@@ -1,4 +1,7 @@
-package data;
+package character;
+
+import data.Position;
+import data.Size;
 
 public class WildAnimals extends Character{
 

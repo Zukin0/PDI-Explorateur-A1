@@ -1,4 +1,4 @@
-package data;
+package game;
 
 public class Difficulty {
 

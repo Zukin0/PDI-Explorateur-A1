@@ -1,4 +1,8 @@
-package data;
+package character;
+
+import data.MapObjects;
+import data.Position;
+import data.Size;
 
 public abstract class Character extends MapObjects{
 	
