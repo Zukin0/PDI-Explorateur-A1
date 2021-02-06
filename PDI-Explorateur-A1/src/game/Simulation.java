@@ -1,7 +1,8 @@
-package data;
+package game;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+
+import character.Explorer;
 
 public class Simulation {
 

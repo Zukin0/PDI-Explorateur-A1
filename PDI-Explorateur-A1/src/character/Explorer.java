@@ -1,4 +1,4 @@
-package data;
+package character;
 
 import java.util.ArrayList;
 

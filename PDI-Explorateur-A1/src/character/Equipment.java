@@ -1,4 +1,4 @@
-package data;
+package character;
 
 public class Equipment {
 
