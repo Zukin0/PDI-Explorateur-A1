@@ -1,8 +1,9 @@
 package character;
 
 import java.util.ArrayList;
+import data.*;
 
-public class Explorer extends Character{
+public class Explorer extends Character implements Runnable{
 
 	private float probaFight;
 	private float probaEscape;
@@ -10,6 +11,8 @@ public class Explorer extends Character{
 	private ArrayList<Equipment> equipment;
 	private int equipmentMax;
 	private int price;
+	
+	private int dir;
 	
 	public Explorer(String name, Size size, Position position, boolean movable, int lifePoint, int lifePointMax,
 			int attackPoint, int attackPointMax, int speed, int aura, float probaFight, float probaEscape, float probaCall,
@@ -22,7 +25,75 @@ public class Explorer extends Character{
 		this.equipmentMax = equipmentMax;
 		this.price = price;
 	}
+	
+	public void run() {
+		int cpt = 0;
+		changeDir();
+		while(true) {
+			if(cpt > 20) {
+				changeDir();
+				cpt = 0;
+				System.out.println("CHANGED DIR");
+			}
+			move();
+			cpt++;
+			System.out.println("Compteur " + getName() + ":" + cpt);
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
+	public void changeDir() {
+		dir = (int)(Math.random() * 4);
+		String str = "My name is : " + getName();
+		switch(dir) {
+		
+		//Haut
+		case 0 : str += " 0";
+		break;
+		
+		//Bas
+		case 1 : str += " 1";
+		break;
+		
+		//Droite
+		case 2 : str += " 2";
+		break;
+		
+		//Gauche
+		case 3 : str += " 3";
+		break;
+		}
+		System.out.println(str);
+	}
+
+	public void move() {
+		Position posG = getPosition();
+		int posX = getPosition().getX();
+		int posY = getPosition().getY();
+		switch(dir) {
+		
+		//Up
+		case 0 : posG.setY(posY-1);
+		break;
+		
+		//Down
+		case 1 : posG.setY(posY+1);
+		break;
+		
+		//Right
+		case 2 : posG.setX(posX+1);
+		break;
+		
+		//Left
+		case 3 : posG.setX(posX-1);
+		break;
+		}
+		System.out.println(getName() + " : " +  getPosition().toString());
+	}
 	public float getProbaFight() {
 		return probaFight;
 	}
