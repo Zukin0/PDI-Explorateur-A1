@@ -43,7 +43,7 @@ public class Explorer extends Character{
 				"Il est de la taille : " + getSize() + "\n" +
 				"Deplacable : " + getMovable() + "\n" +
 				"Ses points de vie max : " + getLifePointMax() + " actuelle : " + getLifePoint() + "\n" +
-				"Ses points d'attaque" + getAttackPoint() + "\n" + 
+				"Ses points d'attaque : " + getAttackPoint() + "\n" + 
 				"Sa vitesse : " + getSpeed() + "\n" + 
 				"La taille de son aura : " + getAura() + "\n" + 
 				"Ses probabilités : C-" + getProbaCall() + " F-" + getProbaFight() + " E-" + getProbaEscape() + "\n" +

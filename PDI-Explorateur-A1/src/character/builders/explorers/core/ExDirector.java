@@ -1,4 +1,7 @@
-package character;
+package character.builders.explorers.core;
+
+import character.Explorer;
+import character.builders.explorers.DoraBuilder;
 
 public class ExDirector {
 	private ExBuilder eB ;
@@ -14,13 +17,13 @@ public class ExDirector {
 	}
 	
 	public static void main (String[] args) {
-		/*ExDirector creator = new ExDirector() ;
+		ExDirector creator = new ExDirector() ;
 		ExBuilder bDora = new DoraBuilder() ;
 		
 		creator.setExplorerBuilder(bDora);
 		creator.BuildExplorer();
 		
 		Explorer e = creator.getExplorer() ;
-		System.out.println(e);*/
+		System.out.println(e);
 	}
 }
