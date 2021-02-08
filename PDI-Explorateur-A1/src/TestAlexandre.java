@@ -20,11 +20,11 @@ public class TestAlexandre {
 		pJoe = new Position(50,50);
 		joe = new Explorer("Joe", sJoe, pJoe, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, null, 0, 0);
 		
-		Thread t1 = new Thread(dora);
-		//Thread t2 = new Thread(joe);
-		
-		t1.start();
-		//t2.start();
+//		Thread t1 = new Thread(dora);
+//		Thread t2 = new Thread(joe);
+//		
+//		t1.start();
+//		t2.start();
 	} 
 	
 	public static void main(String args[]) {
