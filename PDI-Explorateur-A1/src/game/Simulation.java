@@ -1,5 +1,4 @@
 package game;
-
 import java.util.HashMap;
 
 import character.Explorer;

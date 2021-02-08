@@ -13,6 +13,10 @@ public class Size {
 		this.height = height;	
 	}
 	
+	public String toString() {
+		return " L : " + getWidth() + " H : " + getHeight() ;
+	}
+	
 	public int getHeight () {
 		return height;
 	}
