@@ -1,7 +1,6 @@
 package character;
 
 import java.util.ArrayList;
-
 import data.Position;
 import data.Size;
 
