@@ -1,5 +1,7 @@
 package character;
 
+import data.*;
+
 import java.util.ArrayList;
 
 public class Explorer extends Character{
