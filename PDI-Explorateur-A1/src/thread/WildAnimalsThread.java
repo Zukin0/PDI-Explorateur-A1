@@ -2,11 +2,11 @@ package thread;
 
 import java.util.ArrayList;
 
-import character.CharacterTreatment;
 import character.WildAnimals;
 import data.Constant;
 import data.Position;
 import game.SimulationUtility;
+import treatment.CharacterTreatment;
 
 public class WildAnimalsThread implements Runnable{
 	WildAnimals a;

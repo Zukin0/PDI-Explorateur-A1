@@ -1,4 +1,4 @@
-package testEmma;
+package tests;
 
 import character.Explorer;
 import character.builders.explorers.DoraBuilder;

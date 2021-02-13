@@ -26,7 +26,7 @@ public class BearBuilder extends WaBuilder{
 	}
 
 	public void upAnimals() {
-		
+		animal.setTerritorySize(new Size(50,50));
 	}
 
 }

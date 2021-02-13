@@ -12,6 +12,7 @@ public class Explorer extends Character{
 	private int equipmentMax;
 	private int price;
 	private boolean isEscaping;
+	private boolean isDead;
 	
 	public Explorer(String name, Size size, Position position, boolean movable, int lifePoint, int lifePointMax,
 			int attackPoint, int attackPointMax, int speed, int aura, float probaFight, float probaEscape, float probaCall,
@@ -24,6 +25,7 @@ public class Explorer extends Character{
 		this.equipmentMax = equipmentMax;
 		this.price = price;
 		this.isEscaping = isEscaping;
+		this.setDead(false);
 	}
 	
 	public Explorer() {
@@ -35,6 +37,7 @@ public class Explorer extends Character{
 		equipmentMax = 0;
 		price = 0 ;	
 		isEscaping = false;
+		setDead(false);
 	}
 	
 	public String toString() {
@@ -73,6 +76,9 @@ public class Explorer extends Character{
 	public boolean isEscaping() {
 		return isEscaping;
 	}
+	public boolean isDead() {
+		return isDead;
+	}
 	
 	public void setProbaFight(float probaFight) {
 		this.probaFight = probaFight;
@@ -94,5 +100,8 @@ public class Explorer extends Character{
 	}
 	public void setEscaping(boolean isEscaping) {
 		this.isEscaping = isEscaping;
+	}
+	public void setDead(boolean isDead) {
+		this.isDead = isDead;
 	}
 }

@@ -32,7 +32,7 @@ public class WolfBuilder extends WaBuilder{
 
 	@Override
 	public void upAnimals() {
-		animal.setTerritorySize(new Size(50,50));
+		animal.setTerritorySize(new Size(100,100));
 	}
 
 }

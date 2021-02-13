@@ -1,4 +1,5 @@
-package character;
+package treatment;
+import character.Character;
 import data.Position;
 
 public class CharacterTreatment {
@@ -91,5 +92,9 @@ public class CharacterTreatment {
 				return true;
 			}
 			return false;
+	}
+	
+	public void suppCharacter(Character c) {
+		
 	}
 }

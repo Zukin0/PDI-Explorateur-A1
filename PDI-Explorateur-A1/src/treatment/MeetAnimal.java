@@ -1,10 +1,10 @@
-package testEmma;
+package treatment;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import character.Explorer;
-import character.WildAnimals;
+import character.*;
+import character.Character;
 import character.builders.WildAnimal.WolfBuilder;
 import character.builders.WildAnimal.core.WaBuilder;
 import character.builders.WildAnimal.core.WaDirector;
@@ -12,10 +12,14 @@ import character.builders.explorers.DoraBuilder;
 import character.builders.explorers.JoeBuilder;
 import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
+import tests.TestAlexandre;
 
 public class MeetAnimal{
 	
-	public static void meetAnimals(Explorer e, WildAnimals a, int simulation, ArrayList<Explorer> explorers) {
+	public static void meetAnimals(Explorer e, WildAnimals a, int simulation /*, ArrayList<Explorer> explorers */) {
+		
+		ArrayList<Explorer> explorers = TestAlexandre.explorers;
+		ArrayList<Character> characters = TestAlexandre.characters;
 		String outcome = null;
 		String action = null;
 		float gain = 0;
@@ -54,7 +58,10 @@ public class MeetAnimal{
 				//remove dead explorer 
 				//faut qqch d autre pour le supprimer de la simulation? avec le builder notamment
 				//fermer le thread
+				// e.setDead(true)
+				e.setDead(true);
 				explorers.remove(e);
+				characters.remove(e);
 				switch(simulation) {
 				case 1:
 					//lower probaFight for every explorers
@@ -107,7 +114,8 @@ public class MeetAnimal{
 		case "escape":
 			//go away for n seconds
 			System.out.println("un animal sauvage.. JE FUIS");
-			changeDir(e,e.getDir());
+			escapeDir(e,e.getDir());
+
 			e.setEscaping(true);
 			break;
 		}
@@ -169,7 +177,7 @@ public class MeetAnimal{
 		return outcome;
 	}
 	
-	public static void changeDir(Explorer e, int dir) {
+	public static void escapeDir(Explorer e, int dir) {
 		switch(dir) {
 		case 0:
 			//down
@@ -234,7 +242,7 @@ public class MeetAnimal{
 		//strategy 	1 : smart
 		//			2 : fight
 		//			3 : escape
-		meetAnimals(e, a,2, explorers);
+		//meetAnimals(e, a,2, explorers);
 	}
 	
 }

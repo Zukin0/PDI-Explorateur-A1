@@ -26,7 +26,7 @@ public class EagleBuilder extends WaBuilder{
 	}
 
 	public void upAnimals() {
-		
+		animal.setTerritorySize(new Size(200,200));
 	}
 
 }
