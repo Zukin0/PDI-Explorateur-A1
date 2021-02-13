@@ -33,7 +33,17 @@ public class ExDirector {
 		creator.BuildExplorer();
 		
 		//Finally store the explorer created.
+		
 		Explorer e = creator.getExplorer() ;
+		
+		creator.BuildExplorer();
+		Explorer e2 = creator.getExplorer() ;
+		
 		System.out.println(e);
+		System.out.println(e2);
+		e2.setAttackPoint(50);
+		System.out.println("---------------------------------");
+		System.out.println(e);
+		System.out.println(e2);
 	}
 }

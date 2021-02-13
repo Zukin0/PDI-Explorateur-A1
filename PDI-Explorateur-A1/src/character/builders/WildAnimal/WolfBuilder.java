@@ -24,14 +24,15 @@ public class WolfBuilder extends WaBuilder{
 		animal.setAttackPoint(80);
 		animal.setAttackPointMax(100);
 		
-		animal.setSpeed(12);
+		animal.setSpeed(2);
 		animal.setAura(5);
+		
+
 	}
 
 	@Override
 	public void upAnimals() {
-		// TODO Auto-generated method stub
-		
+		animal.setTerritorySize(new Size(50,50));
 	}
 
 }

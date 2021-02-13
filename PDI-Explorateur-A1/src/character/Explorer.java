@@ -11,11 +11,11 @@ public class Explorer extends Character{
 	private ArrayList<Equipment> equipment;
 	private int equipmentMax;
 	private int price;
+	private boolean isEscaping;
 	
-	private int dir;
 	public Explorer(String name, Size size, Position position, boolean movable, int lifePoint, int lifePointMax,
 			int attackPoint, int attackPointMax, int speed, int aura, float probaFight, float probaEscape, float probaCall,
-			ArrayList<Equipment> equipment, int equipmentMax, int price) {
+			ArrayList<Equipment> equipment, int equipmentMax, int price, boolean isEscaping) {
 		super(name, size, position, movable, lifePoint, lifePointMax, attackPoint, attackPointMax, speed, aura);
 		this.probaFight = probaFight;
 		this.probaEscape = probaEscape;
@@ -23,6 +23,7 @@ public class Explorer extends Character{
 		this.equipment = equipment;
 		this.equipmentMax = equipmentMax;
 		this.price = price;
+		this.isEscaping = isEscaping;
 	}
 	
 	public Explorer() {
@@ -32,7 +33,8 @@ public class Explorer extends Character{
 		probaCall = 0;
 		equipment = new ArrayList<Equipment>() ;
 		equipmentMax = 0;
-		price = 0 ;		
+		price = 0 ;	
+		isEscaping = false;
 	}
 	
 	public String toString() {
@@ -68,6 +70,9 @@ public class Explorer extends Character{
 	public int getPrice() {
 		return price;
 	}
+	public boolean isEscaping() {
+		return isEscaping;
+	}
 	
 	public void setProbaFight(float probaFight) {
 		this.probaFight = probaFight;
@@ -86,5 +91,8 @@ public class Explorer extends Character{
 	}
 	public void setPrice(int price) {
 		this.price = price;
+	}
+	public void setEscaping(boolean isEscaping) {
+		this.isEscaping = isEscaping;
 	}
 }
