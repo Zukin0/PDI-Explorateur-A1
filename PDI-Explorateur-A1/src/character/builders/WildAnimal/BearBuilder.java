@@ -18,8 +18,8 @@ public class BearBuilder extends WaBuilder{
 		animal.setLifePoint(150);
 		animal.setLifePointMax(150);
 		
-		animal.setAttackPoint(80);
-		animal.setAttackPointMax(100);
+		animal.setAttackPoint(6);
+		animal.setAttackPointMax(10);
 		
 		animal.setSpeed(12);
 		animal.setAura(5);

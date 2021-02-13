@@ -17,8 +17,8 @@ public class EagleBuilder extends WaBuilder{
 		animal.setLifePoint(100);
 		animal.setLifePointMax(100);
 		
-		animal.setAttackPoint(80);
-		animal.setAttackPointMax(100);
+		animal.setAttackPoint(4);
+		animal.setAttackPointMax(10);
 		
 		animal.setSpeed(12);
 		//higher aura than orthers

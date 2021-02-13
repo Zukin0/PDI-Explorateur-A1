@@ -21,8 +21,8 @@ public class JoeBuilder extends ExBuilder{
 		explorer.setLifePoint(150);
 		explorer.setLifePointMax(150);
 		
-		explorer.setAttackPoint(80);
-		explorer.setAttackPointMax(100);
+		explorer.setAttackPoint(5);
+		explorer.setAttackPointMax(10);
 		
 		explorer.setSpeed(12);
 		explorer.setAura(5);	
