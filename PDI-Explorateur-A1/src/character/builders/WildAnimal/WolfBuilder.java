@@ -17,6 +17,7 @@ public class WolfBuilder extends WaBuilder{
 		animal.setLifePoint(100);
 		animal.setLifePointMax(100);
 		
+		//more attack points
 		animal.setAttackPoint(8);
 		animal.setAttackPointMax(10);
 		
