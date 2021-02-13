@@ -8,6 +8,7 @@ import character.builders.WildAnimal.core.WaBuilder;
 import character.builders.WildAnimal.core.WaDirector;
 import character.builders.explorers.DoraBuilder;
 import character.builders.explorers.JoeBuilder;
+import character.builders.explorers.MikeBuilder;
 import character.builders.explorers.RemyBuilder;
 import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
@@ -29,6 +30,7 @@ public class TestAlexandre {
 	private ExBuilder bDora;
 	private ExBuilder bJoe;
 	private ExBuilder bRemy;
+	private ExBuilder bMike;
 	private WaBuilder bWolf;
 	
 	public TestAlexandre() {		
@@ -48,6 +50,7 @@ public class TestAlexandre {
 		//Create specifique builder
 		bDora = new DoraBuilder() ;
 		bJoe = new JoeBuilder();
+		bMike = new MikeBuilder();
 		bRemy = new RemyBuilder();
 		bWolf = new WolfBuilder();
 
@@ -71,7 +74,12 @@ public class TestAlexandre {
 //		WildAnimals w1 = waCreator.getAnimal();
 //		characters.add(w1);
 		
-		creator.setExplorerBuilder(bRemy);
+//		creator.setExplorerBuilder(bRemy);
+//		creator.BuildExplorer();
+//		Explorer e2 = creator.getExplorer();
+//		explorers.add(e2);
+		
+		creator.setExplorerBuilder(bMike);
 		creator.BuildExplorer();
 		Explorer e2 = creator.getExplorer();
 		explorers.add(e2);

@@ -12,7 +12,7 @@ public class RemyBuilder extends ExBuilder{
 		explorer.setSize(new Size(15, 20));
 		explorer.setPosition(new Position(0,2));
 		explorer.setMovable(true);
-		explorer.setName("Mike");	
+		explorer.setName("Remy");	
 	}
 
 	
@@ -20,8 +20,8 @@ public class RemyBuilder extends ExBuilder{
 		explorer.setLifePoint(100);
 		explorer.setLifePointMax(100);
 		
-		explorer.setAttackPoint(80);
-		explorer.setAttackPointMax(100);
+		explorer.setAttackPoint(5);
+		explorer.setAttackPointMax(10);
 		
 		//walks faster than others 
 		explorer.setSpeed(12);

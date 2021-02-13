@@ -6,23 +6,19 @@ import data.Size;
 
 public class WolfBuilder extends WaBuilder{
 
-	@Override
 	public void upMapObject() {
-		// TODO Auto-generated method stub
 		animal.setSize(new Size(15, 20));
 		animal.setPosition(new Position(0,0));
 		animal.setMovable(true);
 		animal.setName("Wolf");	
 	}
 
-	@Override
 	public void upCharacter() {
-		// TODO Auto-generated method stub
 		animal.setLifePoint(100);
 		animal.setLifePointMax(100);
 		
-		animal.setAttackPoint(80);
-		animal.setAttackPointMax(100);
+		animal.setAttackPoint(8);
+		animal.setAttackPointMax(10);
 		
 		animal.setSpeed(2);
 		animal.setAura(5);
@@ -30,7 +26,6 @@ public class WolfBuilder extends WaBuilder{
 
 	}
 
-	@Override
 	public void upAnimals() {
 		animal.setTerritorySize(new Size(100,100));
 	}

@@ -19,8 +19,8 @@ public class MikeBuilder extends ExBuilder{
 				explorer.setLifePointMax(100);
 				
 				//more attack point
-				explorer.setAttackPoint(100);
-				explorer.setAttackPointMax(100);
+				explorer.setAttackPoint(9);
+				explorer.setAttackPointMax(10);
 				
 				explorer.setSpeed(12);
 				explorer.setAura(5);

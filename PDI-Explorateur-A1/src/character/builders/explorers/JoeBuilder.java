@@ -8,30 +8,30 @@ public class JoeBuilder extends ExBuilder{
 
 	public void upMapObject() {
 		explorer.setSize(new Size(15, 20));
-		explorer.setPosition(new Position(0,0));
+		explorer.setPosition(new Position(0,1));
 		explorer.setMovable(true);
 		explorer.setName("Joe");	
 	}
 
 	public void upCharacter() {
-		explorer.setLifePoint(100);
-		explorer.setLifePointMax(100);
+		explorer.setLifePoint(150);
+		explorer.setLifePointMax(150);
 		
-		explorer.setAttackPoint(80);
-		explorer.setAttackPointMax(100);
+		explorer.setAttackPoint(5);
+		explorer.setAttackPointMax(10);
 		
 		explorer.setSpeed(12);
 		explorer.setAura(5);
 	}
 
 	public void upExplorer() {
-		explorer.setProbaCall(25);
-		explorer.setProbaEscape(30);
-		explorer.setProbaFight(50);
+		explorer.setProbaCall(55);
+		explorer.setProbaEscape(25);
+		explorer.setProbaFight(20);
 		
-		explorer.setEquimentMax(2);
+		explorer.setEquimentMax(1);
 		
-		explorer.setPrice(2000);
+		explorer.setPrice(1500);
 	}
 
 }
