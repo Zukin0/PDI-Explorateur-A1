@@ -12,6 +12,7 @@ public abstract class Character extends MapObjects{
 	private int attackPointMax;
 	private int speed;
 	private int aura;
+	private int dir;
 
 	public Character(String name, Size size, Position position, boolean movable, int lifePoint, int lifePointMax,
 			int attackPoint, int attackPointMax, int speed, int aura) {
@@ -21,7 +22,7 @@ public abstract class Character extends MapObjects{
 		this.attackPoint = attackPoint;
 		this.attackPointMax = attackPointMax;
 		this.speed = speed;
-		this.aura = aura;	
+		this.aura = aura;
 	}
 	
 	public int getLifePoint() {
@@ -42,6 +43,9 @@ public abstract class Character extends MapObjects{
 	public int getAura() {
 		return aura;
 	}
+	public int getDir() {
+		return dir;
+	}
 	
 	public void setLifePoint(int lifePoint) {
 		this.lifePoint = lifePoint;
@@ -60,6 +64,9 @@ public abstract class Character extends MapObjects{
 	}
 	public void setAura(int aura) {
 		this.aura = aura;
+	}
+	public void setDir(int dir) {
+		this.dir = dir;
 	}
 
 }

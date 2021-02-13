@@ -2,6 +2,7 @@ package character.builders.explorers.core;
 
 import character.Explorer;
 import character.builders.explorers.DoraBuilder;
+import character.builders.explorers.JoeBuilder;
 
 public class ExDirector {
 	//Here, we have our Builder explorer 
@@ -35,5 +36,25 @@ public class ExDirector {
 		//Finally store the explorer created.
 		Explorer e = creator.getExplorer() ;
 		System.out.println(e);
+		
+		//TEST EMMA
+		//créer une deuxième dora
+		ExBuilder bDora2 = new DoraBuilder();
+		ExBuilder bJoe1 = new JoeBuilder();
+		
+		creator.setExplorerBuilder(bDora2);
+		creator.BuildExplorer(); //cette ligne est nécessaire à chaque fois???
+		
+		Explorer e2 = creator.getExplorer() ;
+		e2.setSpeed(67);
+		e2.setName("Dora2");
+		System.out.println(e2);
+		
+		creator.setExplorerBuilder(bJoe1);
+		creator.BuildExplorer();
+		
+		Explorer e3 = creator.getExplorer();
+		System.out.println(e3);
+		
 	}
 }

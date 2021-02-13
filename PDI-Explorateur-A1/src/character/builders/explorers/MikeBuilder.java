@@ -4,21 +4,22 @@ import character.builders.explorers.core.ExBuilder;
 import data.Position;
 import data.Size;
 
-//Here, we have class that create a Dora Explorer
-public class DoraBuilder extends ExBuilder{
+//Here, we have class that create a Mike Explorer
+public class MikeBuilder extends ExBuilder{
 	
 			public void upMapObject() {
 				explorer.setSize(new Size(15, 20));
-				explorer.setPosition(new Position(0,0));
+				explorer.setPosition(new Position(0,3));
 				explorer.setMovable(true);
-				explorer.setName("Dora");	
+				explorer.setName("Mike");	
 			}
 
 			public void upCharacter() {
 				explorer.setLifePoint(100);
 				explorer.setLifePointMax(100);
 				
-				explorer.setAttackPoint(80);
+				//more attack point
+				explorer.setAttackPoint(100);
 				explorer.setAttackPointMax(100);
 				
 				explorer.setSpeed(12);
@@ -30,9 +31,9 @@ public class DoraBuilder extends ExBuilder{
 				explorer.setProbaEscape(30);
 				explorer.setProbaFight(50);
 				
-				explorer.setEquimentMax(2);
+				explorer.setEquimentMax(1);
 				
-				explorer.setPrice(2000);
+				explorer.setPrice(1500);
 			}
 			
 }

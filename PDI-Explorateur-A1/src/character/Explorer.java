@@ -14,6 +14,7 @@ public class Explorer extends Character{
 	private ArrayList<Equipment> equipment;
 	private int equipmentMax;
 	private int price;
+	private boolean isEscaping;
 	
 	
 	public Explorer(String name, Size size, Position position, boolean movable, int lifePoint, int lifePointMax,
@@ -26,6 +27,7 @@ public class Explorer extends Character{
 		this.equipment = equipment;
 		this.equipmentMax = equipmentMax;
 		this.price = price;
+		isEscaping = false;
 	}
 	
 	public Explorer() {
@@ -35,19 +37,20 @@ public class Explorer extends Character{
 		probaCall = 0;
 		equipment = new ArrayList<Equipment>() ;
 		equipmentMax = 0;
-		price = 0 ;		
+		price = 0 ;	
+		isEscaping = false;
 	}
 	
 	public String toString() {
 		return  "---------------------------- START -------------------------------- \n" +
-				"Tu viens de crée : " + getName() + "\n" + 
+				"Tu viens de crÃ©er : " + getName() + "\n" + 
 				"Il est de la taille : " + getSize() + "\n" +
-				"Deplacable : " + getMovable() + "\n" +
+				"DÃ©placable : " + getMovable() + "\n" +
 				"Ses points de vie max : " + getLifePointMax() + " actuelle : " + getLifePoint() + "\n" +
 				"Ses points d'attaque : " + getAttackPoint() + "\n" + 
 				"Sa vitesse : " + getSpeed() + "\n" + 
 				"La taille de son aura : " + getAura() + "\n" + 
-				"Ses probabilités : C-" + getProbaCall() + " F-" + getProbaFight() + " E-" + getProbaEscape() + "\n" +
+				"Ses probabilitÃ©s : C-" + getProbaCall() + " F-" + getProbaFight() + " E-" + getProbaEscape() + "\n" +
 				"Sa taille d'inventaire : " + getEquipmentMax() + "\n" +
 				"Son prix : " + getPrice() + "\n" +
 				"---------------------------- END ---------------------------------- \n";				
@@ -71,6 +74,9 @@ public class Explorer extends Character{
 	public int getPrice() {
 		return price;
 	}
+	public boolean isEscaping() {
+		return isEscaping;
+	}
 	
 	public void setProbaFight(float probaFight) {
 		this.probaFight = probaFight;
@@ -89,5 +95,8 @@ public class Explorer extends Character{
 	}
 	public void setPrice(int price) {
 		this.price = price;
+	}
+	public void setEscaping(boolean isEscaping) {
+		this.isEscaping = isEscaping;
 	}
 }
