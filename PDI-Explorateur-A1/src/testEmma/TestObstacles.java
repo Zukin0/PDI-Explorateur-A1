@@ -18,7 +18,7 @@ public class TestObstacles {
 		case "water":
 			//prendre de l'eau et comm avec se potes
 			break;
-		case "mude":
+		case "mud":
 			//ralentir si on a pas les bottes
 			break;
 		case "tree":

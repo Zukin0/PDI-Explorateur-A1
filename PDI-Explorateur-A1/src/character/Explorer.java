@@ -19,7 +19,7 @@ public class Explorer extends Character{
 	
 	public Explorer(String name, Size size, Position position, boolean movable, int lifePoint, int lifePointMax,
 			int attackPoint, int attackPointMax, int speed, int aura, float probaFight, float probaEscape, float probaCall,
-			ArrayList<Equipment> equipment, int equipmentMax, int price) {
+			ArrayList<Equipment> equipment, int equipmentMax, int price, boolean isEscaping) {
 		super(name, size, position, movable, lifePoint, lifePointMax, attackPoint, attackPointMax, speed, aura);
 		this.probaFight = probaFight;
 		this.probaEscape = probaEscape;
@@ -27,7 +27,7 @@ public class Explorer extends Character{
 		this.equipment = equipment;
 		this.equipmentMax = equipmentMax;
 		this.price = price;
-		isEscaping = false;
+		this.isEscaping  =  isEscaping;
 	}
 	
 	public Explorer() {
