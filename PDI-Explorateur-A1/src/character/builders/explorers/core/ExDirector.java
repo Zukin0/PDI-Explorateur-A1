@@ -2,6 +2,7 @@ package character.builders.explorers.core;
 
 import character.Explorer;
 import character.builders.explorers.DoraBuilder;
+import character.builders.explorers.JoeBuilder;
 
 public class ExDirector {
 	//Here, we have our Builder explorer 

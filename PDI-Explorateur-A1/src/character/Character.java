@@ -22,7 +22,7 @@ public abstract class Character extends MapObjects{
 		this.attackPoint = attackPoint;
 		this.attackPointMax = attackPointMax;
 		this.speed = speed;
-		this.aura = aura;	
+		this.aura = aura;
 	}
 	
 	public int getLifePoint() {
