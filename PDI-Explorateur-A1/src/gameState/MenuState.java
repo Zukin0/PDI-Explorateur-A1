@@ -84,7 +84,7 @@ public class MenuState extends GameState implements ImageObserver {
 		
 		//image
 		try {
-			image = ImageIO.read(new File("/Users/julia/Desktop/L3/S6/PDI/ressources/schema_carte_sans_fond.png"));
+			image = ImageIO.read(new File("ressources/schema_carte_sans_fond.png"));
 		} catch (IOException e) {
 			System.out.println("no image ");
 			e.printStackTrace();
@@ -105,11 +105,11 @@ public class MenuState extends GameState implements ImageObserver {
         g.setColor(Color.black);
         g.setFont(textFont_italic);
         g.drawString("Pour cette simulation, vous allez devoir choisir :", 120, 550);
-        g.drawString("- une difficulté,", 130, 580);
-        g.drawString("- une stratégie,", 130, 610);
-        g.drawString("- des explorateurs (leur nombre dépendra de la difficulté choisie),", 130, 640);
-        g.drawString("- des équipements pour vos explorateurs.", 130, 670);
-        g.drawString("Faites attention à votre argent et démarrez !", 120, 700);
+        g.drawString("- une difficulte,", 130, 580);
+        g.drawString("- une strategie,", 130, 610);
+        g.drawString("- des explorateurs (leur nombre dependra de la difficulte choisie),", 130, 640);
+        g.drawString("- des equipements pour vos explorateurs.", 130, 670);
+        g.drawString("Faites attention a votre argent et demarrez !", 120, 700);
         
         //voir le centre de la fenetre
         //g.drawLine(GamePanel.WIDTH/2, 0, GamePanel.WIDTH/2, GamePanel.HEIGHT);

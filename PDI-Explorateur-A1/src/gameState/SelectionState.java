@@ -102,7 +102,7 @@ public class SelectionState extends GameState implements ImageObserver {
         g.setFont(categoryFont);
         g.drawString("VOTRE ARGENT : "+money+" $",770, 60);
         try {
-  			imageMoney = ImageIO.read(new File("/Users/julia/Desktop/L3/S6/PDI/ressources/money.png"));
+  			imageMoney = ImageIO.read(new File("ressources/money.png"));
   		} catch (IOException e) {
   			System.out.println("no image");
   			e.printStackTrace();
@@ -155,10 +155,10 @@ public class SelectionState extends GameState implements ImageObserver {
         
         //images explorers
   		try {
-  			imageMike = ImageIO.read(new File("/Users/julia/Desktop/L3/S6/PDI/ressources/mike.png"));
-  			imageRemy = ImageIO.read(new File("/Users/julia/Desktop/L3/S6/PDI/ressources/remy.png"));
-  			imageJoe = ImageIO.read(new File("/Users/julia/Desktop/L3/S6/PDI/ressources/joe.png"));
-  			imageDora = ImageIO.read(new File("/Users/julia/Desktop/L3/S6/PDI/ressources/dora.png"));
+  			imageMike = ImageIO.read(new File("ressources/mike.png"));
+  			imageRemy = ImageIO.read(new File("ressources/remy.png"));
+  			imageJoe = ImageIO.read(new File("ressources/joe.png"));
+  			imageDora = ImageIO.read(new File("ressources/dora.png"));
   		} catch (IOException e) {
   			System.out.println("no image");
   			e.printStackTrace();
@@ -180,24 +180,24 @@ public class SelectionState extends GameState implements ImageObserver {
         //mike
         g.setColor(Color.black);
         g.setFont(infosFont);
-        g.drawString("Spécialité : attaque",350,385);
+        g.drawString("Specialite : attaque",350,385);
         g.drawString("Prix : ?",350,410);
-        g.drawString("Sélection : ",350,435);
+        g.drawString("Selection : ",350,435);
         //remy
         g.setFont(infosFont);
-        g.drawString("Spécialité : vitesse",570,385);
+        g.drawString("Specialite : vitesse",570,385);
         g.drawString("Prix : ?",570,410);
-        g.drawString("Sélection : ",570,435);
+        g.drawString("Selection : ",570,435);
         //joe
         g.setFont(infosFont);
-        g.drawString("Spécialité : vie",770,385);
+        g.drawString("Specialite : vie",770,385);
         g.drawString("Prix : ?",770,410);
-        g.drawString("Sélection : ",770,435);
+        g.drawString("Selection : ",770,435);
         //dora
         g.setFont(infosFont);
-        g.drawString("Spécialité : équipements",915,385);
+        g.drawString("Specialite : equipements",915,385);
         g.drawString("Prix : ?",915,410);
-        g.drawString("Sélection : ",915,435);
+        g.drawString("Selection : ",915,435);
         
         //title equipements
         g.setColor(LIGHT_BLUE);
@@ -208,9 +208,9 @@ public class SelectionState extends GameState implements ImageObserver {
         
         //images equipments
   		try {
-  			weapon = ImageIO.read(new File("/Users/julia/Desktop/L3/S6/PDI/ressources/weapon.png"));
-  			boots = ImageIO.read(new File("/Users/julia/Desktop/L3/S6/PDI/ressources/boots.png"));
-  			binoculars = ImageIO.read(new File("/Users/julia/Desktop/L3/S6/PDI/ressources/binoculars.png"));
+  			weapon = ImageIO.read(new File("ressources/weapon.png"));
+  			boots = ImageIO.read(new File("ressources/boots.png"));
+  			binoculars = ImageIO.read(new File("ressources/binoculars.png"));
   		} catch (IOException e) {
   			System.out.println("no image");
   			e.printStackTrace();
@@ -228,15 +228,15 @@ public class SelectionState extends GameState implements ImageObserver {
         //weapon
         g.setColor(Color.black);
         g.setFont(infosFont);
-        g.drawString("Spécialité : attaque",330,700);
+        g.drawString("Specialite : attaque",330,700);
         g.drawString("Prix : ?",330,725);
         //binoculars
         g.setFont(infosFont);
-        g.drawString("Spécialité : vitesse",550,700);
+        g.drawString("Specialite : vitesse",550,700);
         g.drawString("Prix : ?",550,725);
         //boots
         g.setFont(infosFont);
-        g.drawString("Spécialité : vie",750,700);
+        g.drawString("Specialite : vie",750,700);
         g.drawString("Prix : ?",750,725);
         
         //White board
@@ -323,7 +323,7 @@ public class SelectionState extends GameState implements ImageObserver {
             g.drawString("STRONG MIKE",350,360);
             g.setColor(Color.black);
             g.setFont(infosFont);
-            g.drawString("Sélection : "+nbMike,350,435);
+            g.drawString("Selection : "+nbMike,350,435);
         }
         if (nbRemy > 0) {
         	g.setFont(textFont);
@@ -331,7 +331,7 @@ public class SelectionState extends GameState implements ImageObserver {
         	g.drawString("FAST REMY",570,360);
         	g.setColor(Color.black);
             g.setFont(infosFont);
-            g.drawString("Sélection : "+nbRemy,570,435);
+            g.drawString("Selection : "+nbRemy,570,435);
         }
         if (nbJoe > 0) {
         	g.setFont(textFont);
@@ -339,7 +339,7 @@ public class SelectionState extends GameState implements ImageObserver {
         	g.drawString("BIG JOE",770,360);
         	g.setColor(Color.black);
             g.setFont(infosFont);
-            g.drawString("Sélection : "+nbJoe,770,435);
+            g.drawString("Selection : "+nbJoe,770,435);
         }
         if (nbDora > 0) {
         	g.setFont(textFont);
@@ -347,7 +347,7 @@ public class SelectionState extends GameState implements ImageObserver {
         	g.drawString("DORA",970,360);
         	g.setColor(Color.black);
             g.setFont(infosFont);
-            g.drawString("Sélection : "+nbDora,915,435);
+            g.drawString("Selection : "+nbDora,915,435);
         }
         
 	}
