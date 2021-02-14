@@ -9,7 +9,7 @@ public class Constant {
 	/*
 	 * Speed of the whole program, the smaller the value, the faster the simulation will be
 	 */
-	public static final int SIMULATION_SPEED = 50;
+	public static final int SIMULATION_SPEED = 100;
 	public static final int INTERVAL_DIRECTION_CHANGE = 1000;
 	public static final int TIME_ESCAPING = 5000;
 	

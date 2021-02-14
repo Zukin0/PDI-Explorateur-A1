@@ -1,6 +1,7 @@
 package treatment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import character.*;
@@ -12,14 +13,15 @@ import character.builders.explorers.DoraBuilder;
 import character.builders.explorers.JoeBuilder;
 import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
+import game.Simulation;
 import tests.TestAlexandre;
 
 public class MeetAnimal{
 	
 	public static void meetAnimals(Explorer e, WildAnimals a, int simulation /*, ArrayList<Explorer> explorers */) {
 		
-		ArrayList<Explorer> explorers = TestAlexandre.explorers;
-		ArrayList<Character> characters = TestAlexandre.characters;
+		HashMap<String,Explorer> explorers = Simulation.explorers;
+		HashMap<String,Character> characters = Simulation.characters;
 		String outcome = null;
 		String action = null;
 		float gain = 0;
@@ -60,12 +62,12 @@ public class MeetAnimal{
 				//fermer le thread
 				// e.setDead(true)
 				e.setDead(true);
-				explorers.remove(e);
-				characters.remove(e);
+				explorers.remove(e.getName());
+				characters.remove(e.getName());
 				switch(simulation) {
 				case 1:
 					//lower probaFight for every explorers
-					for (Explorer explorer : explorers){
+					for (Explorer explorer : explorers.values()){
 						gain = explorer.getProbaFight()*(float)10/100;
 						System.out.println(gain);
 						System.out.println(gain/2);
@@ -84,7 +86,7 @@ public class MeetAnimal{
 					break;
 				case 2:
 					//higher attackPoint for every explorers
-					for (Explorer explorer : explorers) {
+					for (Explorer explorer : explorers.values()) {
 						gain2 = explorer.getAttackPoint()*(int)20/100;
 						System.out.println(gain2);
 						if (explorer.getAttackPoint()+gain2<=explorer.getAttackPointMax()) {
@@ -96,7 +98,7 @@ public class MeetAnimal{
 					break;
 				case 3:
 					//higher vision for every explorers
-					for (Explorer explorer : explorers) {
+					for (Explorer explorer : explorers.values()) {
 						System.out.println("Je suis "+explorer.getName()+" et j'avais une vision de : "+explorer.getAura()+"\n");
 						explorer.setAura(explorer.getAura()+2);
 						System.out.println("Je suis "+explorer.getName()+" et j'ai une vision de : "+explorer.getAura()+"\n");

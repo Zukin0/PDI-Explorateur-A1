@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 
+import game.Simulation;
+import character.Character;
 import ihm.Game;
 import ihm.GamePanel;
 
@@ -16,6 +18,8 @@ public class SimulationState extends GameState {
 	
 	//création des polices
 	private Font titleFont = new Font("Century Goth", Font.BOLD, 40);
+	
+	private Simulation sim;
 	
 	public SimulationState(GameStateManager gsm) {
 		super(gsm);
@@ -39,6 +43,11 @@ public class SimulationState extends GameState {
 		g.setColor(Color.black);
 		g.setFont(titleFont);
 		g.drawString("SIMULATION",20, 60);
+		
+		for(Character c : sim.characters.values()) {
+			g.setColor(Color.green);
+			g.fillRect(c.getPosition().getX(), c.getPosition().getY(), c.getSize().getWidth(), c.getSize().getHeight());
+		}
 	}
 
 	public void keyPressed(int k) {
@@ -82,6 +91,16 @@ public class SimulationState extends GameState {
 	public void mouseExited(MouseEvent m) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	public Simulation getSim() {
+		return sim;
+	}
+
+
+	public void setSim(Simulation sim) {
+		this.sim = sim;
 	}
 	
 	//public void render(Graphics2D g) {}

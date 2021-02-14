@@ -16,6 +16,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import character.builders.explorers.core.ExDirector;
+import game.Simulation;
 import ihm.Game;
 import ihm.GamePanel;
 
@@ -31,6 +33,8 @@ public class SelectionState extends GameState implements ImageObserver {
 	private int nbDora = 0;
 	private int difficultySelected = 3;
 	private int strategySelected = 3;
+	
+	private Simulation sim;
 	
 	private int money = 0; 
 	
@@ -475,7 +479,16 @@ public class SelectionState extends GameState implements ImageObserver {
 			System.out.println("DEBUT DE LA SIMULATION");
 			if ((nbExplorateurs >= nbMinExplorateurs) && (nbExplorateurs <= nbMaxExplorateurs)&&(strategySelected != 3)
 					&&(difficultySelected != 3)){
-				gsm.gameStates.push(new SimulationState(gsm));
+				int tabEx[] = {nbDora, nbJoe, nbRemy, nbMike};
+				/*
+				 * A FAIRE : CHANGER le chiffre difficultySelected par la classe "Difficulty"
+				 * 			Ajouter un tab d'animaux
+				 */
+				sim = new Simulation(difficultySelected, strategySelected, tabEx);
+				SimulationState simulationState = new SimulationState(gsm);
+				gsm.gameStates.push(simulationState);
+				simulationState.setSim(sim);
+				sim.createThreads();
 			}
 		}
 	}
