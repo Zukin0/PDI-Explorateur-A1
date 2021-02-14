@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
@@ -20,13 +21,27 @@ import ihm.GamePanel;
 
 public class MenuState extends GameState implements ImageObserver {
 	
-	private int currentSelection = 0; //quelle option du menu on a selectionné
+	//création des couleurs nécessaires à l'interface
+	private Color BEIGE = new Color(255,250,240);
+	private Color DARK_BEIGE = new Color(193, 146, 115);
+	
+	//création des polices et image
+	private Font titleFont = new Font("Century Goth", Font.BOLD, 48);
+	private Font selectionFont = new Font("Arial", Font.PLAIN, 50);	
+	private Font textFont_bold = new Font("Arial", Font.BOLD, 30);
+	private Font textFont_italic = new Font("Arial", Font.ITALIC, 25);
+	private BufferedImage image=null;
+	
+	//quelle option du menu on a selectionné
+	private int currentSelection = 0; 
 	//liste des options possible à selectionner sur le menu
 	private String[] options = {
 			"Simulation",
 			"Recap",
-			"Quit"
+			"Quitter"
 	};
+	
+	private int nbClicks = 0;
 
 	public MenuState(GameStateManager gsm) {
 		super(gsm);
@@ -38,29 +53,112 @@ public class MenuState extends GameState implements ImageObserver {
 
 	//présentation de la fenêtre
 	public void draw(Graphics g) {
-		BufferedImage image=null;
+		
+		//background
+		g.setColor(BEIGE);
+		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
+		
+		g.setColor(Color.black);
+		g.fillRect(20, 20, 40, 40);
+        
+        //squares 
+        //g.drawRect(x, y, width, height);
+		//rules
+		g.setColor(Color.black);
+		g.fillRect(100, 475, 1100, 250);
+        g.setColor(BEIGE);
+        g.fillRect(105, 480, 1090, 240);
+        //selections
+        g.setColor(Color.black);
+		g.fillRect(520, 145, 290, 77);
+        g.setColor(DARK_BEIGE);
+		g.fillRect(525, 150, 280, 67);
+		g.setColor(Color.black);
+		g.fillRect(520, 245, 290, 77);
+		g.setColor(DARK_BEIGE);
+		g.fillRect(525, 250, 280, 67);
+		g.setColor(Color.black);
+		g.fillRect(520, 345, 290, 77);
+		g.setColor(DARK_BEIGE);
+		g.fillRect(525, 350, 280, 67);
+		
+		//image
 		try {
-			image = ImageIO.read(new File("/Users/julia/Desktop/L3/S6/PDI/ressources/sable.jpeg"));
+			image = ImageIO.read(new File("/Users/julia/Desktop/L3/S6/PDI/ressources/schema_carte_sans_fond.png"));
 		} catch (IOException e) {
-			System.out.println("pas d'image ");
+			System.out.println("no image ");
 			e.printStackTrace();
 		}
-        g.drawImage(image, 0, 0, GamePanel.WIDTH, GamePanel.HEIGHT, (ImageObserver) this);
+		//g.setColor(Color.black);
+		//g.fillRect(90, 140, 270, 270);
+        g.drawImage(image, 100, 150, 250, 250, (ImageObserver) this);
+        //g.setColor(Color.black);
+		//g.fillRect(940, 140, 270, 270);
+        g.drawImage(image, 950, 150, 250, 250, (ImageObserver) this);
         
+        //title rules
+        g.setColor(DARK_BEIGE);
+        g.setFont(textFont_bold);
+        g.drawString("REGLES", 120, 515);
+        
+        //text rules
+        g.setColor(Color.black);
+        g.setFont(textFont_italic);
+        g.drawString("Pour cette simulation, vous allez devoir choisir :", 120, 550);
+        g.drawString("- une difficulté,", 130, 580);
+        g.drawString("- une stratégie,", 130, 610);
+        g.drawString("- des explorateurs (leur nombre dépendra de la difficulté choisie),", 130, 640);
+        g.drawString("- des équipements pour vos explorateurs.", 130, 670);
+        g.drawString("Faites attention à votre argent et démarrez !", 120, 700);
+        
+        //voir le centre de la fenetre
+        //g.drawLine(GamePanel.WIDTH/2, 0, GamePanel.WIDTH/2, GamePanel.HEIGHT);
+        
+        //title
+        g.setColor(Color.black);
+        g.setFont(titleFont);
+        //g.drawString(str, x, y);
+        g.drawString("EXPLORATEURS AUTONOMES ET COMMUNICANTS",30, 80);
+        
+        //selection
+        g.setFont(selectionFont);
 		for (int i = 0; i<options.length; i++) {
 			if (i==currentSelection) {
-				g.setColor(Color.green);
+				switch (i) {
+				case 0 :
+					g.setColor(BEIGE);
+					g.drawString(options[i], 550, 200);
+					break;
+				case 1 : 
+					g.setColor(BEIGE);
+					g.drawString(options[i], 590, 300);
+					break;
+				case 2 :
+					g.setColor(BEIGE);
+					g.drawString(options[i], 590, 400);
+					break;
+				}
 			}
 			else {
-				g.setColor(Color.black);
+				switch (i) {
+				case 0 :
+					g.setColor(Color.black);
+					g.drawString(options[i], 550, 200);
+					break;
+				case 1 : 
+					g.setColor(Color.black);
+					g.drawString(options[i], 590, 300);
+					break;
+				case 2 :
+					g.setColor(Color.black);
+					g.drawString(options[i], 590, 400);
+					break;
+				}
 			}
-			//g.drawLine(x1, y1, x2, y2);
-			g.setFont(new Font("Arial", Font.PLAIN, 72));
-			//g.drawString(str, x, y);
-			g.drawString(options[i], GamePanel.WIDTH/2-150, 100 + i * 100);
 		}
+		//g.drawString("Nb clicks = " + nbClicks, 500, 500);//////////////
 	}
- 
+	
 	//evenements avec le clavier
 	public void keyPressed(int k) {
 		if (k==KeyEvent.VK_DOWN) {
@@ -80,10 +178,11 @@ public class MenuState extends GameState implements ImageObserver {
 				System.out.println("simulation");
 				gsm.gameStates.push(new SelectionState(gsm));
 				break;
-			case 2 : 
+			case 1 : 
 				System.out.println("recap");
+				gsm.gameStates.push(new RecapState(gsm));
 				break;
-			case 3 :
+			case 2 :
 				System.out.println("quit");
 				System.exit(0);
 				break; 
@@ -97,132 +196,22 @@ public class MenuState extends GameState implements ImageObserver {
 		return false;
 	}
 
+	public void mouseClicked(MouseEvent m) {
+		
+	}
+
+	public void mousePressed(MouseEvent m) {
+		nbClicks ++;
+		System.out.println(m.getX() + "," + m.getY());
+		
+		//faire toutes les possibilités de coordonnées pour les différents choix
+		
+	}
+
+	public void mouseReleased(MouseEvent m) {}
+
+	public void mouseEntered(MouseEvent m) {}
+
+	public void mouseExited(MouseEvent m) {}
+
 }
-
-
-
-	/*private Background background;
-	private int currentChoice = 0;
-	private String[] options = {
-			"Start",
-			"Recap"
-	};
-	
-	private Color titleColor;
-	private Font titleFont;
-	private Font font;	
-	private boolean isSelected = false;
-	
-	public MenuState() {	
-		try {
-			background = new Background("/sable.png",1); 
-			background.setVector(-0.1, 0);
-			
-			titleColor = new Color(128, 0, 0);
-			titleFont = new Font("Century Goth", Font.PLAIN, 100);
-			font = new Font("Arial", Font.PLAIN, 80);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void select() {
-		switch (currentChoice) {
-		case 0 :
-			GameStateManager.setState(GameStateManager.SELECTIONSTATE);
-			break;
-		case 1 :
-			GameStateManager.setState(GameStateManager.RECAPSTATE);
-			break;
-		}
-	}
-	
-	public void init() {
-	}
-	
-	public void tick() {
-		background.update();
-		//InputGame.menu();
-		if(isSelected) {
-			select();
-		}
-	}
-	
-	public void render(Graphics2D g) {
-		//DRAW BACKGROUND
-		background.draw(g);
-		
-		//DRAW TITLE
-		g.setColor(titleColor);
-		g.setFont(titleFont);
-		g.drawString("EXPLORATEURS AUTONOMES ET COMMUNICANTS", Game.WIDTH/2 - 250, Game.HEIGHT/2 - 120);
-		
-		//DRAW MENU OPTIONS
-		g.setFont(font);
-		for(int i = 0; i<options.length; i++) {
-			if(i == currentChoice) {
-				g.setColor(Color.BLACK);
-			}
-			else {
-				g.setColor(Color.ORANGE);
-			}
-			g.drawString(options[i], Game.WIDTH/2 - 100, Game.HEIGHT/2 + i *80);
-		}
-	}
-
-	public Background getBg() {
-		return background;
-	}
-
-	public void setBg(Background background) {
-		this.background = background;
-	}
-
-	public int getCurrentChoice() {
-		return currentChoice;
-	}
-
-	public void setCurrentChoice(int currentChoice) {
-		this.currentChoice = currentChoice;
-	}
-
-	public String[] getOptions() {
-		return options;
-	}
-
-	public void setOptions(String[] options) {
-		this.options = options;
-	}
-
-	public Color getTitleColor() {
-		return titleColor;
-	}
-
-	public void setTitleColor(Color titleColor) {
-		this.titleColor = titleColor;
-	}
-
-	public Font getTitleFont() {
-		return titleFont;
-	}
-
-	public void setTitleFont(Font titleFont) {
-		this.titleFont = titleFont;
-	}
-
-	public Font getFont() {
-		return font;
-	}
-
-	public void setFont(Font font) {
-		this.font = font;
-	}
-
-	public boolean isSelected() {
-		return isSelected;
-	}
-
-	public void setSelected(boolean isSelected) {
-		this.isSelected = isSelected;
-	}
-}*/

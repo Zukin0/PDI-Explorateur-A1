@@ -4,12 +4,14 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 
 import gameState.GameStateManager;
 
-public class GamePanel extends JPanel implements Runnable, KeyListener{
+public class GamePanel extends JPanel implements Runnable, KeyListener, MouseListener{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -27,6 +29,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 	public GamePanel () {
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		addKeyListener(this);
+		addMouseListener(this);
 		setFocusable(true); 
 		start();
 	}
@@ -73,9 +76,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 		gsm.draw(g);
 	}
 
-	public void keyTyped(KeyEvent e) {
-
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	public void keyPressed(KeyEvent e) {
 		gsm.KeyPressed(e.getKeyCode());
@@ -83,6 +84,26 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
 	public void keyReleased(KeyEvent e) {
 		gsm.keyReleased(e.getKeyCode());
+	}
+
+	public void mouseClicked(MouseEvent m) {
+		gsm.mouseClicked(m);
+	}
+
+	public void mousePressed(MouseEvent m) {
+		gsm.mousePressed(m);
+	}
+
+	public void mouseReleased(MouseEvent m) {
+		gsm.mouseReleased(m);
+	}
+
+	public void mouseEntered(MouseEvent m) {
+		gsm.mouseEntered(m);
+	}
+
+	public void mouseExited(MouseEvent m) {
+		gsm.mouseExited(m);
 	}
 	
 }
