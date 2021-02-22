@@ -37,14 +37,14 @@ public class Simulation {
 	
 //	public static ArrayList<Explorer> explorers = new ArrayList<Explorer>() ;
 	private int difficulty;
-	private int strategy;
+	public static int strategy;
 	
 	public Simulation(int difficulty, int strategy, int[] tabEx) {
 		this.difficulty = difficulty;
 		this.strategy = strategy;
 		initBuilders();
 		createExplorers(tabEx);
-		//createAnimals(tabAni);
+		createAnimals(/*tabAni*/);
 		addListCharacters();
 	}
 	
@@ -94,8 +94,12 @@ public class Simulation {
 		}
 	}
 	
-	public void createAnimals(int[] tabAni) {
-		
+	public void createAnimals(/*int[] tabAni*/) {
+		waCreator.setWildAnimalsBuilder(bWolf);
+		waCreator.BuildWildAnimals();
+		WildAnimals w1 = waCreator.getAnimal();
+		w1.setName("Wolf1");
+		animals.put(w1.getName(),w1);
 	}
 	
 	public void addListCharacters() {

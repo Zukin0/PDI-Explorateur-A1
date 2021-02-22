@@ -7,9 +7,14 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 
 import game.Simulation;
+import game.SimulationUtility;
 import character.Character;
+import character.Explorer;
+import character.WildAnimals;
 import ihm.Game;
 import ihm.GamePanel;
+import thread.ExplorerThread;
+import thread.WildAnimalsThread;
 
 public class SimulationState extends GameState {
 	
@@ -31,7 +36,10 @@ public class SimulationState extends GameState {
 	}
 	
 	public void tick() {
-	
+		if(sim.explorers.size() == 0) {
+			System.out.println("TOUS LES EXPLORATEURS SONT MORT : FIN DE LA PARTIE");
+			System.exit(0);
+		}
 	}
 
 	public void draw(Graphics g) {
@@ -45,7 +53,27 @@ public class SimulationState extends GameState {
 		g.drawString("SIMULATION",20, 60);
 		
 		for(Character c : sim.characters.values()) {
-			g.setColor(Color.green);
+			if(SimulationUtility.isInstance(c, Explorer.class)) {
+				String name = c.getName().substring(0,c.getName().length()-1);
+				switch(name) {
+				
+				case "Dora" : g.setColor(Color.pink);
+					break;
+				case "Mike" : g.setColor(Color.green);
+					break;
+				case "Joe" : g.setColor(Color.orange);
+					break;
+				case "Remy" : g.setColor(Color.blue);
+					break;
+				}
+//				g.setColor(Color.green);
+			}
+			else {
+				g.setColor(Color.black);
+				WildAnimals wa = (WildAnimals)c;
+				g.drawRect(wa.getPosTerr().getX(),wa.getPosTerr().getY(), wa.getTerritorySize().getHeight(), wa.getTerritorySize().getHeight());
+				g.setColor(Color.red);
+			}
 			g.fillRect(c.getPosition().getX(), c.getPosition().getY(), c.getSize().getWidth(), c.getSize().getHeight());
 		}
 	}

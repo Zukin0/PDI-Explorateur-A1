@@ -18,7 +18,7 @@ public class WildAnimalsThread implements Runnable{
 	public void run() {
 		int cpt = 0;
 		// need while(!dead & running)
-		a.setPosTerr(new Position(a.getPosition().getX(), a.getPosition().getY()));
+		a.setPosTerr(new Position(a.getPosition().getX()-(a.getTerritorySize().getWidth()/2), a.getPosition().getY()-(a.getTerritorySize().getHeight()/2)));
 		CharacterTreatment.changeDir(a);
 		while(true) {
 			SimulationUtility.unitTime();		

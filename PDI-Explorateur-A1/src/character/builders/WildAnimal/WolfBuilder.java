@@ -8,7 +8,7 @@ public class WolfBuilder extends WaBuilder{
 
 	public void upMapObject() {
 		animal.setSize(new Size(15, 20));
-		animal.setPosition(new Position(0,0));
+		animal.setPosition(new Position(1000,500));
 		animal.setMovable(true);
 		animal.setName("Wolf");	
 	}

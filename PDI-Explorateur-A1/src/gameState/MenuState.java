@@ -57,9 +57,9 @@ public class MenuState extends GameState implements ImageObserver {
 		//background
 		g.setColor(BEIGE);
 		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
-		
-		g.setColor(Color.black);
-		g.fillRect(20, 20, 40, 40);
+//		
+//		g.setColor(Color.black);
+//		g.fillRect(20, 20, 40, 40);
         
         //squares 
         //g.drawRect(x, y, width, height);
