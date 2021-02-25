@@ -7,6 +7,7 @@ import character.builders.explorers.core.ExDirector;
 import data.Obstacles;
 import data.Position;
 import data.Size;
+import treatment.CharacterTreatment;
 
 public class TestObstacles {
 
@@ -17,15 +18,21 @@ public class TestObstacles {
 		switch(name) {
 		case "water":
 			//prendre de l'eau et comm avec se potes
+			//YOHAN 
 			break;
-		case "mude":
+		case "mud":
 			//ralentir si on a pas les bottes
+			if (e.getEquipment().isEmpty()) {
+				//utiliser la méthode d'alex avec le  calcul moins grand
+			}
 			break;
 		case "tree":
 			//changer de direction
+			CharacterTreatment.changeDir(e);
 			break;
 		case "stone": 
 			//changer de direction
+			CharacterTreatment.changeDir(e);
 			break;
 		}
 		
