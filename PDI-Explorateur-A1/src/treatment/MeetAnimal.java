@@ -1,6 +1,7 @@
 package treatment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import character.*;
@@ -10,16 +11,18 @@ import character.builders.WildAnimal.core.WaBuilder;
 import character.builders.WildAnimal.core.WaDirector;
 import character.builders.explorers.DoraBuilder;
 import character.builders.explorers.JoeBuilder;
+import character.builders.explorers.MikeBuilder;
 import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
+import game.Simulation;
 import tests.TestAlexandre;
 
 public class MeetAnimal{
 	
 	public static void meetAnimals(Explorer e, WildAnimals a, int simulation /*, ArrayList<Explorer> explorers */) {
 		
-		ArrayList<Explorer> explorers = TestAlexandre.explorers;
-		ArrayList<Character> characters = TestAlexandre.characters;
+		HashMap<String,Explorer> explorers = Simulation.explorers;
+		HashMap<String,Character> characters = Simulation.characters;
 		String outcome = null;
 		String action = null;
 		float gain = 0;
@@ -35,20 +38,32 @@ public class MeetAnimal{
 		
 		Random r = new Random(); 
 		float n = min + r.nextFloat() * (max - min);
-		System.out.println(n);
+		//System.out.println(n);
 		
-		if (n>=0 && n<=pf) {
-			//[0-pf]
+		switch(simulation) {
+		
+		case 0 : //MODE INTELLIGENT
+			if (n>=0 && n<=pf) {
+				//[0-pf]
+				action= "fight";
+			}else if(n>pf && n<=pf+pc) {
+				//]pf-pf+pc]
+				action= "call";
+			}else {
+				//]pf+pc-100]
+				action= "escape";
+			}
+			break;
+		case 1 : // MODE COMBAT
 			action= "fight";
-		}else if(n>pf && n<=pf+pc) {
-			//]pf-pf+pc]
-			action= "call";
-		}else {
-			//]pf+pc-100]
-			action= "escape";
+			break;
+		case 2 : // MODE FUITE
+			action="escape";
+			break;
 		}
+
 		
-		System.out.println(action);
+		System.out.println(action.toUpperCase());
 		
 		switch(action) {
 		case "fight":
@@ -60,15 +75,15 @@ public class MeetAnimal{
 				//fermer le thread
 				// e.setDead(true)
 				e.setDead(true);
-				explorers.remove(e);
-				characters.remove(e);
+				explorers.remove(e.getName());
+				characters.remove(e.getName());
 				switch(simulation) {
-				case 1:
+				case 0:
 					//lower probaFight for every explorers
-					for (Explorer explorer : explorers){
+					for (Explorer explorer : explorers.values()){
 						gain = explorer.getProbaFight()*(float)10/100;
-						System.out.println(gain);
-						System.out.println(gain/2);
+//						System.out.println(gain);
+//						System.out.println(gain/2);
 						if (explorer.getProbaFight()-gain>=0 && explorer.getProbaCall()+(gain/2)<=100 && explorer.getProbaCall()+(gain/2)<=100){
 							System.out.println("Je suis "+explorer.getName()+" et j'avais une proba de combat de : "+explorer.getProbaFight());
 							System.out.println("Je suis "+explorer.getName()+" et j'avais une proba de fuite de : "+explorer.getProbaEscape());
@@ -82,9 +97,9 @@ public class MeetAnimal{
 						}
 					}
 					break;
-				case 2:
+				case 1:
 					//higher attackPoint for every explorers
-					for (Explorer explorer : explorers) {
+					for (Explorer explorer : explorers.values()) {
 						gain2 = explorer.getAttackPoint()*(int)20/100;
 						System.out.println(gain2);
 						if (explorer.getAttackPoint()+gain2<=explorer.getAttackPointMax()) {
@@ -94,9 +109,9 @@ public class MeetAnimal{
 						}
 					}
 					break;
-				case 3:
+				case 2:
 					//higher vision for every explorers
-					for (Explorer explorer : explorers) {
+					for (Explorer explorer : explorers.values()) {
 						System.out.println("Je suis "+explorer.getName()+" et j'avais une vision de : "+explorer.getAura()+"\n");
 						explorer.setAura(explorer.getAura()+2);
 						System.out.println("Je suis "+explorer.getName()+" et j'ai une vision de : "+explorer.getAura()+"\n");
@@ -107,13 +122,13 @@ public class MeetAnimal{
 			break;
 		case "call":
 			//comm : call a friend
-			System.out.println("Salut besoin d'aide le plus proche peut venir m'aider ? Ma position : "+
+			System.out.println(e.getName() + " : Besoin d'aide, ma position : "+
 								e.getPosition().getX()+", "+e.getPosition().getY()+"\n");
 			//arrivée autre explorateur
 			break;
 		case "escape":
 			//go away for n seconds
-			System.out.println("un animal sauvage.. JE FUIS");
+			System.out.println(e.getName() + " :Un animal sauvage.. JE FUIS");
 			escapeDir(e,e.getDir());
 
 			e.setEscaping(true);
@@ -151,8 +166,8 @@ public class MeetAnimal{
 			}
 			e.setLifePoint(lpE);
 			a.setLifePoint(lpA);
-			System.out.println(lpE);
-			System.out.println(lpA);
+//			System.out.println(lpE);
+//			System.out.println(lpA);
 		}
 		
 		//outcome of the fight
@@ -160,17 +175,17 @@ public class MeetAnimal{
 		if(lpE==0 && lpA==0) {
 			//explo and animal are dead
 			//comm
-			System.out.println("je suis "+e.getName()+" et je vais mourir et j'ai tué un animal\n");
+			System.out.println("Je suis "+e.getName()+" et je vais mourir et j'ai tue un animal\n");
 			outcome = "deathExplo";
 		}
 		else if(lpA==0) {
 			//animal is dead
-			System.out.println("je suis "+e.getName()+" et j'ai tué un animal il me reste : "+e.getLifePoint()+" point de vie\n");
+			System.out.println("Je suis "+e.getName()+" et j'ai tue un animal il me reste : "+e.getLifePoint()+" point de vie\n");
 			outcome = "deathAnimal";
 		}
 		else if(lpE==0) {
 			//explo is dead
-			System.out.println("je suis "+e.getName()+" et je vais mourir\n");
+			System.out.println("Je suis "+e.getName()+" et je vais mourir\n");
 			outcome = "deathExplo";
 		}
 		
@@ -220,6 +235,11 @@ public class MeetAnimal{
 		Explorer e3 = creatorE.getExplorer() ;
 		e3.setName("Dora2");
 		
+		ExBuilder bMike = new MikeBuilder();
+		creatorE.setExplorerBuilder(bMike);
+		creatorE.BuildExplorer();
+		Explorer e4 = creatorE.getExplorer() ;
+		
 		System.out.println("--------DORA 1--------\nattack point : "+e.getAttackPoint()+"\nlife point : "+e.getLifePoint()+"\n");
 		System.out.println("--------JOE--------\nattack point : "+e2.getAttackPoint()+"\nlife point : "+e2.getLifePoint()+"\n");
 		System.out.println("--------DORA 2--------\nattack point : "+e3.getAttackPoint()+"\nlife point : "+e3.getLifePoint()+"\n");
@@ -238,11 +258,12 @@ public class MeetAnimal{
 		explorers.add(e);
 		explorers.add(e2);
 		explorers.add(e3);
+		explorers.add(e4);
 		
 		//strategy 	1 : smart
 		//			2 : fight
 		//			3 : escape
-		//meetAnimals(e, a,2, explorers);
+		meetAnimals(e4, a,2);
 	}
 	
 }

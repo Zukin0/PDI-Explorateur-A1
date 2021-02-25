@@ -1,6 +1,7 @@
 package treatment;
 import character.Character;
 import data.Position;
+import ihm.GamePanel;
 
 public class CharacterTreatment {
 	
@@ -26,7 +27,7 @@ public class CharacterTreatment {
 		break;
 		}
 		a.setDir(dir);
-		System.out.println("\nCHANGED DIRECTION => " + a.getName() + " : " + str + "\n");
+		//System.out.println("\nCHANGED DIRECTION => " + a.getName() + " : " + str + "\n");
 	}
 	
 	public static void move(Character a) {
@@ -52,13 +53,13 @@ public class CharacterTreatment {
 		case 3 : posG.setX(posX-speed);
 		break;
 		}
-		System.out.println(a.getName() + " : " +  posG.toString());
+		//System.out.println(a.getName() + " : " +  posG.toString());
 	}
 	
 	public static Position predictPos(Character c) {
 		Position pos = c.getPosition();
 		int speed = c.getSpeed();
-		int futurX = 0,futurY = 0;
+		int futurX = pos.getX(),futurY = pos.getY();
 		switch(c.getDir()) {
 		
 		//Up
@@ -92,6 +93,16 @@ public class CharacterTreatment {
 				return true;
 			}
 			return false;
+	}
+	
+	public static boolean isBorderWindow(Position pChar, int w, int h) {
+		int xChar = pChar.getX();
+		int yChar = pChar.getY();
+		
+		if(xChar+w >= GamePanel.WIDTH || xChar < 0 || yChar+h >= GamePanel.HEIGHT || yChar < 0) {
+			return true;
+		}
+		return false;
 	}
 	
 	public void suppCharacter(Character c) {
