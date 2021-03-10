@@ -4,7 +4,12 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import game.Simulation;
 import game.SimulationUtility;
@@ -74,7 +79,14 @@ public class SimulationState extends GameState {
 				g.drawRect(wa.getPosTerr().getX(),wa.getPosTerr().getY(), wa.getTerritorySize().getHeight(), wa.getTerritorySize().getHeight());
 				g.setColor(Color.red);
 			}
-			g.fillRect(c.getPosition().getX(), c.getPosition().getY(), c.getSize().getWidth(), c.getSize().getHeight());
+			//g.fillRect(c.getPosition().getX(), c.getPosition().getY(), c.getSize().getWidth(), c.getSize().getHeight());
+			try {
+				Image sprite = ImageIO.read(new File("ressources/dora.png"));
+				g.drawImage(sprite , c.getPosition().getX() , c.getPosition().getY(), null);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 		}
 	}
 
