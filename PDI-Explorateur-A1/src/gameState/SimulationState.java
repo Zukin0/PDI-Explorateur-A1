@@ -78,36 +78,11 @@ public class SimulationState extends GameState implements ImageObserver{
 		//g.setFont(titleFont);
 		//g.drawString("SIMULATION",20, 60);
 		
-		//map
+///////////////////////////MAP////////////////////////////////////////////////
 		g.setColor(Color.black);
 		g.fillRect(3,3, 1040, 744);
 		tilemap.draw(g);
 		
-		//infos de la simulation
-		g.setColor(Color.black);
-		g.fillRect(1050 , 3, 245, 744);
-		g.setColor(BEIGE);
-		g.fillRect(1052 , 5, 241, 740);
-		g.setColor(Color.black);
-        g.setFont(categoryFont);
-        g.drawString("VOTRE SIMULATION",1060, 30);
-        try {
-  			heart = ImageIO.read(new File("ressources/icone_coeur.png"));
-  			time = ImageIO.read(new File("ressources/icone_temps.png"));
-  			treasure = ImageIO.read(new File("ressources/tresor.png"));
-  		} catch (IOException e) {
-  			System.out.println("no image");
-  			e.printStackTrace();
-  		}
-        g.drawImage(time, 1050, 40, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 130, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 220, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 310, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 400, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 490, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 580, 90, 80, (ImageObserver)this);
-        g.drawImage(treasure, 1060, 660, 80, 80, (ImageObserver)this);
-	
 		for(Character c : sim.characters.values()) {
 			if(SimulationUtility.isInstance(c, Explorer.class)) {
 				String name = c.getName().substring(0,c.getName().length()-1);
@@ -146,6 +121,31 @@ public class SimulationState extends GameState implements ImageObserver{
 			}
 			//g.fillRect(c.getPosition().getX(), c.getPosition().getX(), c.getSize().getWidth(), c.getSize().getHeight());
 		}
+		
+//////////////////////CADRE BLANC////////////////////////////////////////////
+		g.setColor(Color.black);
+		g.fillRect(1050 , 3, 245, 744);
+		g.setColor(BEIGE);
+		g.fillRect(1052 , 5, 241, 740);
+		g.setColor(Color.black);
+        g.setFont(categoryFont);
+        g.drawString("VOTRE SIMULATION",1060, 30);
+        try {
+  			heart = ImageIO.read(new File("ressources/icone_coeur.png"));
+  			time = ImageIO.read(new File("ressources/icone_temps.png"));
+  			treasure = ImageIO.read(new File("ressources/tresor.png"));
+  		} catch (IOException e) {
+  			System.out.println("no image");
+  			e.printStackTrace();
+  		}
+        g.drawImage(time, 1050, 40, 90, 80, (ImageObserver)this);
+        g.drawImage(heart, 1050, 130, 90, 80, (ImageObserver)this);
+        g.drawImage(heart, 1050, 220, 90, 80, (ImageObserver)this);
+        g.drawImage(heart, 1050, 310, 90, 80, (ImageObserver)this);
+        g.drawImage(heart, 1050, 400, 90, 80, (ImageObserver)this);
+        g.drawImage(heart, 1050, 490, 90, 80, (ImageObserver)this);
+        g.drawImage(heart, 1050, 580, 90, 80, (ImageObserver)this);
+        g.drawImage(treasure, 1060, 660, 80, 80, (ImageObserver)this);
 	}
 
 	public void keyPressed(int k) {}
