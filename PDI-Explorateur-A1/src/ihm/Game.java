@@ -23,9 +23,7 @@ public class Game /*extends Canvas implements Runnable*/ {
 		frame.add(new GamePanel(), BorderLayout.CENTER);
 		frame.pack();
 		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-		
+		frame.setVisible(true); 
 		
 	}
-	
 }
