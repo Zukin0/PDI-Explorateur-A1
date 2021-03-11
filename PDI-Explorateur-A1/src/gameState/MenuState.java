@@ -15,11 +15,19 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import game.Simulation;
 import ihm.Background;
 import ihm.Game;
 import ihm.GamePanel;
 
 public class MenuState extends GameState implements ImageObserver {
+	
+	private int nbMike = 2;
+	private int nbRemy = 2;
+	private int nbJoe = 2;
+	private int nbDora = 2;
+	private Simulation sim;
+	private int tabEx[] = {nbDora, nbJoe, nbRemy, nbMike};
 	
 	//création des couleurs nécessaires à l'interface
 	private Color BEIGE = new Color(255,250,240);

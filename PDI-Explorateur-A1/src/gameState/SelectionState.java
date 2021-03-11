@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -23,20 +25,53 @@ import ihm.GamePanel;
 
 public class SelectionState extends GameState implements ImageObserver {
 	
-	private int nbMinExplorateurs = 0;
-	private int nbMaxExplorateurs = 0;
+	private boolean machette = false;
+	
+	private int nbMinExplorateurs = 3;
+	private int nbMaxExplorateurs = 6;
 	private int nbExplorateurs = 0;
+	private int nbTreasures = 0;
+	private int nbAnimals = 0;
 	
 	private int nbMike = 0;
 	private int nbRemy = 0;
 	private int nbJoe = 0;
 	private int nbDora = 0;
+	
 	private int difficultySelected = 3;
 	private int strategySelected = 3;
+	
+	private int priceExplorers = 0;
+	private int priceWeapon = 0;
+	private int priceBoots = 0;
+	private int priceBinoculars = 0;
+	
+	
+	/* Character Selection for Equipment choice */
+	private boolean isSelectedDora = false;
+	private boolean isSelectedMike = false;
+	private boolean isSelectedRemy = false;
+	private boolean isSelectedJoe = false;
+	
+	private String doraEquipment = "";
+	private String mikeEquipment = "";
+	private String remyEquipment = "";
+	private String joeEquipment = "";
+	
+	private int isSelectedTab = -1;
+	
+	private int indice = 0;
+	private String[] tabExplorers = {" ", " ", " ", " ", " ", " "};
+	
+	private ArrayList<String> listExplorers;
+	/* List equipment for each explorer */
+	private HashMap<String,ArrayList<String>> exEquipements; 
 	
 	private Simulation sim;
 	
 	private int money = 0; 
+	
+	private boolean alreadyEquiped = false;
 	
 	/*
 	 * Autres couleurs :
@@ -80,16 +115,21 @@ public class SelectionState extends GameState implements ImageObserver {
 	
 	public SelectionState(GameStateManager gsm) {
 		super(gsm);
+		init();
 	}
 
 
-	public void init() {}
+	public void init() {
+		listExplorers = new ArrayList<String>();
+		exEquipements = new HashMap<String,ArrayList<String>>();
+	}
 	
 	public void tick() {}
 	
 	//prÃ©sentation de la fenÃªtre
 	public void draw(Graphics g) {
 		
+	////////////////////////////TOP OF THE FRAME/////////////////////////////////////
 		//background
 		g.setColor(BEIGE);
 		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
@@ -111,10 +151,10 @@ public class SelectionState extends GameState implements ImageObserver {
   			System.out.println("no image");
   			e.printStackTrace();
   		}
-        g.drawImage(imageMoney, 1130, 0, 110, 110, (ImageObserver) this);
+        g.drawImage(imageMoney, 1140, 0, 110, 110, (ImageObserver) this);
         
+////////////////////////////DIFFICULTY/////////////////////////////////////
         //title difficulty
-        //g.drawOval(x, y, width, height);
         g.setColor(LIGHT_ORANGE);
         g.fillOval(50, 100, 250, 80);
         g.setColor(Color.black);
@@ -132,6 +172,34 @@ public class SelectionState extends GameState implements ImageObserver {
         g.drawString("MOYEN",80, 290);
         g.drawString("DIFFICILE",80,350);
         
+        switch(difficultySelected) {
+        case 0 :
+        	//easy
+        	g.setColor(Color.black);
+    		g.fillRect(50, 213, 20, 20);
+    		money = 100;
+    		nbTreasures = 2;
+    		nbAnimals = 3;
+        	break;
+        case 1 :
+        	//medium
+        	g.setColor(Color.black);
+        	g.fillRect(50, 273, 20, 20);
+        	money = 110;
+        	nbTreasures = 4;
+    		nbAnimals = 6;
+        	break;
+        case 2 :
+        	//hard
+        	g.setColor(Color.black);
+        	g.fillRect(50, 333, 20, 20);
+        	money = 120;
+        	nbTreasures = 8;
+    		nbAnimals = 9;
+        	break;
+        }
+        
+////////////////////////////STRATEGY/////////////////////////////////////
         //title strategy
         g.setColor(PURPLE);
         g.fillOval(50, 420, 250, 80);
@@ -150,6 +218,37 @@ public class SelectionState extends GameState implements ImageObserver {
         g.drawString("COMBAT",80, 610);
         g.drawString("FUITE",80,670);
         
+        switch(strategySelected) {
+        case 0 :
+        	//intelligent
+        	g.setColor(Color.black);
+        	g.fillRect(50, 533, 20, 20);
+        	priceWeapon = 10;
+        	priceBinoculars = 20;
+        	priceBoots = 10;
+        	priceExplorers = 20;
+        	break;
+        case 1 :
+        	//combat
+        	g.setColor(Color.black);
+        	g.fillRect(50, 593, 20, 20);
+        	priceWeapon = 20;
+        	priceBinoculars = 10;
+        	priceBoots = 10;
+        	priceExplorers = 10;
+        	break;
+        case 2 :
+        	//fuite
+        	g.setColor(Color.black);
+        	g.fillRect(50, 653, 20, 20);
+        	priceWeapon = 10;
+        	priceBinoculars = 10;
+        	priceBoots = 20;
+        	priceExplorers = 10;
+        	break;
+        }
+        
+////////////////////////////EXPLORERS/////////////////////////////////////
         //title explorers
         g.setColor(LIGHT_GREEN);
         g.fillOval(440, 100, 340, 80);
@@ -185,24 +284,25 @@ public class SelectionState extends GameState implements ImageObserver {
         g.setColor(Color.black);
         g.setFont(infosFont);
         g.drawString("Specialite : attaque",350,385);
-        g.drawString("Prix : ?",350,410);
+        g.drawString("Prix : "+priceExplorers+" $",350,410);
         g.drawString("Selection : ",350,435);
         //remy
         g.setFont(infosFont);
         g.drawString("Specialite : vitesse",570,385);
-        g.drawString("Prix : ?",570,410);
+        g.drawString("Prix : "+priceExplorers+" $",570,410);
         g.drawString("Selection : ",570,435);
         //joe
         g.setFont(infosFont);
         g.drawString("Specialite : vie",770,385);
-        g.drawString("Prix : ?",770,410);
+        g.drawString("Prix : "+priceExplorers+" $",770,410);
         g.drawString("Selection : ",770,435);
         //dora
         g.setFont(infosFont);
         g.drawString("Specialite : equipements",915,385);
-        g.drawString("Prix : ?",915,410);
+        g.drawString("Prix : "+priceExplorers+" $",915,410);
         g.drawString("Selection : ",915,435);
         
+////////////////////////////EQUIPMENTS/////////////////////////////////////
         //title equipements
         g.setColor(LIGHT_BLUE);
         g.fillOval(440, 460, 310, 80);
@@ -212,16 +312,16 @@ public class SelectionState extends GameState implements ImageObserver {
         
         //images equipments
   		try {
-  			weapon = ImageIO.read(new File("ressources/weapon.png"));
-  			boots = ImageIO.read(new File("ressources/boots.png"));
-  			binoculars = ImageIO.read(new File("ressources/binoculars.png"));
+  			weapon = ImageIO.read(new File("ressources/weapon-.png"));
+  			boots = ImageIO.read(new File("ressources/boots-.png"));
+  			binoculars = ImageIO.read(new File("ressources/binoculars-.png"));
   		} catch (IOException e) {
   			System.out.println("no image");
   			e.printStackTrace();
   		}
-        g.drawImage(weapon,350, 550, 100, 100, (ImageObserver) this);
-        g.drawImage(binoculars, 550, 550, 100, 100, (ImageObserver) this);
-        g.drawImage(boots, 750, 550, 100, 100, (ImageObserver) this);
+        g.drawImage(weapon,330, 530, 140, 140, (ImageObserver) this);
+        g.drawImage(binoculars, 530, 530, 140, 140, (ImageObserver) this);
+        g.drawImage(boots, 730, 520, 140, 140, (ImageObserver) this);
         
         //text equipments
         g.setColor(DARK_BEIGE);
@@ -232,18 +332,18 @@ public class SelectionState extends GameState implements ImageObserver {
         //weapon
         g.setColor(Color.black);
         g.setFont(infosFont);
-        g.drawString("Specialite : attaque",330,700);
-        g.drawString("Prix : ?",330,725);
+        g.drawString("Apporte des points d'attaque",330,700);
+        g.drawString("Prix : "+priceWeapon+" $",330,725);
         //binoculars
         g.setFont(infosFont);
-        g.drawString("Specialite : vitesse",550,700);
-        g.drawString("Prix : ?",550,725);
+        g.drawString("Allonge la vision",550,700);
+        g.drawString("Prix : "+priceBinoculars+" $",550,725);
         //boots
         g.setFont(infosFont);
-        g.drawString("Specialite : vie",750,700);
-        g.drawString("Prix : ?",750,725);
+        g.drawString("EmpÃªche l'ensevelissement",750,700);
+        g.drawString("Prix : "+priceBoots+" $",750,725);
         
-        //White board
+////////////////////////////WHITE BOARD/////////////////////////////////////
         g.setColor(Color.black);
         g.fillRect(1100, 145, 180, 467);
         g.setColor(Color.white);
@@ -252,20 +352,22 @@ public class SelectionState extends GameState implements ImageObserver {
 		g.setFont(textFont);
         g.drawString("EQUIPEMENTS",1120, 178);
         g.setColor(Color.black);
-        //y + 30
-        g.drawString("Mike : ",1120, 208);
-        g.drawString("- ",1120, 238);
-        g.drawString(" ",1120, 268);
-        g.drawString("Remy : ",1120, 298);
-        g.drawString("- ",1120, 328);
-        g.drawString(" ",1120, 358);
-        g.drawString("Joe : ",1120, 388);
-        g.drawString("- ",1120, 418);
-        g.drawString(" ",1120, 448);
-        g.drawString("Dora : ",1120, 478);
-        g.drawString("- ",1120, 508);
-        g.drawString("- ",1120, 538);
-        g.drawString(" ",1120, 568);
+        
+        /* Draw Explorer's names and change color when selected */
+        for(int i = 0; i<listExplorers.size(); i++) {
+        	String name = listExplorers.get(i);
+        	/* Names start at height 238 and are 60 pixels separeted */
+        	if(isSelectedTab == i) { // If a character is selected
+        		g.setColor(Color.red);
+        		g.drawString(name,1120, 238 + 60*i);
+
+        	}
+        	else {
+            	g.drawString(name,1120, 238 + 60*i);
+        	}
+        	g.setColor(Color.black);
+
+        }
         
         //bouton
         g.setColor(Color.black);
@@ -276,51 +378,6 @@ public class SelectionState extends GameState implements ImageObserver {
 		g.setFont(buttonFont);
         g.drawString("Simulation",1110, 688);
         
-        switch(difficultySelected) {
-        case 0 :
-        	//easy
-        	g.setColor(Color.black);
-    		g.fillRect(50, 213, 20, 20);
-    		nbMinExplorateurs = 2;
-    		nbMaxExplorateurs = 8;
-    		money = 10;
-        	break;
-        case 1 :
-        	//medium
-        	g.setColor(Color.black);
-        	g.fillRect(50, 273, 20, 20);
-        	nbMinExplorateurs = 2;
-        	nbMaxExplorateurs = 8;
-        	money = 10;
-        	break;
-        case 2 :
-        	//hard
-        	g.setColor(Color.black);
-        	g.fillRect(50, 333, 20, 20);
-        	nbMinExplorateurs = 2;
-        	nbMaxExplorateurs = 8;
-        	money = 10;
-        	break;
-        }
-        
-        switch(strategySelected) {
-        case 0 :
-        	//intelligent
-        	g.setColor(Color.black);
-        	g.fillRect(50, 533, 20, 20);
-        	break;
-        case 1 :
-        	//combat
-        	g.setColor(Color.black);
-        	g.fillRect(50, 593, 20, 20);
-        	break;
-        case 2 :
-        	//fuite
-        	g.setColor(Color.black);
-        	g.fillRect(50, 653, 20, 20);
-        	break;
-        }
-        
         if (nbMike > 0) {
         	g.setFont(textFont);
         	g.setColor(GREEN);
@@ -328,6 +385,9 @@ public class SelectionState extends GameState implements ImageObserver {
             g.setColor(Color.black);
             g.setFont(infosFont);
             g.drawString("Selection : "+nbMike,350,435);
+            isSelectedMike = true;
+        } else if (nbMike <=0){
+        	isSelectedMike = false;
         }
         if (nbRemy > 0) {
         	g.setFont(textFont);
@@ -336,6 +396,9 @@ public class SelectionState extends GameState implements ImageObserver {
         	g.setColor(Color.black);
             g.setFont(infosFont);
             g.drawString("Selection : "+nbRemy,570,435);
+            isSelectedRemy = true;
+        } else if (nbRemy <= 0){
+        	isSelectedRemy = false;
         }
         if (nbJoe > 0) {
         	g.setFont(textFont);
@@ -344,6 +407,9 @@ public class SelectionState extends GameState implements ImageObserver {
         	g.setColor(Color.black);
             g.setFont(infosFont);
             g.drawString("Selection : "+nbJoe,770,435);
+            isSelectedJoe = true;
+        } else if (nbJoe <= 0) {
+        	isSelectedJoe = false;
         }
         if (nbDora > 0) {
         	g.setFont(textFont);
@@ -352,6 +418,9 @@ public class SelectionState extends GameState implements ImageObserver {
         	g.setColor(Color.black);
             g.setFont(infosFont);
             g.drawString("Selection : "+nbDora,915,435);
+            isSelectedDora = true;
+        } else if (nbDora <= 0) {
+        	isSelectedDora = false;
         }
         
 	}
@@ -364,8 +433,9 @@ public class SelectionState extends GameState implements ImageObserver {
 
 
 	public void mousePressed(MouseEvent m) {
-		//System.out.println(m.getX() + "," + m.getY() + "\n");
-		//difficulte
+		System.out.println("Mouse position : " + m.getX() + "," + m.getY() + "\n");
+		
+////////////////////////////DIFFICULTY/////////////////////////////////////
 		if ((m.getX()>= 50 && m.getX()<= 70 && m.getY()>=213 && m.getY()<= 233)) {
 			System.out.println("DIFFICULTE FACILE CHOISIE");
 			difficultySelected = 0;
@@ -379,7 +449,7 @@ public class SelectionState extends GameState implements ImageObserver {
 			difficultySelected = 2;
 		}
 		
-		//strategie
+////////////////////////////STRATEGY/////////////////////////////////////
 		else if ((m.getX()>= 50 && m.getX()<= 70 && m.getY()>=535 && m.getY()<= 555)) {
 			System.out.println("STRATEGIE INTELLIGENTE CHOISIE");
 			strategySelected = 0;
@@ -393,89 +463,234 @@ public class SelectionState extends GameState implements ImageObserver {
 			strategySelected = 2;
 		}
 		
-		//explorateur
-		else if ((m.getX()>= 445 && m.getX()<= 475 && m.getY()>=250 && m.getY()<=275)) {
-			System.out.println("MIKE CHOISI");
-			nbMike ++;
-			nbExplorateurs ++;
-			if (nbExplorateurs > nbMaxExplorateurs) {
-				nbExplorateurs --;
-				nbMike--;
+////////////////////////////EXPLORERS/////////////////////////////////////
+
+		else if (m.getX()>= 445 && m.getX()<= 475 && m.getY()>=250 && m.getY()<=275) { // Ajout  Mike
+			if (nbExplorateurs+1 <= nbMaxExplorateurs) {
+				System.out.println("Add Mike");
+				nbMike++;
+				nbExplorateurs++;
+				String name = "Mike" + nbMike;
+				listExplorers.add(name);
+				exEquipements.put(name, new ArrayList<String>());
 			}
 		}
-		else if ((m.getX()>= 365 && m.getX()<= 395 && m.getY()>=250 && m.getY()<=275)) {
-			System.out.println("MIKE CHOISI");
-			nbMike --;
-			nbExplorateurs --;
-			if (nbMike<0) {
-				nbMike = 0;
+		else if (m.getX()>= 365 && m.getX()<= 395 && m.getY()>=250 && m.getY()<=275 && isSelectedMike == true) {
+			System.out.println("Supp last Mike added");
+			String name = "Mike" + nbMike;
+			listExplorers.remove(name);
+			exEquipements.remove(name);
+			nbMike--;
+			nbExplorateurs--;
+		}
+		else if (m.getX()>= 650 && m.getX()<= 685 && m.getY()>=250 && m.getY()<= 275) {
+			if (nbExplorateurs+1 <= nbMaxExplorateurs) {
+				System.out.println("Add Remy");
+				nbRemy++;
+				nbExplorateurs++;
+				String name = "Remy" + nbRemy;
+				listExplorers.add(name);
+				exEquipements.put(name, new ArrayList<String>());
 			}
 		}
-		else if ((m.getX()>= 650 && m.getX()<= 685 && m.getY()>=250 && m.getY()<= 275)) {
-			System.out.println("REMY CHOISI");
-			nbRemy ++;
-			nbExplorateurs ++;
-			if (nbExplorateurs > nbMaxExplorateurs) {
-				nbExplorateurs --;
-				nbRemy--;
+		else if (m.getX()>= 565 && m.getX()<= 595 && m.getY()>=250 && m.getY()<= 280 && isSelectedRemy == true) {
+			System.out.println("Supp last Remy added");
+			String name = "Remy" + nbRemy;
+			listExplorers.remove(name);
+			exEquipements.remove(name);
+			nbRemy--;
+			nbExplorateurs--;
+		}
+		else if (m.getX()>= 860 && m.getX()<= 895 && m.getY()>=255 && m.getY()<= 280) {
+			if (nbExplorateurs+1 <= nbMaxExplorateurs) {
+				System.out.println("Add Joe");
+				nbJoe++;
+				nbExplorateurs++;
+				String name = "Joe" + nbJoe;
+				listExplorers.add(name);
+				exEquipements.put(name, new ArrayList<String>());
 			}
 		}
-		else if ((m.getX()>= 565 && m.getX()<= 595 && m.getY()>=250 && m.getY()<= 280)) {
-			System.out.println("REMY CHOISI");
-			nbRemy --;
-			nbExplorateurs --;
-			if (nbRemy<0) {
-				nbRemy = 0;
+		else if (m.getX()>= 755 && m.getX()<= 790 && m.getY()>=255 && m.getY()<= 280 && isSelectedJoe == true) {
+			System.out.println("Supp last Joe added");
+			String name = "Joe" + nbJoe;
+			listExplorers.remove(name);
+			exEquipements.remove(name);
+			nbJoe--;
+			nbExplorateurs--;
+		}
+		else if (m.getX()>= 1025 && m.getX()<= 1060 && m.getY()>=250 && m.getY()<= 280) {
+			if (nbExplorateurs+1 <= nbMaxExplorateurs) {
+				System.out.println("Add Dora");
+				nbDora++;
+				nbExplorateurs++;
+				String name = "Dora" + nbDora;
+				listExplorers.add(name);
+				exEquipements.put(name, new ArrayList<String>());
 			}
 		}
-		else if ((m.getX()>= 860 && m.getX()<= 895 && m.getY()>=255 && m.getY()<= 280)) {
-			System.out.println("JOE CHOISI");
-			nbJoe ++;
-			nbExplorateurs ++;
-			if (nbExplorateurs > nbMaxExplorateurs) {
-				nbExplorateurs --;
-				nbJoe--;
+		else if (m.getX()>= 840 && m.getX()<= 970 && m.getY()>=250 && m.getY()<= 280 && isSelectedDora == true) {
+			System.out.println("Supp last Dora added");
+			String name = "Dora" + nbDora;
+			listExplorers.remove(name);
+			exEquipements.remove(name);
+			nbDora--;
+			nbExplorateurs--;
+			
+		}
+		
+////////////////////////////EQUIPMENTS/////////////////////////////////////
+		/* Machete */
+		/* Add */
+		else if (m.getX()>= 440 && m.getX()<= 465 && m.getY()>=580 && m.getY()<= 610) {
+			if (isSelectedTab != -1) {
+				int maxEquipment;
+				String name = listExplorers.get(isSelectedTab);
+				ArrayList<String> equipmentTmp = exEquipements.get(name);
+				if(name.contains("Dora")) {
+					maxEquipment = 2;
+				} else {
+					maxEquipment = 1;
+				}
+				if(equipmentTmp.size() < maxEquipment) {
+					/* Check if equipment not already taken */
+					for(String equipment : equipmentTmp) {
+						if(equipment.equals("Machetes")) {
+							alreadyEquiped = true;
+						}
+					}
+					if(alreadyEquiped) {
+						System.out.println("Objet déjà pris");
+						alreadyEquiped = false;
+					}
+					else {
+						System.out.println("Add Machetes");
+						equipmentTmp.add("Machetes");
+						System.out.println("Machetes pour "+ name);
+					}
+				}
+				else {
+					System.out.println("Inventaire Plein");
+				}
 			}
 		}
-		else if ((m.getX()>= 755 && m.getX()<= 790 && m.getY()>=255 && m.getY()<= 280)) {
-			System.out.println("JOE CHOISI");
-			nbJoe --;
-			nbExplorateurs --;
-			if (nbJoe<0) {
-				nbJoe = 0;
-			}
-		}
-		else if ((m.getX()>= 1025 && m.getX()<= 1060 && m.getY()>=250 && m.getY()<= 280)) {
-			System.out.println("DORA CHOISIE");
-			nbDora ++;
-			nbExplorateurs ++;
-			if (nbExplorateurs > nbMaxExplorateurs) {
-				nbExplorateurs --;
-				nbDora--;
-			}
-		}
-		else if ((m.getX()>= 840 && m.getX()<= 970 && m.getY()>=250 && m.getY()<= 280)) {
-			System.out.println("DORA CHOISIE");
-			nbDora --;
-			nbExplorateurs --;
-			if (nbDora<0) {
-				nbDora = 0;
+		/* Remove */
+		else if (m.getX()>= 338 && m.getX()<= 363 && m.getY()>=578 && m.getY()<= 610) {
+			if (isSelectedTab != -1) {
+				System.out.println("Remove Machettes");
+				String name = listExplorers.get(isSelectedTab);
+				ArrayList<String> equipmentTmp = exEquipements.get(name);
+				equipmentTmp.remove("Machetes");
 			}
 		}
 		
-		//equipement
-		else if ((m.getX()>= 330 && m.getX()<= 465 && m.getY()>=550 && m.getY()<= 635)) {
-			System.out.println("MACHETTES CHOISIES");
+		/* Jumelles - Binoculars */
+		/* Add */
+		else if (m.getX()>= 640 && m.getX()<= 665 && m.getY()>=576 && m.getY()<= 609) {
+			System.out.println("Add Binoculars");
+			if (isSelectedTab != -1) {
+				int maxEquipment;
+				String name = listExplorers.get(isSelectedTab);
+				ArrayList<String> equipmentTmp = exEquipements.get(name);
+				if(name.contains("Dora")) {
+					maxEquipment = 2;
+				} else {
+					maxEquipment = 1;
+				}
+				if(equipmentTmp.size() < maxEquipment) {
+					/* Check if equipment not already taken */
+					for(String equipment : equipmentTmp) {
+						if(equipment.equals("Jumelles")) {
+							alreadyEquiped = true;
+						}
+					}
+					if(alreadyEquiped) {
+						System.out.println("Objet déjà pris");
+						alreadyEquiped = false;
+					}
+					else {
+						equipmentTmp.add("Jumelles");
+						System.out.println("Jumelles pour "+ name);
+					}
+				}
+				else {
+					System.out.println("Inventaire Plein");
+				}
+			}
 		}
-		else if ((m.getX()>= 545 && m.getX()<= 650 && m.getY()>=560 && m.getY()<= 630)) {
-			System.out.println("JUMELLES CHOISIES");
-		}
-		else if ((m.getX()>= 750 && m.getX()<= 850 && m.getY()>=560 && m.getY()<= 635)) {
-			System.out.println("BOTTES CHOISIE");
+		/* Remove */
+		else if (m.getX()>= 537 && m.getX()<= 562 && m.getY()>=576 && m.getY()<= 609) {
+			if (isSelectedTab != -1) {
+				System.out.println("Remove Binoculars");
+				String name = listExplorers.get(isSelectedTab);
+				ArrayList<String> equipmentTmp = exEquipements.get(name);
+				equipmentTmp.remove("Jumelles");
+			}
 		}
 		
-		//simulation
-		else if ((m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715)) {
+		/* Boots */
+		/* Add */
+		else if (m.getX()>= 838 && m.getX()<= 862 && m.getY()>=576 && m.getY()<= 602) {
+			System.out.println("Add Boots");
+			if (isSelectedTab != -1) {
+				int maxEquipment;
+				String name = listExplorers.get(isSelectedTab);
+				ArrayList<String> equipmentTmp = exEquipements.get(name);
+				if(name.contains("Dora")) {
+					maxEquipment = 2;
+				} else {
+					maxEquipment = 1;
+				}
+				if(equipmentTmp.size() < maxEquipment) {
+					/* Check if equipment not already taken */
+					for(String equipment : equipmentTmp) {
+						if(equipment.equals("Bottes")) {
+							alreadyEquiped = true;
+						}
+					}
+					if(alreadyEquiped) {
+						System.out.println("Objet déjà pris");
+						alreadyEquiped = false;
+					}
+					else {
+						equipmentTmp.add("Bottes");
+						System.out.println("Bottes pour "+ name);
+					}
+				}
+				else {
+					System.out.println("Inventaire Plein");
+				}
+			}
+		}
+		/* Remove */
+		else if (m.getX()>= 741 && m.getX()<= 765 && m.getY()>=576 && m.getY()<= 603) {
+			if (isSelectedTab != -1) {
+				System.out.println("Remove Boots");
+				String name = listExplorers.get(isSelectedTab);
+				ArrayList<String> equipmentTmp = exEquipements.get(name);
+				equipmentTmp.remove("Bottes");
+			}
+		}
+		
+////////////////////////////ZONE BLANCHE/////////////////////////////////////
+		else if (m.getX()>= 1105 && m.getX()<= 1275 && m.getY()>=150 && m.getY()<= 607) {
+			for(int i=0; i<6; i++) {
+				/* Verify each name zone if it is selected, then "break" if true */
+				if (m.getX()>= 1115 && m.getX()<= 1180 && m.getY()>=(215+60*i) && m.getY()<= (245+60*i)) { 
+					if(isSelectedTab==i) { // Unselect explorer i 
+						System.out.println("Unselect Explorer n°"+ (i+1) + ": Index => "+ i);
+						isSelectedTab = -1;
+					}
+					else {
+						System.out.println("Select Explorer n°"+ (i+1) + ": Index => "+ i);
+						isSelectedTab=i;
+					}
+					break;
+				}
+			}
+		}		
+////////////////////////////SIMULATION/////////////////////////////////////
+		else if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715) {
 			System.out.println("DEBUT DE LA SIMULATION");
 			if ((nbExplorateurs >= nbMinExplorateurs) && (nbExplorateurs <= nbMaxExplorateurs)&&(strategySelected != 3)
 					&&(difficultySelected != 3)){
@@ -484,13 +699,15 @@ public class SelectionState extends GameState implements ImageObserver {
 				 * A FAIRE : CHANGER le chiffre difficultySelected par la classe "Difficulty"
 				 * 			Ajouter un tab d'animaux
 				 */
-				sim = new Simulation(difficultySelected, strategySelected, tabEx);
+				sim = new Simulation(difficultySelected, strategySelected, listExplorers, exEquipements);
 				SimulationState simulationState = new SimulationState(gsm);
 				gsm.gameStates.push(simulationState);
 				simulationState.setSim(sim);
 				sim.createThreads();
 			}
 		}
+		
+		System.out.println(exEquipements.toString());
 	}
 
 	public void mouseReleased(MouseEvent m) {}

@@ -39,11 +39,11 @@ public class Simulation {
 	private int difficulty;
 	public static int strategy;
 	
-	public Simulation(int difficulty, int strategy, int[] tabEx) {
+	public Simulation(int difficulty, int strategy, ArrayList<String> listExp, HashMap<String,ArrayList<String>> exEquipment) {
 		this.difficulty = difficulty;
 		this.strategy = strategy;
 		initBuilders();
-		createExplorers(tabEx);
+		createExplorers(listExp, exEquipment);
 		createAnimals(/*tabAni*/);
 		addListCharacters();
 	}
@@ -62,7 +62,7 @@ public class Simulation {
 
 	}
 	
-	public void createExplorers(int[] tabEx) {
+	public void createExplorers(ArrayList<String> listExp, HashMap<String,ArrayList<String>> exEquipment) {
 		String name = "";
 		for(int i = 0;i<4;i++) {
 			switch(i) {
@@ -85,12 +85,12 @@ public class Simulation {
 		
 			}
 			System.out.println(name);
-			for(int j = 1;j<=tabEx[i]; j++) {
-				creator.BuildExplorer();
-				Explorer e = creator.getExplorer();
-				e.setName(name + j);
-				explorers.put(e.getName(),e);
-			}
+//			for(int j = 1;j<=tabEx[i]; j++) {
+//				creator.BuildExplorer();
+//				Explorer e = creator.getExplorer();
+//				e.setName(name + j);
+//				explorers.put(e.getName(),e);
+//			}
 		}
 	}
 	
