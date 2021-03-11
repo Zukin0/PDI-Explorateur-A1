@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -23,8 +24,8 @@ public class TileMap {
 	//map
 	private static int[][] map;
 	private int tileSize=32;
-	private int nbRows;
-	private int nbCols;
+	private int nbRows ;
+	private int nbCols ;
 	private int width;
 	private int height;
 	
@@ -38,6 +39,7 @@ public class TileMap {
 	public TileMap() {}
 	
 	public void loadTiles (String s) {
+		
 		try {
 			tileset = ImageIO.read(getClass().getResource(s));
 			numTilesAcross = tileset.getWidth()/tileSize;
@@ -60,6 +62,8 @@ public class TileMap {
 	 
 	
 	public void loadMap (String s) {
+		
+	//public void loadMap (int tab[][]) {
 		/*
 		 * notre doc .txt de la map est fait tel que :
 		 * première ligne  = nombre de lignes
@@ -86,7 +90,32 @@ public class TileMap {
 				}
 			}
 			
-			System.out.println("---->"+numTilesAcross);
+			for (int row = 0; row<nbRows;row++) {
+				for (int col = 0; col<nbCols; col++) {
+					Random random = new Random();
+					int nb;
+					nb = random.nextInt(20);
+					if (map[row][col] == 7) {
+						if (nb == 0) {
+							map[row][col] = 6;
+						}
+						else if (nb == 1) {
+							map[row][col] = 13;
+						}
+						else {
+							map[row][col] = 7;
+						}
+					}
+				}
+			}
+			
+			for (int row = 0; row<nbRows;row++) {
+				for (int col = 0; col<nbCols; col++) {
+					System.out.print(map[row][col]+" ");
+				}
+				System.out.println();
+			}
+			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -115,6 +144,10 @@ public class TileMap {
 	
 	public int getHeight() {
 		return height;
+	}
+	
+	public int getPosition(int x, int y) {
+		return map[x][y];
 	}
 	
 	//ici on récupère le type de tile car pour lui il y a des tiles bloquées 
