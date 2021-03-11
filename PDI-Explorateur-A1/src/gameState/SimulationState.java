@@ -3,7 +3,6 @@ package gameState;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -21,10 +20,7 @@ import game.TileMap;
 import character.Character;
 import character.Explorer;
 import character.WildAnimals;
-import ihm.Game;
 import ihm.GamePanel;
-import thread.ExplorerThread;
-import thread.WildAnimalsThread;
 
 public class SimulationState extends GameState implements ImageObserver{
 	
@@ -36,6 +32,7 @@ public class SimulationState extends GameState implements ImageObserver{
 	
 	//création des polices
 	private Font categoryFont = new Font("Arial", Font.BOLD, 22);
+	private Font whiteBoardFont = new Font("Arial", Font.PLAIN, 20);
 	
 	private Simulation sim;
 	
@@ -56,8 +53,8 @@ public class SimulationState extends GameState implements ImageObserver{
 
 	public void init() {
 		tilemap = new TileMap();
-		tilemap.loadMap("/testMap.txt");
-		tilemap.loadTiles("/tileset28.png");
+		tilemap.loadMap("/textMap.txt");
+		tilemap.loadTiles("/tileset.png");
 		tilemap.setPosition(10, 10);
 		tilemap.setTileSize(GamePanel.HEIGHT/20);
 		
@@ -103,6 +100,24 @@ public class SimulationState extends GameState implements ImageObserver{
 				
 				case "Dora" : 
 					g.drawImage(imageDora, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
+					System.out.print("//// Dora se trouve sur : ");
+					switch (tilemap.getPosition((c.getPosition().getX())/32, (c.getPosition().getY())/32)) {
+					case 12:
+						//System.out.println(" arbres");
+						break ;
+					case 7:
+						//System.out.println(" herbe");
+						break ;
+					case 11:
+						//System.out.println(" rocher");
+						break ;
+					case 6:
+						//System.out.println(" boue");
+						break ;
+					case 13:
+						//System.out.println(" eau");
+						break ;
+					}
 					break;
 				case "Mike" : 
 					g.drawImage(imageMike, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
@@ -157,6 +172,16 @@ public class SimulationState extends GameState implements ImageObserver{
         g.drawImage(heart, 1050, 490, 90, 80, (ImageObserver)this);
         g.drawImage(heart, 1050, 580, 90, 80, (ImageObserver)this);
         g.drawImage(treasure, 1060, 660, 80, 80, (ImageObserver)this);
+        
+        g.drawString("07:04", 1170, 90);
+        g.setFont(whiteBoardFont);
+        g.drawString("Dora1 : 3/8", 1145, 175);
+        g.drawString("Dora2 : DEAD", 1145, 265);
+        g.drawString("Mike : 8/8", 1145, 355);
+        g.drawString("Joe : 8/8", 1145, 445);
+        g.drawString("Remy1 : 1/8", 1145, 535);
+        g.drawString("Remy2 : DEAD", 1145, 625);
+        g.drawString("Tresors : 0", 1145, 715);
 	}
 
 	public void keyPressed(int k) {}
