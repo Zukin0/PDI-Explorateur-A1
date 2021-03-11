@@ -4,8 +4,6 @@ public class Constant {
 	
 	public static final int SLEEP_THREAD_TIME = 1000;
 	
-	
-	
 	/*
 	 * Speed of the whole program, the smaller the value, the faster the simulation will be
 	 */
