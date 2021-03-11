@@ -188,12 +188,12 @@ public class MenuState extends GameState implements ImageObserver {
 				break;
 			case 1 : 
 				System.out.println("recap");
-				//gsm.gameStates.push(new RecapState(gsm));
-				sim = new Simulation(0, 0, tabEx);
-				SimulationState simulationState = new SimulationState(gsm);
-				gsm.gameStates.push(simulationState);
-				simulationState.setSim(sim);
-				sim.createThreads();
+//				gsm.gameStates.push(new RecapState(gsm));
+//				sim = new Simulation(0, 0, tabEx);
+//				SimulationState simulationState = new SimulationState(gsm);
+//				gsm.gameStates.push(simulationState);
+//				simulationState.setSim(sim);
+//				sim.createThreads();
 				break;
 			case 2 :
 				System.out.println("quit");

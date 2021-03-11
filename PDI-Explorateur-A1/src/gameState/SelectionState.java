@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -28,20 +30,24 @@ public class SelectionState extends GameState implements ImageObserver {
 	private int nbMinExplorateurs = 3;
 	private int nbMaxExplorateurs = 6;
 	private int nbExplorateurs = 0;
+	private int nbTreasures = 0;
+	private int nbAnimals = 0;
+	
 	private int nbMike = 0;
 	private int nbRemy = 0;
 	private int nbJoe = 0;
 	private int nbDora = 0;
+	
 	private int difficultySelected = 3;
 	private int strategySelected = 3;
-	private int nbTreasures = 0;
-	private int nbAnimals = 0;
 	
 	private int priceExplorers = 0;
 	private int priceWeapon = 0;
 	private int priceBoots = 0;
 	private int priceBinoculars = 0;
 	
+	
+	/* Character Selection for Equipment choice */
 	private boolean isSelectedDora = false;
 	private boolean isSelectedMike = false;
 	private boolean isSelectedRemy = false;
@@ -52,14 +58,20 @@ public class SelectionState extends GameState implements ImageObserver {
 	private String remyEquipment = "";
 	private String joeEquipment = "";
 	
-	private int isSelectedTab = 6;
+	private int isSelectedTab = -1;
 	
 	private int indice = 0;
 	private String[] tabExplorers = {" ", " ", " ", " ", " ", " "};
 	
+	private ArrayList<String> listExplorers;
+	/* List equipment for each explorer */
+	private HashMap<String,ArrayList<String>> exEquipements; 
+	
 	private Simulation sim;
 	
 	private int money = 0; 
+	
+	private boolean alreadyEquiped = false;
 	
 	/*
 	 * Autres couleurs :
@@ -103,10 +115,14 @@ public class SelectionState extends GameState implements ImageObserver {
 	
 	public SelectionState(GameStateManager gsm) {
 		super(gsm);
+		init();
 	}
 
 
-	public void init() {}
+	public void init() {
+		listExplorers = new ArrayList<String>();
+		exEquipements = new HashMap<String,ArrayList<String>>();
+	}
 	
 	public void tick() {}
 	
@@ -296,16 +312,16 @@ public class SelectionState extends GameState implements ImageObserver {
         
         //images equipments
   		try {
-  			weapon = ImageIO.read(new File("ressources/weapon.png"));
-  			boots = ImageIO.read(new File("ressources/boots.png"));
-  			binoculars = ImageIO.read(new File("ressources/binoculars.png"));
+  			weapon = ImageIO.read(new File("ressources/weapon-.png"));
+  			boots = ImageIO.read(new File("ressources/boots-.png"));
+  			binoculars = ImageIO.read(new File("ressources/binoculars-.png"));
   		} catch (IOException e) {
   			System.out.println("no image");
   			e.printStackTrace();
   		}
-        g.drawImage(weapon,350, 550, 100, 100, (ImageObserver) this);
-        g.drawImage(binoculars, 550, 550, 100, 100, (ImageObserver) this);
-        g.drawImage(boots, 750, 550, 100, 100, (ImageObserver) this);
+        g.drawImage(weapon,330, 530, 140, 140, (ImageObserver) this);
+        g.drawImage(binoculars, 530, 530, 140, 140, (ImageObserver) this);
+        g.drawImage(boots, 730, 520, 140, 140, (ImageObserver) this);
         
         //text equipments
         g.setColor(DARK_BEIGE);
@@ -337,74 +353,21 @@ public class SelectionState extends GameState implements ImageObserver {
         g.drawString("EQUIPEMENTS",1120, 178);
         g.setColor(Color.black);
         
-        g.drawString(tabExplorers[0],1120, 238);
-    	g.drawString(tabExplorers[1],1120, 298);
-    	g.drawString(tabExplorers[2],1120, 358);
-    	g.drawString(tabExplorers[3],1120, 418);
-    	g.drawString(tabExplorers[4],1120, 478);
-    	g.drawString(tabExplorers[5],1120, 538);
-    	
-    	switch (isSelectedTab) {
-    	case 0:
-    		g.setColor(Color.red);
-    		g.drawString(tabExplorers[0],1120, 238);
-    		g.setColor(Color.black);
-        	g.drawString(tabExplorers[1],1120, 298);
-        	g.drawString(tabExplorers[2],1120, 358);
-        	g.drawString(tabExplorers[3],1120, 418);
-        	g.drawString(tabExplorers[4],1120, 478);
-        	g.drawString(tabExplorers[5],1120, 538);
-    		break;
-    	case 1:
-    		g.drawString(tabExplorers[0],1120, 238);
-    		g.setColor(Color.red);
-        	g.drawString(tabExplorers[1],1120, 298);
+        /* Draw Explorer's names and change color when selected */
+        for(int i = 0; i<listExplorers.size(); i++) {
+        	String name = listExplorers.get(i);
+        	/* Names start at height 238 and are 60 pixels separeted */
+        	if(isSelectedTab == i) { // If a character is selected
+        		g.setColor(Color.red);
+        		g.drawString(name,1120, 238 + 60*i);
+
+        	}
+        	else {
+            	g.drawString(name,1120, 238 + 60*i);
+        	}
         	g.setColor(Color.black);
-        	g.drawString(tabExplorers[2],1120, 358);
-        	g.drawString(tabExplorers[3],1120, 418);
-        	g.drawString(tabExplorers[4],1120, 478);
-        	g.drawString(tabExplorers[5],1120, 538);
-    		break;
-    	case 2:
-    		g.drawString(tabExplorers[0],1120, 238);
-        	g.drawString(tabExplorers[1],1120, 298);
-        	g.setColor(Color.red);
-        	g.drawString(tabExplorers[2],1120, 358);
-        	g.setColor(Color.black);
-        	g.drawString(tabExplorers[3],1120, 418);
-        	g.drawString(tabExplorers[4],1120, 478);
-        	g.drawString(tabExplorers[5],1120, 538);
-    		break;
-    	case 3:
-    		g.drawString(tabExplorers[0],1120, 238);
-        	g.drawString(tabExplorers[1],1120, 298);
-        	g.drawString(tabExplorers[2],1120, 358);
-        	g.setColor(Color.red);
-        	g.drawString(tabExplorers[3],1120, 418);
-        	g.setColor(Color.black);
-        	g.drawString(tabExplorers[4],1120, 478);
-        	g.drawString(tabExplorers[5],1120, 538);
-    		break;
-    	case 4:
-    		g.drawString(tabExplorers[0],1120, 238);
-        	g.drawString(tabExplorers[1],1120, 298);
-        	g.drawString(tabExplorers[2],1120, 358);
-        	g.drawString(tabExplorers[3],1120, 418);
-        	g.setColor(Color.red);
-        	g.drawString(tabExplorers[4],1120, 478);
-        	g.setColor(Color.black);
-        	g.drawString(tabExplorers[5],1120, 538);
-    		break;
-    	case 5:
-    		g.drawString(tabExplorers[0],1120, 238);
-        	g.drawString(tabExplorers[1],1120, 298);
-        	g.drawString(tabExplorers[2],1120, 358);
-        	g.drawString(tabExplorers[3],1120, 418);
-        	g.drawString(tabExplorers[4],1120, 478);
-        	g.setColor(Color.red);
-        	g.drawString(tabExplorers[5],1120, 538);
-    		break;
-    	}
+
+        }
         
         //bouton
         g.setColor(Color.black);
@@ -470,7 +433,7 @@ public class SelectionState extends GameState implements ImageObserver {
 
 
 	public void mousePressed(MouseEvent m) {
-		System.out.println(m.getX() + "," + m.getY() + "\n");
+		System.out.println("Mouse position : " + m.getX() + "," + m.getY() + "\n");
 		
 ////////////////////////////DIFFICULTY/////////////////////////////////////
 		if ((m.getX()>= 50 && m.getX()<= 70 && m.getY()>=213 && m.getY()<= 233)) {
@@ -501,186 +464,231 @@ public class SelectionState extends GameState implements ImageObserver {
 		}
 		
 ////////////////////////////EXPLORERS/////////////////////////////////////
-		else if (m.getX()>= 445 && m.getX()<= 475 && m.getY()>=250 && m.getY()<=275) {
-			System.out.println("MIKE +");
-			nbMike ++;
-			nbExplorateurs ++;
-			if (nbExplorateurs > nbMaxExplorateurs) {
-				nbExplorateurs --;
-				nbMike--;
+
+		else if (m.getX()>= 445 && m.getX()<= 475 && m.getY()>=250 && m.getY()<=275) { // Ajout  Mike
+			if (nbExplorateurs+1 <= nbMaxExplorateurs) {
+				System.out.println("Add Mike");
+				nbMike++;
+				nbExplorateurs++;
+				String name = "Mike" + nbMike;
+				listExplorers.add(name);
+				exEquipements.put(name, new ArrayList<String>());
 			}
-			tabExplorers[indice] = "Mike";
-			indice ++;
-			if (indice>5) {
-				indice=5;
-			}
-			System.out.println(indice);
 		}
 		else if (m.getX()>= 365 && m.getX()<= 395 && m.getY()>=250 && m.getY()<=275 && isSelectedMike == true) {
-			System.out.println("MIKE -");
-			if (tabExplorers[indice-1]=="Mike") {
-				nbMike --;
-				nbExplorateurs --;
-				if (nbMike<0) {
-					nbMike = 0;
-				}
-				if (nbExplorateurs<0) {
-					nbExplorateurs = 0;
-				}
-				indice--;
-				if (indice<0) {
-					indice=0;
-				}
-				tabExplorers[indice]=" ";
-			}
-			System.out.println(indice);
+			System.out.println("Supp last Mike added");
+			String name = "Mike" + nbMike;
+			listExplorers.remove(name);
+			exEquipements.remove(name);
+			nbMike--;
+			nbExplorateurs--;
 		}
 		else if (m.getX()>= 650 && m.getX()<= 685 && m.getY()>=250 && m.getY()<= 275) {
-			System.out.println("REMY +");
-			nbRemy ++;
-			nbExplorateurs ++;
-			if (nbExplorateurs > nbMaxExplorateurs) {
-				nbExplorateurs --;
-				nbRemy--;
+			if (nbExplorateurs+1 <= nbMaxExplorateurs) {
+				System.out.println("Add Remy");
+				nbRemy++;
+				nbExplorateurs++;
+				String name = "Remy" + nbRemy;
+				listExplorers.add(name);
+				exEquipements.put(name, new ArrayList<String>());
 			}
-			tabExplorers[indice] = "Remy";
-			indice++;
-			if (indice>5) {
-				indice=5;
-			}
-			System.out.println(indice);
 		}
 		else if (m.getX()>= 565 && m.getX()<= 595 && m.getY()>=250 && m.getY()<= 280 && isSelectedRemy == true) {
-			System.out.println("REMY -");
-			if (tabExplorers[indice-1]=="Remy") {
-				nbRemy --;
-				nbExplorateurs --;
-				if (nbRemy<0) {
-					nbRemy = 0;
-				}
-				if (nbExplorateurs<0) {
-					nbExplorateurs = 0;
-				}
-				indice--;
-				if (indice<0) {
-					indice=0;
-				}
-				tabExplorers[indice]=" ";
-			}
-			System.out.println(indice);
+			System.out.println("Supp last Remy added");
+			String name = "Remy" + nbRemy;
+			listExplorers.remove(name);
+			exEquipements.remove(name);
+			nbRemy--;
+			nbExplorateurs--;
 		}
 		else if (m.getX()>= 860 && m.getX()<= 895 && m.getY()>=255 && m.getY()<= 280) {
-			System.out.println("JOE +");
-			nbJoe ++;
-			nbExplorateurs ++;
-			if (nbExplorateurs > nbMaxExplorateurs) {
-				nbExplorateurs --;
-				nbJoe--;
+			if (nbExplorateurs+1 <= nbMaxExplorateurs) {
+				System.out.println("Add Joe");
+				nbJoe++;
+				nbExplorateurs++;
+				String name = "Joe" + nbJoe;
+				listExplorers.add(name);
+				exEquipements.put(name, new ArrayList<String>());
 			}
-			tabExplorers[indice] = "Joe";
-			indice ++;
-			if (indice>5) {
-				indice=5;
-			}
-			System.out.println(indice);
 		}
 		else if (m.getX()>= 755 && m.getX()<= 790 && m.getY()>=255 && m.getY()<= 280 && isSelectedJoe == true) {
-			System.out.println("JOE -");
-			if (tabExplorers[indice-1]=="Joe") {
-				nbJoe --;
-				nbExplorateurs --;
-				if (nbJoe<0) {
-					nbJoe = 0;
-				}
-				if (nbExplorateurs<0) {
-					nbExplorateurs = 0;
-				}
-				indice--;
-				if (indice<0) {
-					indice=0;
-				}
-				tabExplorers[indice]=" ";
-			}
-			System.out.println(indice);
+			System.out.println("Supp last Joe added");
+			String name = "Joe" + nbJoe;
+			listExplorers.remove(name);
+			exEquipements.remove(name);
+			nbJoe--;
+			nbExplorateurs--;
 		}
 		else if (m.getX()>= 1025 && m.getX()<= 1060 && m.getY()>=250 && m.getY()<= 280) {
-			System.out.println("DORA +");
-			nbDora ++;
-			nbExplorateurs ++;
-			if (nbExplorateurs > nbMaxExplorateurs) {
-				nbExplorateurs --;
-				nbDora--;
+			if (nbExplorateurs+1 <= nbMaxExplorateurs) {
+				System.out.println("Add Dora");
+				nbDora++;
+				nbExplorateurs++;
+				String name = "Dora" + nbDora;
+				listExplorers.add(name);
+				exEquipements.put(name, new ArrayList<String>());
 			}
-			tabExplorers[indice]="Dora";
-			indice++;
-			if (indice>5) {
-				indice=5;
-			}
-			System.out.println(indice);
 		}
 		else if (m.getX()>= 840 && m.getX()<= 970 && m.getY()>=250 && m.getY()<= 280 && isSelectedDora == true) {
-			System.out.println("DORA -");
-			if (tabExplorers[indice-1]=="Dora") {
-				nbDora --;
-				nbExplorateurs --;
-				if (nbDora<0) {
-					nbDora = 0;
-				}
-				if (nbExplorateurs<0) {
-					nbExplorateurs = 0;
-				}
-				indice--;
-				if (indice<0) {
-					indice=0;
-				}
-				tabExplorers[indice]=" ";
-			}
-			System.out.println(indice);
+			System.out.println("Supp last Dora added");
+			String name = "Dora" + nbDora;
+			listExplorers.remove(name);
+			exEquipements.remove(name);
+			nbDora--;
+			nbExplorateurs--;
+			
 		}
 		
 ////////////////////////////EQUIPMENTS/////////////////////////////////////
-		else if (m.getX()>= 330 && m.getX()<= 465 && m.getY()>=550 && m.getY()<= 635) {
-			if (isSelectedTab != 6) {
-				System.out.println("Machettes pour "+tabExplorers[isSelectedTab]);
+		/* Machete */
+		/* Add */
+		else if (m.getX()>= 440 && m.getX()<= 465 && m.getY()>=580 && m.getY()<= 610) {
+			if (isSelectedTab != -1) {
+				int maxEquipment;
+				String name = listExplorers.get(isSelectedTab);
+				ArrayList<String> equipmentTmp = exEquipements.get(name);
+				if(name.contains("Dora")) {
+					maxEquipment = 2;
+				} else {
+					maxEquipment = 1;
+				}
+				if(equipmentTmp.size() < maxEquipment) {
+					/* Check if equipment not already taken */
+					for(String equipment : equipmentTmp) {
+						if(equipment.equals("Machetes")) {
+							alreadyEquiped = true;
+						}
+					}
+					if(alreadyEquiped) {
+						System.out.println("Objet déjà pris");
+						alreadyEquiped = false;
+					}
+					else {
+						System.out.println("Add Machetes");
+						equipmentTmp.add("Machetes");
+						System.out.println("Machetes pour "+ name);
+					}
+				}
+				else {
+					System.out.println("Inventaire Plein");
+				}
 			}
 		}
-		else if (m.getX()>= 545 && m.getX()<= 650 && m.getY()>=560 && m.getY()<= 630) {
-			if (isSelectedTab != 6) {
-				System.out.println("Jumelles pour "+tabExplorers[isSelectedTab]);
+		/* Remove */
+		else if (m.getX()>= 338 && m.getX()<= 363 && m.getY()>=578 && m.getY()<= 610) {
+			if (isSelectedTab != -1) {
+				System.out.println("Remove Machettes");
+				String name = listExplorers.get(isSelectedTab);
+				ArrayList<String> equipmentTmp = exEquipements.get(name);
+				equipmentTmp.remove("Machetes");
 			}
 		}
-		else if (m.getX()>= 750 && m.getX()<= 850 && m.getY()>=560 && m.getY()<= 635) {
-			if (isSelectedTab != 6) {
-				System.out.println("Bottes pour "+tabExplorers[isSelectedTab]);
+		
+		/* Jumelles - Binoculars */
+		/* Add */
+		else if (m.getX()>= 640 && m.getX()<= 665 && m.getY()>=576 && m.getY()<= 609) {
+			System.out.println("Add Binoculars");
+			if (isSelectedTab != -1) {
+				int maxEquipment;
+				String name = listExplorers.get(isSelectedTab);
+				ArrayList<String> equipmentTmp = exEquipements.get(name);
+				if(name.contains("Dora")) {
+					maxEquipment = 2;
+				} else {
+					maxEquipment = 1;
+				}
+				if(equipmentTmp.size() < maxEquipment) {
+					/* Check if equipment not already taken */
+					for(String equipment : equipmentTmp) {
+						if(equipment.equals("Jumelles")) {
+							alreadyEquiped = true;
+						}
+					}
+					if(alreadyEquiped) {
+						System.out.println("Objet déjà pris");
+						alreadyEquiped = false;
+					}
+					else {
+						equipmentTmp.add("Jumelles");
+						System.out.println("Jumelles pour "+ name);
+					}
+				}
+				else {
+					System.out.println("Inventaire Plein");
+				}
+			}
+		}
+		/* Remove */
+		else if (m.getX()>= 537 && m.getX()<= 562 && m.getY()>=576 && m.getY()<= 609) {
+			if (isSelectedTab != -1) {
+				System.out.println("Remove Binoculars");
+				String name = listExplorers.get(isSelectedTab);
+				ArrayList<String> equipmentTmp = exEquipements.get(name);
+				equipmentTmp.remove("Jumelles");
+			}
+		}
+		
+		/* Boots */
+		/* Add */
+		else if (m.getX()>= 838 && m.getX()<= 862 && m.getY()>=576 && m.getY()<= 602) {
+			System.out.println("Add Boots");
+			if (isSelectedTab != -1) {
+				int maxEquipment;
+				String name = listExplorers.get(isSelectedTab);
+				ArrayList<String> equipmentTmp = exEquipements.get(name);
+				if(name.contains("Dora")) {
+					maxEquipment = 2;
+				} else {
+					maxEquipment = 1;
+				}
+				if(equipmentTmp.size() < maxEquipment) {
+					/* Check if equipment not already taken */
+					for(String equipment : equipmentTmp) {
+						if(equipment.equals("Bottes")) {
+							alreadyEquiped = true;
+						}
+					}
+					if(alreadyEquiped) {
+						System.out.println("Objet déjà pris");
+						alreadyEquiped = false;
+					}
+					else {
+						equipmentTmp.add("Bottes");
+						System.out.println("Bottes pour "+ name);
+					}
+				}
+				else {
+					System.out.println("Inventaire Plein");
+				}
+			}
+		}
+		/* Remove */
+		else if (m.getX()>= 741 && m.getX()<= 765 && m.getY()>=576 && m.getY()<= 603) {
+			if (isSelectedTab != -1) {
+				System.out.println("Remove Boots");
+				String name = listExplorers.get(isSelectedTab);
+				ArrayList<String> equipmentTmp = exEquipements.get(name);
+				equipmentTmp.remove("Bottes");
 			}
 		}
 		
 ////////////////////////////ZONE BLANCHE/////////////////////////////////////
-		else if (m.getX()>= 1115 && m.getX()<= 1180 && m.getY()>=215 && m.getY()<= 245) {
-			System.out.println("tab[0]");
-			isSelectedTab = 0;
-		}
-		else if(m.getX()>= 1115 && m.getX()<= 1180 && m.getY()>=275 && m.getY()<= 305) {
-			System.out.println("tab[1]");
-			isSelectedTab=1;
-		}
-		else if(m.getX()>= 1115 && m.getX()<= 1180 && m.getY()>=340 && m.getY()<= 370) {
-			System.out.println("tab[2]");
-			isSelectedTab=2;
-		}
-		else if(m.getX()>= 1115 && m.getX()<= 1180 && m.getY()>=400 && m.getY()<= 430) {
-			System.out.println("tab[3]");
-			isSelectedTab=3;
-		}
-		else if(m.getX()>= 1115 && m.getX()<= 1180 && m.getY()>=460 && m.getY()<= 490) {
-			System.out.println("tab[4]");
-			isSelectedTab=4;
-		}
-		else if(m.getX()>= 1115 && m.getX()<= 1180 && m.getY()>=520 && m.getY()<= 550) {
-			System.out.println("tab[5]");
-			isSelectedTab=5;
-		}
-		
+		else if (m.getX()>= 1105 && m.getX()<= 1275 && m.getY()>=150 && m.getY()<= 607) {
+			for(int i=0; i<6; i++) {
+				/* Verify each name zone if it is selected, then "break" if true */
+				if (m.getX()>= 1115 && m.getX()<= 1180 && m.getY()>=(215+60*i) && m.getY()<= (245+60*i)) { 
+					if(isSelectedTab==i) { // Unselect explorer i 
+						System.out.println("Unselect Explorer n°"+ (i+1) + ": Index => "+ i);
+						isSelectedTab = -1;
+					}
+					else {
+						System.out.println("Select Explorer n°"+ (i+1) + ": Index => "+ i);
+						isSelectedTab=i;
+					}
+					break;
+				}
+			}
+		}		
 ////////////////////////////SIMULATION/////////////////////////////////////
 		else if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715) {
 			System.out.println("DEBUT DE LA SIMULATION");
@@ -691,13 +699,15 @@ public class SelectionState extends GameState implements ImageObserver {
 				 * A FAIRE : CHANGER le chiffre difficultySelected par la classe "Difficulty"
 				 * 			Ajouter un tab d'animaux
 				 */
-				sim = new Simulation(difficultySelected, strategySelected, tabEx);
+				sim = new Simulation(difficultySelected, strategySelected, listExplorers, exEquipements);
 				SimulationState simulationState = new SimulationState(gsm);
 				gsm.gameStates.push(simulationState);
 				simulationState.setSim(sim);
 				sim.createThreads();
 			}
 		}
+		
+		System.out.println(exEquipements.toString());
 	}
 
 	public void mouseReleased(MouseEvent m) {}
