@@ -389,15 +389,17 @@ public class SelectionState extends GameState implements ImageObserver {
         			System.out.println("//////////////////");
         		}
         		ArrayList<String> tmp = exEquipements.get(name);
+        		int nbEq = 0;
         		for (String equipements : tmp) {
+        			nbEq++;
         			if (equipements.equals("Bottes")) {
-        				g.drawImage(bootsIcon, 1200, 205 + 60*i, 50, 50, (ImageObserver) this);
+        				g.drawImage(bootsIcon, 1190 + (40*(nbEq-1)), 210 + 60*i, 40, 40, (ImageObserver) this);
         			}
         			else if (equipements.equals("Machettes")) {
-        				g.drawImage(weaponIcon, 1200, 205 + 60*i, 50, 50, (ImageObserver) this);
+        				g.drawImage(weaponIcon, 1190 + (40*(nbEq-1)), 210 + 60*i, 40, 40, (ImageObserver) this);
         			}
         			else if (equipements.equals("Jumelles")) {
-        				g.drawImage(binocularsIcon, 1200, 205 + 60*i, 50, 50, (ImageObserver) this);
+        				g.drawImage(binocularsIcon, 1190 + (40*(nbEq-1)), 210 + 60*i, 40, 40, (ImageObserver) this);
         			}
         		}
         	}
@@ -775,7 +777,7 @@ public class SelectionState extends GameState implements ImageObserver {
 				 * A FAIRE : CHANGER le chiffre difficultySelected par la classe "Difficulty"
 				 * 			Ajouter un tab d'animaux
 				 */
-				sim = new Simulation(difficultySelected, strategySelected, listExplorers, exEquipements);
+				sim = new Simulation(dif, strategySelected, listExplorers, exEquipements);
 				SimulationState simulationState = new SimulationState(gsm);
 				gsm.gameStates.push(simulationState);
 				simulationState.setSim(sim);
