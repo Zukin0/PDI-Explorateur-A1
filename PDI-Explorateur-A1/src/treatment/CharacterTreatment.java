@@ -1,5 +1,9 @@
 package treatment;
 import character.Character;
+import character.Explorer;
+import character.builders.explorers.DoraBuilder;
+import character.builders.explorers.core.ExBuilder;
+import character.builders.explorers.core.ExDirector;
 import data.Position;
 import ihm.GamePanel;
 
@@ -105,7 +109,52 @@ public class CharacterTreatment {
 		return false;
 	}
 	
+	public static void auraCheck(Character pChar, Position eChar) {
+		
+		//Calcul distance between two entity	
+		double dis = Math.sqrt(Math.pow(pChar.getPosition().getX() - eChar.getX(), 2) + Math.pow(pChar.getPosition().getY() - eChar.getY(), 2));	
+		System.out.println("la distance et de : " + dis);
+		
+		//Checking
+		if(pChar.getAura() >= dis) {
+			System.out.println("Dans la zone");
+		}
+		else {
+			System.out.println("Pas dans la zone");
+		}	
+	}
+	
 	public void suppCharacter(Character c) {
 		
+	}
+	
+	
+	public static void main(String []args) {
+		//Create the builder director
+				ExDirector creator = new ExDirector() ;
+				//Create specifique builder
+				ExBuilder bDora = new DoraBuilder() ;
+				
+				Position un = new Position(1, 2);
+				Position deux = new Position (150, 10);
+				Position trois = new Position (4, 6);
+				
+				//Set the builder type and create the explorer this type
+				creator.setExplorerBuilder(bDora);
+				creator.BuildExplorer();
+				
+				//Finally store the explorer created.
+				Explorer e = creator.getExplorer() ;
+				
+				//New one
+				creator.BuildExplorer();
+				Explorer e2 = creator.getExplorer() ;
+				
+				e.setPosition(un);
+				e2.setPosition(trois);
+				
+				auraCheck(e, e2.getPosition());
+	
+				
 	}
 }
