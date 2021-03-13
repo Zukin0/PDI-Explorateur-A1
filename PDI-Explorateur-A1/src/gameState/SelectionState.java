@@ -63,9 +63,9 @@ public class SelectionState extends GameState implements ImageObserver {
 	private int indice = 0;
 	private String[] tabExplorers = {" ", " ", " ", " ", " ", " "};
 	
-	private ArrayList<String> listExplorers;
+	private ArrayList<String> listExplorers; //{"Dora1","Joe1"}
 	/* List equipment for each explorer */
-	private HashMap<String,ArrayList<String>> exEquipements; 
+	private HashMap<String,ArrayList<String>> exEquipements;
 	
 	private Simulation sim;
 	
@@ -540,7 +540,7 @@ public class SelectionState extends GameState implements ImageObserver {
 		}
 		
 ////////////////////////////EQUIPMENTS/////////////////////////////////////
-		/* Machete */
+		/* Machette */
 		/* Add */
 		else if (m.getX()>= 440 && m.getX()<= 465 && m.getY()>=580 && m.getY()<= 610) {
 			if (isSelectedTab != -1) {
@@ -555,7 +555,7 @@ public class SelectionState extends GameState implements ImageObserver {
 				if(equipmentTmp.size() < maxEquipment) {
 					/* Check if equipment not already taken */
 					for(String equipment : equipmentTmp) {
-						if(equipment.equals("Machetes")) {
+						if(equipment.equals("Machettes")) {
 							alreadyEquiped = true;
 						}
 					}
@@ -564,9 +564,9 @@ public class SelectionState extends GameState implements ImageObserver {
 						alreadyEquiped = false;
 					}
 					else {
-						System.out.println("Add Machetes");
-						equipmentTmp.add("Machetes");
-						System.out.println("Machetes pour "+ name);
+						System.out.println("Add Machettes");
+						equipmentTmp.add("Machettes");
+						System.out.println("Machettes pour "+ name);
 					}
 				}
 				else {
@@ -580,7 +580,7 @@ public class SelectionState extends GameState implements ImageObserver {
 				System.out.println("Remove Machettes");
 				String name = listExplorers.get(isSelectedTab);
 				ArrayList<String> equipmentTmp = exEquipements.get(name);
-				equipmentTmp.remove("Machetes");
+				equipmentTmp.remove("Machettes");
 			}
 		}
 		

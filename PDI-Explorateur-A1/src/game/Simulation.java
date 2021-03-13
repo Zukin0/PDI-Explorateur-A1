@@ -4,11 +4,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import character.Character;
+import character.Equipment;
 import character.Explorer;
 import character.WildAnimals;
+import character.builders.WildAnimal.BearBuilder;
+import character.builders.WildAnimal.EagleBuilder;
 import character.builders.WildAnimal.WolfBuilder;
 import character.builders.WildAnimal.core.WaBuilder;
 import character.builders.WildAnimal.core.WaDirector;
+import character.builders.equipment.BinocularBuilder;
+import character.builders.equipment.BootsBuilder;
+import character.builders.equipment.MachetteBuilder;
+import character.builders.equipment.core.EqBuilder;
+import character.builders.equipment.core.EqDirector;
 import character.builders.explorers.DoraBuilder;
 import character.builders.explorers.JoeBuilder;
 import character.builders.explorers.MikeBuilder;
@@ -25,8 +33,9 @@ public class Simulation {
 	public static HashMap<String,Character> characters = new HashMap<String, Character>();
 	public static HashMap<String,WildAnimals> animals = new HashMap<String, WildAnimals>();
 	
-	private ExDirector creator;
+	private ExDirector exCreator;
 	private WaDirector waCreator;
+	private EqDirector eqCreator;
 	
 	private ExBuilder bDora;
 	private ExBuilder bMike;
@@ -34,67 +43,92 @@ public class Simulation {
 	private ExBuilder bJoe;
 	
 	private WaBuilder bWolf;
+	private WaBuilder bBear;
+	private WaBuilder bEagle;
 	
-//	public static ArrayList<Explorer> explorers = new ArrayList<Explorer>() ;
-	private int difficulty;
+	private EqBuilder bMachette;
+	private EqBuilder bBinocular;
+	private EqBuilder bBoots;
+	
+	private Difficulty difficulty;
 	public static int strategy;
 	
 	public Simulation(int difficulty, int strategy, ArrayList<String> listExp, HashMap<String,ArrayList<String>> exEquipment) {
-		this.difficulty = difficulty;
 		this.strategy = strategy;
+		//this.difficulty = difficulty;
 		initBuilders();
 		createExplorers(listExp, exEquipment);
-		createAnimals(/*tabAni*/);
+		createAnimals();
 		addListCharacters();
 	}
 	
 	public void initBuilders() {
-		//Create the builder director
-		creator = new ExDirector() ;
+		/*Create the builder director */
+		exCreator = new ExDirector() ;
 		waCreator = new WaDirector();
+		eqCreator = new EqDirector();
 		
-		//Create specifique builder
+		/*Create specific builder */
+		/* Explorers */
 		bDora = new DoraBuilder() ;
 		bJoe = new JoeBuilder();
 		bMike = new MikeBuilder();
 		bRemy = new RemyBuilder();
+		
+		/*Animals*/
 		bWolf = new WolfBuilder();
-
+		bBear = new BearBuilder();
+		bEagle = new EagleBuilder();
+		
+		/* Equipment */
+		bMachette = new MachetteBuilder();
+		bBinocular = new BinocularBuilder();
+		bBoots = new BootsBuilder();
 	}
 	
 	public void createExplorers(ArrayList<String> listExp, HashMap<String,ArrayList<String>> exEquipment) {
-		String name = "";
-		for(int i = 0;i<4;i++) {
-			switch(i) {
-			case 0: 
-				creator.setExplorerBuilder(bDora);
-				name = "Dora";
-				break;
-			case 1: 
-				creator.setExplorerBuilder(bJoe);
-				name = "Joe";
-				break;
-			case 2: 
-				creator.setExplorerBuilder(bRemy);
-				name = "Remy";
-				break;
-			case 3: 
-				creator.setExplorerBuilder(bMike);
-				name = "Mike";
-				break;
-		
+		/* Loop through explorer list, change Builder when needed */
+		for(String nameEx : listExp) {
+			if(nameEx.contains("Dora")) {
+				exCreator.setExplorerBuilder(bDora);
 			}
-			System.out.println(name);
-//			for(int j = 1;j<=tabEx[i]; j++) {
-//				creator.BuildExplorer();
-//				Explorer e = creator.getExplorer();
-//				e.setName(name + j);
-//				explorers.put(e.getName(),e);
-//			}
+			else if(nameEx.contains("Mike")) {
+				exCreator.setExplorerBuilder(bMike);
+			}
+			else if(nameEx.contains("Joe")) {
+				exCreator.setExplorerBuilder(bJoe);
+			}
+			else if(nameEx.contains("Remy")) {
+				exCreator.setExplorerBuilder(bRemy);
+			}
+			/* Create proper explorer */
+			exCreator.BuildExplorer();
+			Explorer e = exCreator.getExplorer();
+			e.setName(nameEx);
+			
+			/* Gather right equipmentName list for the explorer and create <Equipment> List*/
+			ArrayList<Equipment> eqList = new ArrayList<Equipment>();
+			for(String equipment : exEquipment.get(nameEx)) {
+				switch(equipment) {
+				case "Machettes" : eqCreator.setEquipmentBuilder(bMachette);
+					break;
+				case "Jumelles" : eqCreator.setEquipmentBuilder(bBinocular);
+					break;
+				case "Bottes" : eqCreator.setEquipmentBuilder(bBoots);
+					break;
+				}
+				eqCreator.BuildEquipment();
+				Equipment eq = eqCreator.getEquipment();
+				eqList.add(eq);
+			}
+			
+			/* Add Equipment List to Explorer and add to instance's HashMap */
+			e.setEquiment(eqList);
+			explorers.put(e.getName(),e);
 		}
 	}
 	
-	public void createAnimals(/*int[] tabAni*/) {
+	public void createAnimals() {
 		waCreator.setWildAnimalsBuilder(bWolf);
 		waCreator.BuildWildAnimals();
 		WildAnimals w1 = waCreator.getAnimal();
@@ -136,7 +170,7 @@ public class Simulation {
 		return explorers;
 	}
 	
-	public int getDifficulty() {
+	public Difficulty getDifficulty() {
 		return difficulty;
 	}
 	
@@ -148,7 +182,7 @@ public class Simulation {
 		this.explorers = explorers;
 	}
 	
-	public void setEquimentMax(int difficulty) {
+	public void setEquimentMax(Difficulty difficulty) {
 		this.difficulty = difficulty;
 	}
 	
