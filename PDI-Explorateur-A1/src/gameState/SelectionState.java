@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import character.builders.explorers.core.ExDirector;
+import game.Difficulty;
 import game.Simulation;
 import ihm.Game;
 import ihm.GamePanel;
@@ -38,7 +39,11 @@ public class SelectionState extends GameState implements ImageObserver {
 	private int nbJoe = 0;
 	private int nbDora = 0;
 	
+	/* Diffculty variables */
+	private Difficulty dif;
+	private boolean changeDif = false;
 	private int difficultySelected = 3;
+	
 	private int strategySelected = 3;
 	
 	private int priceExplorers = 0;
@@ -69,7 +74,7 @@ public class SelectionState extends GameState implements ImageObserver {
 	
 	private Simulation sim;
 	
-	private int money = 160;
+	private int money;
 	
 	private boolean alreadyEquiped = false;
 	
@@ -125,6 +130,19 @@ public class SelectionState extends GameState implements ImageObserver {
 	public void init() {
 		listExplorers = new ArrayList<String>();
 		exEquipements = new HashMap<String,ArrayList<String>>();
+		dif = new Difficulty();
+	}
+	
+	public void resetAll() {
+		money = dif.getMoney();
+		nbDora = 0;
+		nbMike = 0;
+		nbJoe = 0;
+		nbRemy = 0;
+		nbExplorateurs = 0;
+		isSelectedTab = -1;
+		listExplorers.clear();
+		exEquipements.clear();
 	}
 	
 	public void tick() {}
@@ -175,29 +193,33 @@ public class SelectionState extends GameState implements ImageObserver {
         g.drawString("MOYEN",80, 290);
         g.drawString("DIFFICILE",80,350);
         
-        switch(difficultySelected) {
-        case 0 :
-        	//easy
-        	g.setColor(Color.black);
-    		g.fillRect(50, 213, 20, 20);
-    		nbTreasures = 2;
-    		nbAnimals = 3;
-        	break;
-        case 1 :
-        	//medium
-        	g.setColor(Color.black);
-        	g.fillRect(50, 273, 20, 20);
-        	nbTreasures = 4;
-    		nbAnimals = 6;
-        	break;
-        case 2 :
-        	//hard
-        	g.setColor(Color.black);
-        	g.fillRect(50, 333, 20, 20);
-        	nbTreasures = 8;
-    		nbAnimals = 9;
-        	break;
+        /* reset selection if difficulty is changed */
+        if(changeDif) {
+            switch(difficultySelected) {
+            case 0 :
+            	//easy
+        		dif.changeDif(2, 3, 100); // param : nbTreasure, nbAnimals, money
+        		resetAll();
+            	break;
+            case 1 :
+            	//medium
+        		dif.changeDif(4, 6, 130); // param : nbTreasure, nbAnimals, money
+        		resetAll();
+            	break;
+            case 2 :
+            	//hard
+        		dif.changeDif(8, 9, 160); // param : nbTreasure, nbAnimals, money
+        		resetAll();
+            	break;
+            }
+            changeDif = false;
         }
+        /* draw difficulty rectangle selected */
+        else if(difficultySelected != 3) {
+        	g.setColor(Color.black);
+    		g.fillRect(50, 213 + (difficultySelected * 60), 20, 20);
+        }
+
         
 ////////////////////////////STRATEGY/////////////////////////////////////
         //title strategy
@@ -367,15 +389,17 @@ public class SelectionState extends GameState implements ImageObserver {
         			System.out.println("//////////////////");
         		}
         		ArrayList<String> tmp = exEquipements.get(name);
+        		int nbEq = 0;
         		for (String equipements : tmp) {
+        			nbEq++;
         			if (equipements.equals("Bottes")) {
-        				g.drawImage(bootsIcon, 1200, 205 + 60*i, 50, 50, (ImageObserver) this);
+        				g.drawImage(bootsIcon, 1190 + (40*(nbEq-1)), 210 + 60*i, 40, 40, (ImageObserver) this);
         			}
         			else if (equipements.equals("Machettes")) {
-        				g.drawImage(weaponIcon, 1200, 205 + 60*i, 50, 50, (ImageObserver) this);
+        				g.drawImage(weaponIcon, 1190 + (40*(nbEq-1)), 210 + 60*i, 40, 40, (ImageObserver) this);
         			}
         			else if (equipements.equals("Jumelles")) {
-        				g.drawImage(binocularsIcon, 1200, 205 + 60*i, 50, 50, (ImageObserver) this);
+        				g.drawImage(binocularsIcon, 1190 + (40*(nbEq-1)), 210 + 60*i, 40, 40, (ImageObserver) this);
         			}
         		}
         	}
@@ -463,14 +487,17 @@ public class SelectionState extends GameState implements ImageObserver {
 		if ((m.getX()>= 50 && m.getX()<= 70 && m.getY()>=213 && m.getY()<= 233)) {
 			System.out.println("DIFFICULTE FACILE CHOISIE");
 			difficultySelected = 0;
+			changeDif = true;
 		}
 		else if ((m.getX()>= 50 && m.getX()<= 70 && m.getY()>=275 && m.getY()<= 295)) {
 			System.out.println("DIFFICULTE MOYENNE CHOISIE");
 			difficultySelected = 1;
+			changeDif = true;
 		}
 		else if ((m.getX()>= 50 && m.getX()<= 70 && m.getY()>=335 && m.getY()<= 355)) {
 			System.out.println("DIFFICULTE DIFFICILE CHOISIE");
 			difficultySelected = 2;
+			changeDif = true;
 		}
 		
 ////////////////////////////STRATEGY/////////////////////////////////////
@@ -621,7 +648,7 @@ public class SelectionState extends GameState implements ImageObserver {
 				ArrayList<String> equipmentTmp = exEquipements.get(name);
 				if (equipmentTmp.size()!=0) {
 					equipmentTmp.remove("Machetes");
-					money = money + priceBinoculars;
+					money = money + priceWeapon;
 				}
 			}
 		}
@@ -718,7 +745,7 @@ public class SelectionState extends GameState implements ImageObserver {
 				ArrayList<String> equipmentTmp = exEquipements.get(name);
 				if (equipmentTmp.size()!=0) {
 					equipmentTmp.remove("Bottes");
-					money = money + priceBinoculars;
+					money = money + priceBoots;
 				}
 			}
 		}
@@ -750,7 +777,7 @@ public class SelectionState extends GameState implements ImageObserver {
 				 * A FAIRE : CHANGER le chiffre difficultySelected par la classe "Difficulty"
 				 * 			Ajouter un tab d'animaux
 				 */
-				sim = new Simulation(difficultySelected, strategySelected, listExplorers, exEquipements);
+				sim = new Simulation(dif, strategySelected, listExplorers, exEquipements);
 				SimulationState simulationState = new SimulationState(gsm);
 				gsm.gameStates.push(simulationState);
 				simulationState.setSim(sim);

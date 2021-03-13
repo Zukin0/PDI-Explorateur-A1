@@ -37,10 +37,18 @@ public class SimulationState extends GameState implements ImageObserver{
 	private Simulation sim;
 	
 	//initialisation des images
+	/*Explorer*/
 	private BufferedImage imageDora=null;
 	private BufferedImage imageJoe=null;
 	private BufferedImage imageMike=null;
 	private BufferedImage imageRemy=null;
+	
+	/*Animals*/
+	private BufferedImage imageWolf=null;
+	private BufferedImage imageBear=null;
+	private BufferedImage imageEagle=null;
+	
+	/*Others*/
 	private BufferedImage time=null;
 	private BufferedImage heart=null;
 	private BufferedImage treasure=null;
@@ -61,21 +69,12 @@ public class SimulationState extends GameState implements ImageObserver{
 	}
 	
 	public void tick() {
-		/*if(sim.explorers.size() == 0) {
-			System.out.println("TOUS LES EXPLORATEURS SONT MORT : FIN DE LA PARTIE");
-			System.exit(0);
-		}*/
 	}
 
 	public void draw(Graphics g) {
 		//background
 		g.setColor(BEIGE);
 		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
-						
-		//title
-		//g.setColor(Color.black);
-		//g.setFont(titleFont);
-		//g.drawString("SIMULATION",20, 60);
 		
 ///////////////////////////MAP////////////////////////////////////////////////
 		g.setColor(Color.black);
@@ -83,69 +82,84 @@ public class SimulationState extends GameState implements ImageObserver{
 		tilemap.draw(g);
 		
 		for(Character c : sim.characters.values()) {
-			if(SimulationUtility.isInstance(c, Explorer.class)) {
-				String name = c.getName().substring(0,c.getName().length()-1);
-				
-				try {
-		  			imageDora = ImageIO.read(new File("ressources/dora_face.png"));
-		  			imageRemy = ImageIO.read(new File("ressources/remy_face.png"));
-		  			imageMike = ImageIO.read(new File("ressources/mike_face.png"));
-		  			imageJoe = ImageIO.read(new File("ressources/joe_face.png"));
-		  		} catch (IOException e) {
-		  			System.out.println("no image");
-		  			e.printStackTrace();
-		  		}
-				
-				switch(name) {
-				
-				case "Dora" : 
-					g.drawImage(imageDora, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
-					System.out.print("//// Dora se trouve sur : ");
-					switch (tilemap.getPosition((c.getPosition().getX())/32, (c.getPosition().getY())/32)) {
-					case 12:
-						//System.out.println(" arbres");
-						break ;
-					case 7:
-						//System.out.println(" herbe");
-						break ;
-					case 11:
-						//System.out.println(" rocher");
-						break ;
-					case 6:
-						//System.out.println(" boue");
-						break ;
-					case 13:
-						//System.out.println(" eau");
-						break ;
-					}
-					break;
-				case "Mike" : 
-					g.drawImage(imageMike, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
-					break;
-				case "Joe" : 
-					g.drawImage(imageJoe, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
-					break;
-				case "Remy" : 
-					g.drawImage(imageRemy, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
-					break;
-				}
+			String name = c.getName().substring(0,c.getName().length()-1);
+			String dynFileName ="";
+			switch(c.getDir()) {
+			case 0 : /* Up */
+				dynFileName = "dos";
+				break;
+			case 1 : /* Down */
+				dynFileName = "face";
+				break;
+			case 2 : /* Right */
+				dynFileName = "droite";
+				break;
+			case 3 : /* Left */
+				dynFileName = "gauche";
+				break;
+			
 			}
-			else {
+			try {
+	  			imageDora = ImageIO.read(new File("ressources/dora_" + dynFileName + ".png"));
+	  			imageRemy = ImageIO.read(new File("ressources/remy_" + dynFileName + ".png"));
+	  			imageMike = ImageIO.read(new File("ressources/mike_" + dynFileName + ".png"));
+	  			imageJoe = ImageIO.read(new File("ressources/joe_" + dynFileName + ".png"));
+	  			
+	  			imageWolf = ImageIO.read(new File("ressources/loup_" + dynFileName + ".png"));
+	  			imageBear = ImageIO.read(new File("ressources/ours_" + dynFileName + ".png"));
+	  			imageEagle = ImageIO.read(new File("ressources/aigle_" + dynFileName + ".png"));
+	  		} catch (IOException e) {
+	  			System.out.println("Error Image File couldn't load");
+	  			e.printStackTrace();
+	  		}
+			
+			switch(name) {
+			
+			case "Dora" : 
+				g.drawImage(imageDora, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
+//					//System.out.print("//// Dora se trouve sur : ");
+//					switch (tilemap.getPosition((c.getPosition().getX())/32, (c.getPosition().getY())/32)) {
+//					case 12:
+//						//System.out.println("arbres");
+//						break ;
+//					case 7:
+//						//System.out.println("herbe");
+//						break ;
+//					case 11:
+//						//System.out.println("rocher");
+//						break ;
+//					case 6:
+//						//System.out.println("boue");
+//						break ;
+//					case 13:
+//						//System.out.println("eau");
+//						break ;
+//					}
+				break;
+			case "Mike" : 
+				g.drawImage(imageMike, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
+				break;
+			case "Joe" : 
+				g.drawImage(imageJoe, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
+				break;
+			case "Remy" : 
+				g.drawImage(imageRemy, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
+				break;
+			case "Wolf" : 
+				g.drawImage(imageWolf, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
+				break;
+			case "Bear" : 
+				g.drawImage(imageBear, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
+				break;
+			case "Eagle" : 
+				g.drawImage(imageEagle, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
+				break;
+			}
+			if(SimulationUtility.isInstance(c, WildAnimals.class)) {
 				g.setColor(Color.black);
 				WildAnimals wa = (WildAnimals)c;
 				g.drawRect(wa.getPosTerr().getX(),wa.getPosTerr().getY(), wa.getTerritorySize().getHeight(), wa.getTerritorySize().getHeight());
-				g.setColor(Color.red);
 			}
-			//g.fillRect(c.getPosition().getX(), c.getPosition().getY(), c.getSize().getWidth(), c.getSize().getHeight());
-			/*try {
-				Image sprite = ImageIO.read(new File("ressources/dora.png"));
-				g.drawImage(sprite , c.getPosition().getX() , c.getPosition().getY(), null);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}*/
-			
-			//g.fillRect(c.getPosition().getX(), c.getPosition().getX(), c.getSize().getWidth(), c.getSize().getHeight());
-			//g.fillRect(c.getPosition().getX(), c.getPosition().getX(), c.getSize().getWidth(), c.getSize().getHeight());
 		}
 		
 //////////////////////CADRE BLANC////////////////////////////////////////////
