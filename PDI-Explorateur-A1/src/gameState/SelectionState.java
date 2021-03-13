@@ -69,7 +69,7 @@ public class SelectionState extends GameState implements ImageObserver {
 	
 	private Simulation sim;
 	
-	private int money = 0; 
+	private int money = 160;
 	
 	private boolean alreadyEquiped = false;
 	
@@ -105,6 +105,9 @@ public class SelectionState extends GameState implements ImageObserver {
 	private BufferedImage boots=null;
 	private BufferedImage binoculars=null;
 	private BufferedImage weapon=null;
+	private BufferedImage bootsIcon=null;
+	private BufferedImage binocularsIcon=null;
+	private BufferedImage weaponIcon=null;
 	
 	/*
 	 * difficult√©s : facile, moyen, difficile
@@ -177,7 +180,6 @@ public class SelectionState extends GameState implements ImageObserver {
         	//easy
         	g.setColor(Color.black);
     		g.fillRect(50, 213, 20, 20);
-    		money = 100;
     		nbTreasures = 2;
     		nbAnimals = 3;
         	break;
@@ -185,7 +187,6 @@ public class SelectionState extends GameState implements ImageObserver {
         	//medium
         	g.setColor(Color.black);
         	g.fillRect(50, 273, 20, 20);
-        	money = 110;
         	nbTreasures = 4;
     		nbAnimals = 6;
         	break;
@@ -193,7 +194,6 @@ public class SelectionState extends GameState implements ImageObserver {
         	//hard
         	g.setColor(Color.black);
         	g.fillRect(50, 333, 20, 20);
-        	money = 120;
         	nbTreasures = 8;
     		nbAnimals = 9;
         	break;
@@ -315,6 +315,9 @@ public class SelectionState extends GameState implements ImageObserver {
   			weapon = ImageIO.read(new File("ressources/weapon-.png"));
   			boots = ImageIO.read(new File("ressources/boots-.png"));
   			binoculars = ImageIO.read(new File("ressources/binoculars-.png"));
+  			weaponIcon = ImageIO.read(new File("ressources/weapon.png"));
+  			bootsIcon = ImageIO.read(new File("ressources/boots.png"));
+  			binocularsIcon = ImageIO.read(new File("ressources/binoculars.png"));
   		} catch (IOException e) {
   			System.out.println("no image");
   			e.printStackTrace();
@@ -356,6 +359,27 @@ public class SelectionState extends GameState implements ImageObserver {
         /* Draw Explorer's names and change color when selected */
         for(int i = 0; i<listExplorers.size(); i++) {
         	String name = listExplorers.get(i);
+  
+        	/*Add the explorer's equipement when selected*/
+        	/* Icones start at height 205 and are 60 pixels separeted */
+        	if ((exEquipements.get(name))!=null) {
+        		if (exEquipements.get(name).equals("Dora"+i)) {
+        			System.out.println("//////////////////");
+        		}
+        		ArrayList<String> tmp = exEquipements.get(name);
+        		for (String equipements : tmp) {
+        			if (equipements.equals("Bottes")) {
+        				g.drawImage(bootsIcon, 1200, 205 + 60*i, 50, 50, (ImageObserver) this);
+        			}
+        			else if (equipements.equals("Machettes")) {
+        				g.drawImage(weaponIcon, 1200, 205 + 60*i, 50, 50, (ImageObserver) this);
+        			}
+        			else if (equipements.equals("Jumelles")) {
+        				g.drawImage(binocularsIcon, 1200, 205 + 60*i, 50, 50, (ImageObserver) this);
+        			}
+        		}
+        	}
+        	
         	/* Names start at height 238 and are 60 pixels separeted */
         	if(isSelectedTab == i) { // If a character is selected
         		g.setColor(Color.red);
@@ -465,14 +489,15 @@ public class SelectionState extends GameState implements ImageObserver {
 		
 ////////////////////////////EXPLORERS/////////////////////////////////////
 
-		else if (m.getX()>= 445 && m.getX()<= 475 && m.getY()>=250 && m.getY()<=275) { // Ajout  Mike
-			if (nbExplorateurs+1 <= nbMaxExplorateurs) {
+		else if (m.getX()>= 445 && m.getX()<= 475 && m.getY()>=250 && m.getY()<=275 && difficultySelected != 3 && strategySelected != 3) { // Ajout  Mike
+			if ((nbExplorateurs+1 <= nbMaxExplorateurs)&&(money>= priceExplorers)){
 				System.out.println("Add Mike");
 				nbMike++;
 				nbExplorateurs++;
 				String name = "Mike" + nbMike;
 				listExplorers.add(name);
 				exEquipements.put(name, new ArrayList<String>());
+				money = money - priceExplorers;
 			}
 		}
 		else if (m.getX()>= 365 && m.getX()<= 395 && m.getY()>=250 && m.getY()<=275 && isSelectedMike == true) {
@@ -482,15 +507,19 @@ public class SelectionState extends GameState implements ImageObserver {
 			exEquipements.remove(name);
 			nbMike--;
 			nbExplorateurs--;
+			money = money + priceExplorers;
 		}
-		else if (m.getX()>= 650 && m.getX()<= 685 && m.getY()>=250 && m.getY()<= 275) {
+		else if (m.getX()>= 650 && m.getX()<= 685 && m.getY()>=250 && m.getY()<= 275 && difficultySelected != 3 && strategySelected != 3) {
 			if (nbExplorateurs+1 <= nbMaxExplorateurs) {
-				System.out.println("Add Remy");
-				nbRemy++;
-				nbExplorateurs++;
-				String name = "Remy" + nbRemy;
-				listExplorers.add(name);
-				exEquipements.put(name, new ArrayList<String>());
+				if (money>=priceExplorers) {
+					System.out.println("Add Remy");
+					nbRemy++;
+					nbExplorateurs++;
+					String name = "Remy" + nbRemy;
+					listExplorers.add(name);
+					exEquipements.put(name, new ArrayList<String>());
+					money = money - priceExplorers;
+				}
 			}
 		}
 		else if (m.getX()>= 565 && m.getX()<= 595 && m.getY()>=250 && m.getY()<= 280 && isSelectedRemy == true) {
@@ -500,15 +529,19 @@ public class SelectionState extends GameState implements ImageObserver {
 			exEquipements.remove(name);
 			nbRemy--;
 			nbExplorateurs--;
+			money = money + priceExplorers;
 		}
-		else if (m.getX()>= 860 && m.getX()<= 895 && m.getY()>=255 && m.getY()<= 280) {
+		else if (m.getX()>= 860 && m.getX()<= 895 && m.getY()>=255 && m.getY()<= 280 && difficultySelected != 3 && strategySelected != 3) {
 			if (nbExplorateurs+1 <= nbMaxExplorateurs) {
-				System.out.println("Add Joe");
-				nbJoe++;
-				nbExplorateurs++;
-				String name = "Joe" + nbJoe;
-				listExplorers.add(name);
-				exEquipements.put(name, new ArrayList<String>());
+				if (money>=priceExplorers) {
+					System.out.println("Add Joe");
+					nbJoe++;
+					nbExplorateurs++;
+					String name = "Joe" + nbJoe;
+					listExplorers.add(name);
+					exEquipements.put(name, new ArrayList<String>());
+					money = money - priceExplorers;
+				}
 			}
 		}
 		else if (m.getX()>= 755 && m.getX()<= 790 && m.getY()>=255 && m.getY()<= 280 && isSelectedJoe == true) {
@@ -518,15 +551,19 @@ public class SelectionState extends GameState implements ImageObserver {
 			exEquipements.remove(name);
 			nbJoe--;
 			nbExplorateurs--;
+			money = money + priceExplorers;
 		}
-		else if (m.getX()>= 1025 && m.getX()<= 1060 && m.getY()>=250 && m.getY()<= 280) {
+		else if (m.getX()>= 1025 && m.getX()<= 1060 && m.getY()>=250 && m.getY()<= 280 && difficultySelected != 3 && strategySelected != 3) {
 			if (nbExplorateurs+1 <= nbMaxExplorateurs) {
-				System.out.println("Add Dora");
-				nbDora++;
-				nbExplorateurs++;
-				String name = "Dora" + nbDora;
-				listExplorers.add(name);
-				exEquipements.put(name, new ArrayList<String>());
+				if (money>=priceExplorers) {
+					System.out.println("Add Dora");
+					nbDora++;
+					nbExplorateurs++;
+					String name = "Dora" + nbDora;
+					listExplorers.add(name);
+					exEquipements.put(name, new ArrayList<String>());
+					money = money - priceExplorers;
+				}
 			}
 		}
 		else if (m.getX()>= 840 && m.getX()<= 970 && m.getY()>=250 && m.getY()<= 280 && isSelectedDora == true) {
@@ -536,14 +573,14 @@ public class SelectionState extends GameState implements ImageObserver {
 			exEquipements.remove(name);
 			nbDora--;
 			nbExplorateurs--;
-			
+			money = money + priceExplorers;
 		}
 		
 ////////////////////////////EQUIPMENTS/////////////////////////////////////
 		/* Machette */
 		/* Add */
-		else if (m.getX()>= 440 && m.getX()<= 465 && m.getY()>=580 && m.getY()<= 610) {
-			if (isSelectedTab != -1) {
+		else if (m.getX()>= 440 && m.getX()<= 465 && m.getY()>=580 && m.getY()<= 610 && difficultySelected != 3 && strategySelected != 3) {
+			if ((isSelectedTab != -1)&&(money>=priceWeapon)) {
 				int maxEquipment;
 				String name = listExplorers.get(isSelectedTab);
 				ArrayList<String> equipmentTmp = exEquipements.get(name);
@@ -560,13 +597,14 @@ public class SelectionState extends GameState implements ImageObserver {
 						}
 					}
 					if(alreadyEquiped) {
-						System.out.println("Objet dÈj‡ pris");
+						System.out.println("Objet deja pris");
 						alreadyEquiped = false;
 					}
 					else {
 						System.out.println("Add Machettes");
 						equipmentTmp.add("Machettes");
 						System.out.println("Machettes pour "+ name);
+						money = money-priceWeapon;
 					}
 				}
 				else {
@@ -577,18 +615,22 @@ public class SelectionState extends GameState implements ImageObserver {
 		/* Remove */
 		else if (m.getX()>= 338 && m.getX()<= 363 && m.getY()>=578 && m.getY()<= 610) {
 			if (isSelectedTab != -1) {
+				money = money + priceWeapon;
 				System.out.println("Remove Machettes");
 				String name = listExplorers.get(isSelectedTab);
 				ArrayList<String> equipmentTmp = exEquipements.get(name);
-				equipmentTmp.remove("Machettes");
+				if (equipmentTmp.size()!=0) {
+					equipmentTmp.remove("Machetes");
+					money = money + priceBinoculars;
+				}
 			}
 		}
 		
 		/* Jumelles - Binoculars */
 		/* Add */
-		else if (m.getX()>= 640 && m.getX()<= 665 && m.getY()>=576 && m.getY()<= 609) {
+		else if (m.getX()>= 640 && m.getX()<= 665 && m.getY()>=576 && m.getY()<= 609 && difficultySelected != 3 && strategySelected != 3) {
 			System.out.println("Add Binoculars");
-			if (isSelectedTab != -1) {
+			if ((isSelectedTab != -1)&&(money>=priceBinoculars)) {
 				int maxEquipment;
 				String name = listExplorers.get(isSelectedTab);
 				ArrayList<String> equipmentTmp = exEquipements.get(name);
@@ -605,12 +647,13 @@ public class SelectionState extends GameState implements ImageObserver {
 						}
 					}
 					if(alreadyEquiped) {
-						System.out.println("Objet dÈj‡ pris");
+						System.out.println("Objet deja pris");
 						alreadyEquiped = false;
 					}
 					else {
 						equipmentTmp.add("Jumelles");
 						System.out.println("Jumelles pour "+ name);
+						money = money - priceBinoculars;
 					}
 				}
 				else {
@@ -619,20 +662,23 @@ public class SelectionState extends GameState implements ImageObserver {
 			}
 		}
 		/* Remove */
-		else if (m.getX()>= 537 && m.getX()<= 562 && m.getY()>=576 && m.getY()<= 609) {
+		else if (m.getX()>= 537 && m.getX()<= 562 && m.getY()>=576 && m.getY()<= 609 ) {
 			if (isSelectedTab != -1) {
 				System.out.println("Remove Binoculars");
 				String name = listExplorers.get(isSelectedTab);
 				ArrayList<String> equipmentTmp = exEquipements.get(name);
-				equipmentTmp.remove("Jumelles");
+				if (equipmentTmp.size()!=0) {
+					equipmentTmp.remove("Jumelles");
+					money = money + priceBinoculars;
+				}
 			}
 		}
 		
 		/* Boots */
 		/* Add */
-		else if (m.getX()>= 838 && m.getX()<= 862 && m.getY()>=576 && m.getY()<= 602) {
+		else if (m.getX()>= 838 && m.getX()<= 862 && m.getY()>=576 && m.getY()<= 602 && difficultySelected != 3 && strategySelected != 3) {
 			System.out.println("Add Boots");
-			if (isSelectedTab != -1) {
+			if ((isSelectedTab != -1)&&(money>=priceBoots)) {
 				int maxEquipment;
 				String name = listExplorers.get(isSelectedTab);
 				ArrayList<String> equipmentTmp = exEquipements.get(name);
@@ -649,12 +695,13 @@ public class SelectionState extends GameState implements ImageObserver {
 						}
 					}
 					if(alreadyEquiped) {
-						System.out.println("Objet dÈj‡ pris");
+						System.out.println("Objet deja pris");
 						alreadyEquiped = false;
 					}
 					else {
 						equipmentTmp.add("Bottes");
 						System.out.println("Bottes pour "+ name);
+						money = money - priceBoots;
 					}
 				}
 				else {
@@ -665,10 +712,14 @@ public class SelectionState extends GameState implements ImageObserver {
 		/* Remove */
 		else if (m.getX()>= 741 && m.getX()<= 765 && m.getY()>=576 && m.getY()<= 603) {
 			if (isSelectedTab != -1) {
+				money = money + priceBoots;
 				System.out.println("Remove Boots");
 				String name = listExplorers.get(isSelectedTab);
 				ArrayList<String> equipmentTmp = exEquipements.get(name);
-				equipmentTmp.remove("Bottes");
+				if (equipmentTmp.size()!=0) {
+					equipmentTmp.remove("Bottes");
+					money = money + priceBinoculars;
+				}
 			}
 		}
 		

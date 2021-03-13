@@ -1,7 +1,6 @@
 package game;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import character.Character;
 import character.Equipment;
