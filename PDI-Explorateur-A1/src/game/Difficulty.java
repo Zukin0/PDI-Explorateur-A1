@@ -14,6 +14,19 @@ public class Difficulty {
 		this.money = money;
 	}
 	
+	public Difficulty() {
+		this.id = 0;
+		this.treasureNB = 0;
+		this.animalsNB = 0;
+		this.money = 0;
+	}
+	
+	public void changeDif(int treasureNB, int animalsNB, int money) {
+		this.treasureNB = treasureNB;
+		this.animalsNB = animalsNB;
+		this.money = money;
+	}
+	
 	public int getID() {
 		return id;
 	}
