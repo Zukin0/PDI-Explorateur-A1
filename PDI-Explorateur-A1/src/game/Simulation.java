@@ -158,7 +158,7 @@ public class Simulation {
 			}
 			threads.add(t);
 			
-		}
+	}
 		
 		for (Thread t : threads) {
 			t.start();
