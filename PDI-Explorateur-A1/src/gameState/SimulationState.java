@@ -103,19 +103,19 @@ public class SimulationState extends GameState implements ImageObserver{
 					System.out.print("//// Dora se trouve sur : ");
 					switch (tilemap.getPosition((c.getPosition().getX())/32, (c.getPosition().getY())/32)) {
 					case 12:
-						//System.out.println(" arbres");
+						System.out.println("arbres");
 						break ;
 					case 7:
-						//System.out.println(" herbe");
+						System.out.println("herbe");
 						break ;
 					case 11:
-						//System.out.println(" rocher");
+						System.out.println("rocher");
 						break ;
 					case 6:
-						//System.out.println(" boue");
+						System.out.println("boue");
 						break ;
 					case 13:
-						//System.out.println(" eau");
+						System.out.println("eau");
 						break ;
 					}
 					break;
