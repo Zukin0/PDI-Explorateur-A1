@@ -73,7 +73,7 @@ public class ExplorerThread implements Runnable{
 					WildAnimals wa = creatorA.getAnimal();
 					int rand = (int)(Math.random() * 100);
 					if( wa != null && rand == 0) { 
-						MeetAnimal.meetAnimals(e, wa, Simulation.strategy);
+						MeetAnimal.meetAnimals(e, wa);
 					}
 					else {
 						CharacterTreatment.move(e);
