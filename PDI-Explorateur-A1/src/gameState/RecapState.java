@@ -24,6 +24,7 @@ public class RecapState extends GameState implements ImageObserver{
 	//création des polices
 	private Font titleFont = new Font("Century Goth", Font.BOLD, 40);
 	private Font simpleFont = new Font("Century Goth", Font.BOLD, 35);
+	private Font texteFont = new Font("Century Goth", Font.PLAIN, 20);
 	
 	private BufferedImage map=null;
 	private BufferedImage heart=null;
@@ -61,7 +62,7 @@ public class RecapState extends GameState implements ImageObserver{
 		g.setFont(simpleFont);
 		g.drawString("LES LOGS DE LA SIMULATION",650, 325);
 		
-		//image
+		//images
 		try {
 			map = ImageIO.read(new File("ressources/schema_carte_sans_fond.png"));
 			heart= ImageIO.read(new File("ressources/icone_coeur.png"));
@@ -77,18 +78,36 @@ public class RecapState extends GameState implements ImageObserver{
 		}
         g.drawImage(map, 1000, 40, 200, 200, (ImageObserver) this);
         
-        g.drawImage(clock, 20, 80, 50, 50, (ImageObserver) this);
-        g.drawImage(money, 20,135, 50, 50, (ImageObserver) this);
-        g.drawImage(treasure,20, 190, 50, 50, (ImageObserver) this);
-        g.drawImage(fight, 20, 245, 50, 50, (ImageObserver) this);
-        g.drawImage(animals, 20, 300,50, 50, (ImageObserver) this);
-        g.drawImage(dead, 20, 355, 50, 50, (ImageObserver) this);
-        g.drawImage(heart, 20, 410, 50, 50, (ImageObserver) this);
-        g.drawImage(heart, 20, 465, 50, 50, (ImageObserver) this);
-        g.drawImage(heart, 20, 520, 50,50, (ImageObserver) this);
-        g.drawImage(heart, 20, 575, 50,50, (ImageObserver) this);
-        g.drawImage(heart, 20, 630, 50, 50, (ImageObserver) this);
-        g.drawImage(heart, 20,685, 50,50, (ImageObserver) this);
+        g.drawImage(clock, 20, 80, 60, 60, (ImageObserver) this);
+        g.drawImage(money, 20,135, 60, 60, (ImageObserver) this);
+        g.drawImage(treasure,20, 190, 60, 60, (ImageObserver) this);
+        g.drawImage(fight, 20, 245, 60, 60, (ImageObserver) this);
+        g.drawImage(animals, 20, 300,60, 60, (ImageObserver) this);
+        g.drawImage(dead, 20, 355, 60, 60, (ImageObserver) this);
+        g.drawImage(heart, 20, 410, 60, 60, (ImageObserver) this);
+        g.drawImage(heart, 20, 465, 60, 60, (ImageObserver) this);
+        g.drawImage(heart, 20, 520,60,60, (ImageObserver) this);
+        g.drawImage(heart, 20, 575,60,60, (ImageObserver) this);
+        g.drawImage(heart, 20, 630, 60, 60, (ImageObserver) this);
+        g.drawImage(heart, 20,685, 60,60, (ImageObserver) this);
+        
+        //texte
+        g.setColor(Color.black);
+		g.setFont(texteFont);
+		g.drawString("Votre simulation a duré 7 minutes et 19 secondes",95, 120);
+		g.drawString("Il vous reste 10 $",95, 175);
+		g.drawString("Vous avez trouvé 3 trésors !",95, 230);
+		g.drawString("Vous avez combattu 7 fois",95, 285);
+		g.drawString("Vous avez tué 5 animaux, bravo !",95, 340);
+		g.drawString("2 de vos explorateurs sont morts ...",95, 395);
+		g.drawString("Il reste 3 points de vie à Dora1 ",95, 450);
+		g.drawString("Il reste 1 points de vie à Dora2",95, 505);
+		g.drawString("Mike1 est mort",95, 560);
+		g.drawString("Il reste 7 points de vie à Joe1",95, 615);
+		g.drawString("Mike2 est mort",95, 670);
+		g.drawString("Il reste 4 points de vie à Remy1",95, 725);
+		
+		g.drawString("Blablabla.....",650, 360);
 	}
 
 	public void keyPressed(int k) {}
