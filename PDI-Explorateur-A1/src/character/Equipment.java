@@ -12,6 +12,12 @@ public class Equipment {
 		this.price = price;
 	}
 	
+	public Equipment() {
+		name = "";
+		power = "";
+		price = 0;
+	}
+	
 	public String getName() {
 		return name;
 	}
