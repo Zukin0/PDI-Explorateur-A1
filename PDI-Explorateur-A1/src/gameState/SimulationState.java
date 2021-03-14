@@ -29,10 +29,12 @@ public class SimulationState extends GameState implements ImageObserver{
 	
 	//création des couleurs nécessaires à l'interface
 	private Color BEIGE = new Color(255,250,240);
+	private Color DARK_BEIGE = new Color(193, 146, 115);
 	
 	//création des polices
 	private Font categoryFont = new Font("Arial", Font.BOLD, 22);
 	private Font whiteBoardFont = new Font("Arial", Font.PLAIN, 20);
+	private Font buttonFont = new Font("Arial", Font.PLAIN, 33);
 	
 	private Simulation sim;
 	
@@ -150,9 +152,9 @@ public class SimulationState extends GameState implements ImageObserver{
 		
 //////////////////////CADRE BLANC////////////////////////////////////////////
 		g.setColor(Color.black);
-		g.fillRect(1050 , 3, 245, 744);
-		g.setColor(BEIGE);
-		g.fillRect(1052 , 5, 241, 740);
+		g.fillRect(1050 , 3, 245, 630);
+		g.setColor(Color.white);
+		g.fillRect(1052 , 5, 241, 626);
 		g.setColor(Color.black);
         g.setFont(categoryFont);
         g.drawString("VOTRE SIMULATION",1060, 30);
@@ -164,32 +166,46 @@ public class SimulationState extends GameState implements ImageObserver{
   			System.out.println("no image");
   			e.printStackTrace();
   		}
-        g.drawImage(time, 1050, 40, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 130, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 220, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 310, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 400, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 490, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 580, 90, 80, (ImageObserver)this);
-        g.drawImage(treasure, 1060, 660, 80, 80, (ImageObserver)this);
+        g.drawImage(time, 1050, 40, 70, 60, (ImageObserver)this);
+        g.drawImage(heart, 1050, 110, 70, 60, (ImageObserver)this);
+        g.drawImage(heart, 1050, 180, 70, 60, (ImageObserver)this);
+        g.drawImage(heart, 1050, 250, 70, 60, (ImageObserver)this);
+        g.drawImage(heart, 1050, 320, 70, 60, (ImageObserver)this);
+        g.drawImage(heart, 1050, 390, 70, 60, (ImageObserver)this);
+        g.drawImage(heart, 1050, 460, 70, 60,(ImageObserver)this);
+        g.drawImage(treasure, 1060, 530, 60, 60, (ImageObserver)this);
         
-        g.drawString("07:04", 1170, 90);
+        g.drawString("07:04", 1140, 80);
         g.setFont(whiteBoardFont);
-        g.drawString("Dora1 : 3/8", 1145, 175);
-        g.drawString("Dora2 : DEAD", 1145, 265);
-        g.drawString("Mike : 8/8", 1145, 355);
-        g.drawString("Joe : 8/8", 1145, 445);
-        g.drawString("Remy1 : 1/8", 1145, 535);
-        g.drawString("Remy2 : DEAD", 1145, 625);
-        g.drawString("Tresors : 0", 1145, 715);
+        g.drawString("Dora1 : 3/8", 1135, 145);
+        g.drawString("Dora2 : DEAD", 1135, 215);
+        g.drawString("Mike : 8/8", 1135,280);
+        g.drawString("Joe : 8/8", 1135, 355);
+        g.drawString("Remy1 : 1/8", 1135, 430);
+        g.drawString("Remy2 : DEAD", 1135, 495);
+        g.drawString("Tresors : 0", 1135, 570);
+        
+        //button
+        g.setColor(Color.black);
+		g.fillRect(1080, 650, 180, 67);
+        g.setColor(DARK_BEIGE);
+		g.fillRect(1085, 655, 170, 57);
+		g.setFont(buttonFont);
+		g.setColor(Color.black);
+        g.drawString("Recap",1120, 695);
 	}
 
 	public void keyPressed(int k) {}
 
 	public void keyReleased(int k) {}
+	
+	public void mousePressed(MouseEvent m) {
+		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715) {
+			gsm.gameStates.push(new RecapState(gsm));
+		}
+	}
 
 	public void mouseClicked(MouseEvent m) {}
-
 
 	public void mouseReleased(MouseEvent m) {}
 
@@ -202,14 +218,10 @@ public class SimulationState extends GameState implements ImageObserver{
 		return sim;
 	}
 
-
 	public void setSim(Simulation sim) {
 		this.sim = sim;
 	}
 	public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
 		return false;
-	}
-	public void mousePressed(MouseEvent m) {
-		
 	}
 }

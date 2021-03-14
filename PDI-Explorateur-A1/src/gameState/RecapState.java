@@ -20,11 +20,13 @@ public class RecapState extends GameState implements ImageObserver{
 	
 	//création des couleurs nécessaires à l'interface
 	private Color BEIGE = new Color(255,250,240);
+	private Color DARK_BEIGE = new Color(193, 146, 115);
 		
 	//création des polices
 	private Font titleFont = new Font("Century Goth", Font.BOLD, 40);
 	private Font simpleFont = new Font("Century Goth", Font.BOLD, 35);
 	private Font texteFont = new Font("Century Goth", Font.PLAIN, 20);
+	private Font buttonFont = new Font("Arial", Font.PLAIN, 33);
 	
 	private BufferedImage map=null;
 	private BufferedImage heart=null;
@@ -108,6 +110,15 @@ public class RecapState extends GameState implements ImageObserver{
 		g.drawString("Il reste 4 points de vie à Remy1",95, 725);
 		
 		g.drawString("Blablabla.....",650, 360);
+		
+		//button
+        g.setColor(Color.black);
+		g.fillRect(1080, 650, 180, 67);
+        g.setColor(DARK_BEIGE);
+		g.fillRect(1085, 655, 170, 57);
+		g.setFont(buttonFont);
+		g.setColor(Color.black);
+        g.drawString("Recap",1120, 695);
 	}
 
 	public void keyPressed(int k) {}
@@ -116,7 +127,17 @@ public class RecapState extends GameState implements ImageObserver{
 
 	public void mouseClicked(MouseEvent m) {}
 
-	public void mousePressed(MouseEvent m) {}
+	public void mousePressed(MouseEvent m) {
+		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715) {
+			while (!(gsm.gameStates.isEmpty())) {
+				gsm.gameStates.pop();
+			}
+			if((gsm.gameStates.isEmpty())) {
+				System.out.println("/////STACK EMPTY");
+			}
+			gsm.gameStates.push(new MenuState(gsm));
+		}
+	}
 
 	public void mouseReleased(MouseEvent m) {}
 
