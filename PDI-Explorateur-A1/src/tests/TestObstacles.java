@@ -35,7 +35,7 @@ public class TestObstacles {
 		switch(nameObs) {
 		case "water":
 			//prendre de l'eau et comm avec se potes
-			System.out.println("j'ai trouvé de l'eau qui a besoin");
+			System.out.println(e.getName() + " :j'ai trouvé de l'eau qui a besoin");
 			CharacterTreatment.changeDir(e);
 			break;
 		case "mud":
@@ -52,23 +52,23 @@ public class TestObstacles {
 					}
 				}
 				if (botte==false) {
-					System.out.println("j'ai pas de bottes alors je ralenti");
+					System.out.println(e.getName() + " :j'ai pas de bottes alors je ralenti");
 					e.setSpeed(newSpeed);
 				}else {
-					System.out.println("ouf j'ai des bottes");
+					System.out.println(e.getName() + " :ouf j'ai des bottes");
 				}
 			}
 			e.setSpeed(oldSpeed);
-			System.out.println("Je sors de la boue je retrouve ma vitesse : "+e.getSpeed());
+			System.out.println(e.getName() + " : Je sors de la boue je retrouve ma vitesse : "+e.getSpeed());
 			break;
 		case "tree":
 			//changer de direction
-			System.out.println("je rencontre un arbre alors je change de direction");
+			System.out.println(e.getName() + " : je rencontre un arbre alors je change de direction");
 			CharacterTreatment.changeDir(e);
 			break;
 		case "stone": 
 			//changer de direction
-			System.out.println("je rencontre une roche alors je change de direction");
+			System.out.println(e.getName() + " : je rencontre une roche alors je change de direction");
 			CharacterTreatment.changeDir(e);
 			break;
 		case "treasure": 

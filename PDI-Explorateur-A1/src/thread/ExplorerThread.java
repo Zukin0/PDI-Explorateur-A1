@@ -109,40 +109,76 @@ public class ExplorerThread implements Runnable{
 	 * faudrait faire un test sur son chemin du style
 	 * while j avance et que j ai pas un obs et que j ai pas atteint objectif (pos suivante) alors c bon
 	 * des que je trouve un obs mettre false*/
-	public static boolean collision(Explorer e) {
-		boolean collision  = false;
-		//division par 32 car les explorateurs ont une position en pixels alors que la map est un tableau 20x28
-		int posX = e.getPosition().getX()/32;
-		int posY = e.getPosition().getY()/32;
+//public static boolean collision(Explorer e) {
+//		boolean collision  = false;
+//		//division par 32 car les explorateurs ont une position en pixels alors que la map est un tableau 20x28
+////		int posX = (CharacterTreatment.predictPos(e).getX()-TileMap.offsetX)/37;
+////		int posY = (CharacterTreatment.predictPos(e).getY()-TileMap.offsetY)/37;
+//		
+//		int posX = CharacterTreatment.predictPos(e).getX();
+//		int posY = CharacterTreatment.predictPos(e).getY();
+//		
+//		int cWidth = e.getSize().getWidth();
+//		int cHeight = e.getSize().getHeight();
+//		
+//		int xLeft = (int) (posX - TileMap.offsetX) / 37;
+//		int xRight = (int) (posX + cWidth - TileMap.offsetX)/ 37;
+//		int yTop = (int) (posY- TileMap.offsetY) / 37;
+//		int yBottom = (int) (posY + cHeight- TileMap.offsetY) / 37;
 		
-		if (TileMap.map[posX][posY]!=7) {
+		//System.out.println(e.getName() + " : " + e.getDir() + ", posX : " + xLeft + ", posY : " + yTop);
+		
+//		switch(e.getDir()) {
+//		
+//		//Up
+//		case 0 : System.out.println(e.getName() + " : Up, posX : " + xLeft + ", posY : " + yTop);
+//		break;
+//		
+//		//Down
+//		case 1 : System.out.println(e.getName() + " : Down, posX : " + xLeft + ", posY : " + yBottom);
+//		break;
+//		
+//		//Right
+//		case 2 : System.out.println(e.getName() + " : Right, posX : " + xRight+ ", posY : " + yTop);
+//		break;
+//		
+//		//Left
+//		case 3 : System.out.println(e.getName() + " : Left, posX : " + xLeft+ ", posY : " + yTop);
+//		break;
+//		}
+
+		
+//		System.out.println(TileMap.getType(5, 6));
+		
+		/*if (TileMap.map[posX][posY]!=7) {
 			//connaitre l'obstacle
 			switch(TileMap.map[posX][posY]) {
 			case 6 :
-				System.out.println("6");
-				TestObstacles.meetObstacles(e, "mud");
+				System.out.println(e.getName() + " : Boue");
+				//TestObstacles.meetObstacles(e, "mud");
 				break;
 			case 11 :
-				System.out.println("11");
-				TestObstacles.meetObstacles(e, "stone");
+				System.out.println(e.getName() + " : Rocher");
+				//TestObstacles.meetObstacles(e, "stone");
 				break;
 			case 12 :
-				System.out.println("12");
-				TestObstacles.meetObstacles(e, "tree");
+				System.out.println(e.getName() + " : Arbres");
+				//TestObstacles.meetObstacles(e, "tree");
 				break;
 			case 13 :
-				System.out.println("13");
-				TestObstacles.meetObstacles(e, "water");
+				System.out.println(e.getName() + " : Eau");
+				//TestObstacles.meetObstacles(e, "water");
 				break;
 			case 14 :
-				TestObstacles.meetObstacles(e, "treasure");
+				System.out.println(e.getName() + " : Tresor");
+				//TestObstacles.meetObstacles(e, "treasure");
 				break;
 			}
 			collision = true;
 		}/*else {
 			collision=false;
 		}*/
-		return collision;
+//		return collision;
 //		//division par 32 car les explorateurs ont une position en pixels alors que la map est un tableau 20x28
 //		int futurPosX = CharacterTreatment.predictPos(e).getX()/32;
 //		int futurPosY = CharacterTreatment.predictPos(e).getY()/32;
@@ -173,7 +209,7 @@ public class ExplorerThread implements Runnable{
 //			}
 //			return true;
 //		}
-	}
+//	}
 	
 	//je suis sur les bords ?
 	public static boolean side(Explorer e) {

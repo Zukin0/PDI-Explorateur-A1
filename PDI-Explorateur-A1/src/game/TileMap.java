@@ -111,12 +111,12 @@ public class TileMap {
 				}
 			}
 			
-			for (int row = 0; row<nbRows;row++) {
-				for (int col = 0; col<nbCols; col++) {
-					System.out.print(map[row][col]+" ");
-				}
-				System.out.println();
-			}
+//			for (int row = 0; row<nbRows;row++) {
+//				for (int col = 0; col<nbCols; col++) {
+//					System.out.print(map[row][col]+" ");
+//				}
+//				System.out.println();
+//			}
 			
 		}
 		catch (Exception e) {
@@ -209,21 +209,11 @@ public class TileMap {
 				int c = rc % numTilesAcross;
 				
 				g.drawImage(tiles[r][c].getImage(), x+col*tileSize+5, y+row*tileSize+5,tileSize, tileSize, null);
+				//g.drawRect(x+col*tileSize+5, y+row*tileSize+5, tileSize, tileSize);
+				//g.drawString(row + "," + col, x+col*tileSize+5, y+row*tileSize+5 + 20);
 			}
 		}
 	}
-	
-//	public static void main(String args[]) {
-//		TileMap tilemap;
-//		tilemap = new TileMap();
-//		tilemap.loadMap("/textMap.txt");
-//		tilemap.loadTiles("/tileset.png");
-//		tilemap.setPosition(10, 10);
-//		tilemap.setTileSize(GamePanel.HEIGHT/20); /* 750/20 = 37,5 => int(37.5) = 37 */
-//		
-//		System.out.println(tilemap.getNbCols());
-//		System.out.println(tilemap.getNbRows());
-//	}
 	
 	
 }

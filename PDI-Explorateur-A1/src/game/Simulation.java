@@ -166,7 +166,6 @@ public class Simulation {
 	
 	public void createTreasures() {
 		int nbTreasures = difficulty.getTreasureNB();
-		
 		for(int i=1;i<=nbTreasures;i++) {
 			String name = "treasure" + i;
 			Treasure t = new Treasure(name,new Size(30,30),new Position(0,0),true);

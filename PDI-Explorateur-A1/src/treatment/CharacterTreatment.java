@@ -2,6 +2,8 @@ package treatment;
 import character.Character;
 import character.Explorer;
 import data.Position;
+import data.Size;
+import game.TileMap;
 import ihm.GamePanel;
 import thread.ExplorerThread;
 
@@ -65,7 +67,7 @@ public class CharacterTreatment {
 		int speed = e.getSpeed();
 		int movement = 1;
 		
-		while ((movement<=speed)&&(!ExplorerThread.collision(e))) {
+		while ((movement<=speed)/*&&(!ExplorerThread.collision(e))*/) {
 			switch(e.getDir()) {
 			
 			//Up

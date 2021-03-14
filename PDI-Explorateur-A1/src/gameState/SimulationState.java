@@ -23,6 +23,7 @@ import game.TileMap;
 import character.Character;
 import character.Explorer;
 import character.WildAnimals;
+import data.Position;
 import data.Size;
 import data.Treasure;
 import ihm.GamePanel;
@@ -102,20 +103,28 @@ public class SimulationState extends GameState implements ImageObserver{
 			Size treasureSize = t.getSize();
 			treasurePlaced = false;
 			while(!treasurePlaced) {
-				/* Random position X [startPosition X ; Map.width - treasureSize.width] */
-				int x = (int) (tMapX + Math.random() * ((tMapX+(nbCol-1)*tileSize+5) - treasureSize.getWidth()));
+				/* Random position X [startPosition X ; Map.width] */
+				int x = (int) (tMapX + Math.random() * (tMapX+(nbRows-1)*tileSize+5));
 				
-				/* Random position Y [startPosition Y; Map.height - treasureSize.height] */
-				int y = (int) (tMapY + Math.random() * ((tMapY+(nbRows-1)*tileSize+5) - treasureSize.getHeight()));
+				/* Random position Y [startPosition Y; Map.height] */
+				int y = (int) (tMapY + Math.random() * (tMapY+(nbCol-1)*tileSize+5));
 				
-				System.out.println("X : " + x + ", Y = " + y);
+				/* Calcul déduit de la classe TileMap sur le placement des tiles */
+				/* Col = (xPoS - OffSetX)/tileSize, Row = (YPoS - OffSetY)/tileSize */
+				int row = (int)(x-5-tMapX)/tileSize;
+				int col = (int) (y-5-tMapY)/tileSize;
 				
-				if(tilemap.getPosition(x/tileSize, y/tileSize) == 7) {
-					System.out.println("Treasure Placement possible, x : " + x + ", y : " + y);
+
+//				System.out.println("X : " + row + ", Y = " + col);
+				if(tilemap.getPosition(row,col) == 7) {
+//					System.out.println("Treasure Placement possible, x : " + (int)(x-5-tMapX)/tileSize + ", y : " + (int) (y-5-tMapY)/tileSize);
+					
+					t.setPosition(new Position(col*tileSize+5+tMapX,row*tileSize+5+tMapY));
+//					System.out.println(col*tileSize+5+tMapX + " " + row*tileSize+5+tMapY);
 					treasurePlaced = true;
 				}
 				else {
-					System.out.println("Placement impossible, case : " + tilemap.getPosition(x/tileSize, y/tileSize));
+//					System.out.println("Placement impossible, case : " + tilemap.getPosition((int)(x-5-tMapX)/tileSize,(int) (y-5-tMapY)/tileSize));
 				}
 			}
 		}
@@ -199,6 +208,14 @@ public class SimulationState extends GameState implements ImageObserver{
 				WildAnimals wa = (WildAnimals)c;
 				g.drawRect(wa.getPosTerr().getX(),wa.getPosTerr().getY(), wa.getTerritorySize().getHeight(), wa.getTerritorySize().getHeight());
 			}
+//			g.setColor(Color.red);
+//			g.drawRect(c.getPosition().getX(), c.getPosition().getY(), c.getSize().getWidth(), c.getSize().getHeight());
+		}
+		
+		/* Draw Treasures */
+		for(HashMap.Entry<String,Treasure> entry : Simulation.treasures.entrySet()) {
+			Treasure t = entry.getValue();
+			g.drawImage(treasure, t.getPosition().getX(), t.getPosition().getY(), t.getSize().getWidth(), t.getSize().getHeight(),(ImageObserver)this);
 		}
 		
 //////////////////////CADRE BLANC////////////////////////////////////////////
