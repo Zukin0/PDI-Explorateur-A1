@@ -162,6 +162,7 @@ public class SimulationState extends GameState implements ImageObserver{
 			}
 		}
 		
+		
 //////////////////////CADRE BLANC////////////////////////////////////////////
 		g.setColor(Color.black);
 		g.fillRect(1050 , 3, 245, 744);

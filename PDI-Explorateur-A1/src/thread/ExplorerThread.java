@@ -14,11 +14,12 @@ import treatment.MeetAnimal;
 
 public class ExplorerThread implements Runnable{
 	Explorer e;
-	
+	volatile int treasureFind ;
 	int timer;
 	
 	public ExplorerThread(Explorer e) {
-		this.e = e; 
+		this.e = e;
+		treasureFind = 0;
 	}
 	
 	public void run() {
@@ -66,19 +67,22 @@ public class ExplorerThread implements Runnable{
 					/*
 					 * TESTING BRUTE LE TEMPS D'AVOIR LE CODE DE YOHAN
 					 */
-					WaDirector creatorA = new WaDirector();
-					WaBuilder bWolf = new WolfBuilder();
-					creatorA.setWildAnimalsBuilder(bWolf);
-					creatorA.BuildWildAnimals();
-					WildAnimals wa = creatorA.getAnimal();
-					int rand = (int)(Math.random() * 100);
-					if( wa != null && rand == 0) { 
-						MeetAnimal.meetAnimals(e, wa);
+//					WaDirector creatorA = new WaDirector();
+//					WaBuilder bWolf = new WolfBuilder();
+//					creatorA.setWildAnimalsBuilder(bWolf);
+//					creatorA.BuildWildAnimals();
+//					WildAnimals wa = creatorA.getAnimal();
+//					int rand = (int)(Math.random() * 100);
+//					if( wa != null && rand == 0) { 
+//						MeetAnimal.meetAnimals(e, wa);
+//					}
+//					else {
+//						CharacterTreatment.move(e);
+//					}
+					for(WildAnimals a : Simulation.animals.values()) {
+						CharacterTreatment.auraCheck(e, a, this);
 					}
-					else {
-						CharacterTreatment.move(e);
-					}
-					
+					CharacterTreatment.move(e);
 					/*
 					 * FIN TESTING BRUTE
 					 */
@@ -87,6 +91,11 @@ public class ExplorerThread implements Runnable{
 				cpt++;
 			}
 		}
+	}
+	
+	public synchronized void find() {
+		treasureFind++;
+		System.out.println("Trésor trouver on en est a : " + treasureFind);
 	}
 	
 	public void collsion() {

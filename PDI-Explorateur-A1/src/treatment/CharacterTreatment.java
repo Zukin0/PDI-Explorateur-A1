@@ -10,7 +10,9 @@ import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
 import data.MapObjects;
 import data.Position;
+import data.Treasure;
 import ihm.GamePanel;
+import thread.ExplorerThread;
 
 public class CharacterTreatment {
 	
@@ -114,21 +116,23 @@ public class CharacterTreatment {
 		return false;
 	}
 	
-	public static void auraCheck(Character pChar, MapObjects mC) {
+	public static void auraCheck(Character pChar, MapObjects mC, ExplorerThread eT) {
 		
 		//Calcul distance between two entity	
 		double dis = Math.sqrt(Math.pow(pChar.getPosition().getX() - mC.getPosition().getX(), 2) + Math.pow(pChar.getPosition().getY() - mC.getPosition().getY(), 2));	
-		System.out.println("la distance et de : " + dis);
+//		System.out.println("la distance et de : " + dis);
 		
 		//Checking
 		if(pChar.getAura() >= dis) {
 			System.out.println("Dans la zone");
 			if(mC.getClass() == WildAnimals.class)
 				MeetAnimal.meetAnimals((Explorer) pChar, (WildAnimals) mC);
-//			if(mC.getClass() == ????)
+//			
+			if(mC.getClass() == Treasure.class)
+				eT.find();
 		}
 		else {
-			System.out.println("Pas dans la zone");
+//			System.out.println("Pas dans la zone");
 		}	
 	}
 	
@@ -165,9 +169,6 @@ public class CharacterTreatment {
 				e.setPosition(un);
 				e2.setPosition(deux);
 				a.setPosition(trois);
-				
-				auraCheck(e, e2);
-
 				
 	}
 }
