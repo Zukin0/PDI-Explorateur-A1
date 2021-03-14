@@ -23,6 +23,7 @@ public class MeetAnimal{
 		HashMap<String,Character> characters = Simulation.characters;
 		String outcome = null;
 		String action = null;
+		Explorer helper = null;
 		
 		int simulation = Simulation.strategy;
 		
@@ -66,24 +67,37 @@ public class MeetAnimal{
 		switch(action) {
 		case "fight":
 			//fight 
-			outcome = figth(e, a);
+			outcome = fight(e, a);
 			if (outcome == "deathExplo") {
 				deathExplorer(e, simulation, explorers, characters);
 			}
 			break;
 		case "call":
-			//comm : call a friend
+			//call a friend
 			System.out.println(e.getName() + " : Besoin d'aide, ma position : "+
 								e.getPosition().getX()+", "+e.getPosition().getY()+"\n");
-			//arrivée autre explorateur + combat
-			//utiliser les "segments" de la vision pour pouvoir trouver le plus proche
-			//addition des puissances et pv
-			outcome = figth(e, a); 
+			helper = findHelper(e, explorers);
+			//add explorer and helper life points and attack points
+			//change explorer capacities to fight 
+			e.setAttackPoint(e.getAttackPoint()+helper.getAttackPoint());
+			e.setLifePoint(e.getLifePoint()+helper.getLifePoint());
+			//goHelp(e, helper);
+			outcome = fight(e, a); 
+			//if he dies : kill both of explorers
+			//otherwise : distribute explorer capacities
 			if (outcome == "deathExplo") {
-				//faire mourir les deux explorateurs
 				deathExplorer(e, simulation, explorers, characters);
-				//deathExplorer(e2, simulation, explorers, characters);
+				deathExplorer(helper, simulation, explorers, characters);
+			}else {
+				int attack = e.getAttackPoint()/2;
+				int life = e.getLifePoint()/2;
+				e.setAttackPoint(attack);
+				e.setLifePoint(life);
+				helper.setAttackPoint(attack);
+				helper.setLifePoint(life);
 			}
+			CharacterTreatment.changeDir(e);
+			CharacterTreatment.changeDir(helper);
 			break;
 		case "escape":
 			//go away for n seconds
@@ -95,7 +109,7 @@ public class MeetAnimal{
 	}
 	
 	
-	public static String figth(Explorer e, WildAnimals a) {
+	public static String fight(Explorer e, WildAnimals a) {
 		int apE = e.getAttackPoint();
 		int lpE = e.getLifePoint();
 		int apA = a.getAttackPoint();
@@ -165,6 +179,51 @@ public class MeetAnimal{
 			//right
 			e.setDir(2);
 			break;
+		}
+	}
+	
+	public static Explorer findHelper(Explorer e, HashMap<String,Explorer> explorers) {
+		
+		double min = 100000;
+		double dis =0;
+		Explorer helper = null;
+		
+		for (Explorer explorer : explorers.values()){
+			if(!explorer.equals(e)) {
+				dis = Math.sqrt(Math.pow(e.getPosition().getX() - explorer.getPosition().getX(), 2) + Math.pow(e.getPosition().getY() - explorer.getPosition().getY(), 2));
+				if(dis<min) {
+					min=dis;
+					helper = explorer;
+				}	
+			}
+		}
+		System.out.println("coucou je suis "+ helper.getName()+" et je viens t'aider");
+		return helper;
+		
+	}
+	
+	public static void goHelp(Explorer e, Explorer helper) {
+		int xFinish = e.getPosition().getX();
+		int yFinish = e.getPosition().getY();
+		if (helper.getPosition().getX()>xFinish) {
+			while (helper.getPosition().getX()!=xFinish+1) {
+				helper.setDir(3);
+			}
+		}
+		if (helper.getPosition().getX()<xFinish) {
+			while (helper.getPosition().getX()!=xFinish-1) {
+				helper.setDir(2);
+			}
+		}
+		if (helper.getPosition().getY()>yFinish) {
+			while (helper.getPosition().getY()!=yFinish+1) {
+				helper.setDir(0);
+			}
+		}
+		if (helper.getPosition().getY()>yFinish) {
+			while (helper.getPosition().getY()!=yFinish-1) {
+				helper.setDir(1);
+			}
 		}
 	}
 	
