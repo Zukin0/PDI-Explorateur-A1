@@ -130,28 +130,25 @@ public class ExplorerThread implements Runnable{
 		int tile2 = tilemap.getPosition(row2,col2);
 		
 		if(CharacterTreatment.contains(TileMap.blockTile, tile1) || CharacterTreatment.contains(TileMap.blockTile, tile2)) {
-			System.out.println("Blocked tile1 : " + tile1);
+			//System.out.println("Blocked tile1 : " + tile1);
+			TestObstacles.meetObstacles(e, "blocked");
 			return true;
 		}
 		else {
 			switch(tile1) {
 			case 6 :
-				System.out.println("6");
 				TestObstacles.meetObstacles(e, "mud");
 				break;
 			case 13 :
-				System.out.println("13");
 				TestObstacles.meetObstacles(e, "water");
 				break;
 			}
 			
 			switch(tile2) {
 			case 6 :
-				System.out.println("6");
 				TestObstacles.meetObstacles(e, "mud");
 				break;
 			case 13 :
-				System.out.println("13");
 				TestObstacles.meetObstacles(e, "water");
 				break;
 			}

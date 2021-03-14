@@ -3,35 +3,27 @@ package tests;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import character.Character;
 import character.Equipment;
 import character.Explorer;
 import character.builders.explorers.DoraBuilder;
 import character.builders.explorers.JoeBuilder;
 import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
-import data.Obstacles;
-import data.Position;
-import data.Size;
 import game.Simulation;
-import thread.ExplorerThread;
 import treatment.CharacterTreatment;
 
 public class TestObstacles {
 	
-	private static HashMap<String,Explorer> explorers = new HashMap<String,Explorer>();
+	//private static HashMap<String,Explorer> explorers = new HashMap<String,Explorer>();
 
 	//rencontre avec les obstacles fixes et modulables
 	
 	public static void meetObstacles(Explorer e, String nameObs) {
 		
-//		HashMap<String,Explorer> explorers = Simulation.explorers;
+		HashMap<String,Explorer> explorers = Simulation.explorers;
 		
-		//String name = o.getName();
 		int oldSpeed = e.getSpeed();
 		int newSpeed = e.getSpeed()*(int)50/100;
-		
-		//penser a faire un while pour la boue pour reprendre sa vitesse normale
 		
 		switch(nameObs) {
 		case "water":
@@ -51,14 +43,10 @@ public class TestObstacles {
 			e.setSpeed(oldSpeed);
 			System.out.println("Je sors de la boue je retrouve ma vitesse : "+e.getSpeed());
 			break;
-		case "tree":
+		case "blocked":
+			//tree, stone or side
 			//change direction
-			System.out.println("je rencontre un arbre alors je change de direction");
-			CharacterTreatment.changeDir(e);
-			break;
-		case "stone": 
-			//changedirection
-			System.out.println("je rencontre une roche alors je change de direction");
+			System.out.println("je suis bloquée je change de direction");
 			CharacterTreatment.changeDir(e);
 			break;
 		case "treasure": 
@@ -136,10 +124,10 @@ public class TestObstacles {
 		e3.setName("Dora2");
 		
 		
-		explorers.put("Dora1", e);
-		explorers.put("Dora2", e3);
-		explorers.put("Dora3", e4);
-		explorers.put("Joe1", e2);
+//		explorers.put("Dora1", e);
+//		explorers.put("Dora2", e3);
+//		explorers.put("Dora3", e4);
+//		explorers.put("Joe1", e2);
 		
 		//changer les pv
 		e3.setLifePoint(16);
@@ -168,8 +156,9 @@ public class TestObstacles {
 		
 		meetObstacles(e,"water");
 		meetObstacles(e,"mud");
-		meetObstacles(e,"stone");
-		meetObstacles(e,"tree");
+		meetObstacles(e,"blocked");
+		//meetObstacles(e,"stone");
+		//meetObstacles(e,"tree");
 		
 	}
 	
