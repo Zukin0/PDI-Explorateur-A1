@@ -24,7 +24,7 @@ import ihm.GamePanel;
 
 public class SimulationState extends GameState implements ImageObserver{
 	
-	private TileMap tilemap;
+	public static TileMap tilemap;
 	private int speed = 1;
 	
 	//création des couleurs nécessaires à l'interface
