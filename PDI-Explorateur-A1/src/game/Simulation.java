@@ -36,6 +36,7 @@ public class Simulation {
 	public static HashMap<String,WildAnimals> animals = new HashMap<String, WildAnimals>();
 	
 	public static HashMap<String,Treasure> treasures = new HashMap<String, Treasure>();
+	public static ArrayList<String> listExp = new ArrayList<String>();
 	
 	private ExDirector exCreator;
 	private WaDirector waCreator;
@@ -58,6 +59,7 @@ public class Simulation {
 	public static int strategy;
 	
 	public Simulation(Difficulty difficulty, int strategy, ArrayList<String> listExp, HashMap<String,ArrayList<String>> exEquipment) {
+		this.listExp = listExp;
 		this.strategy = strategy;
 		this.difficulty = difficulty;
 		initBuilders();

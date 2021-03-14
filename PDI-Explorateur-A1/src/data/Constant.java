@@ -2,13 +2,13 @@ package data;
 
 public class Constant {
 	
-	public static final int SLEEP_THREAD_TIME = 1000;
+	public static final int SLEEP_CHRONOMETER = 1000;
 	
 	/*
 	 * Speed of the whole program, the smaller the value, the faster the simulation will be
 	 */
 	public static final int SIMULATION_SPEED = 100;
-	public static final int INTERVAL_DIRECTION_CHANGE = 5000;
+	public static final int INTERVAL_DIRECTION_CHANGE = 3000;
 	public static final int TIME_ESCAPING = 5000;
 	
 	/*
