@@ -76,10 +76,13 @@ public class MeetAnimal{
 			System.out.println(e.getName() + " : Besoin d'aide, ma position : "+
 								e.getPosition().getX()+", "+e.getPosition().getY()+"\n");
 			//arrivée autre explorateur + combat
-			//addition des puissances ?
+			//utiliser les "segments" de la vision pour pouvoir trouver le plus proche
+			//addition des puissances et pv
 			outcome = figth(e, a); 
 			if (outcome == "deathExplo") {
+				//faire mourir les deux explorateurs
 				deathExplorer(e, simulation, explorers, characters);
+				//deathExplorer(e2, simulation, explorers, characters);
 			}
 			break;
 		case "escape":
