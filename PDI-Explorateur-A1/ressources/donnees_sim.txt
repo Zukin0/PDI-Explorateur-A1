@@ -1,18 +1,6 @@
-<<<<<<< HEAD
-(07:09=time)
-(money)
-(nb combats)
-(nb animaux morts)
-(nb morts)
-(vie)
-(vie)
-(vie)
-(vie)
-(vie)
-(vie)
-=======
+
 07:09=time
-&
+13
 0
 0
 0
@@ -23,4 +11,3 @@ vie
 vie
 vie
 vie
->>>>>>> refs/heads/juju

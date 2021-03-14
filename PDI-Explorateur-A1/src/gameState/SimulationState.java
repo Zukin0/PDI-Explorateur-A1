@@ -337,7 +337,7 @@ public class SimulationState extends GameState implements ImageObserver{
         for(String name : Simulation.listExp) {
         	if(!Simulation.explorers.containsKey(name)) {
         		g.drawString(name+" : DEAD", 1135, 145+i*70);
-        		g.drawImage(death, 1050, 110+i*70, 70, 60,(ImageObserver)this);
+        		g.drawImage(death, 1055, 110+i*70, 65, 60,(ImageObserver)this);
         		i++;
         	}
 
