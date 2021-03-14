@@ -7,6 +7,9 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
@@ -20,6 +23,8 @@ import game.TileMap;
 import character.Character;
 import character.Explorer;
 import character.WildAnimals;
+import data.Size;
+import data.Treasure;
 import ihm.GamePanel;
 
 public class SimulationState extends GameState implements ImageObserver{
@@ -53,9 +58,14 @@ public class SimulationState extends GameState implements ImageObserver{
 	private BufferedImage heart=null;
 	private BufferedImage treasure=null;
 	
+	/*Boolean*/
+	private boolean treasurePlaced;
+	
 	public SimulationState(GameStateManager gsm) {
 		super(gsm);
 		init();
+		initImageFiles();
+		treasurePlacement();
 	}
 
 
@@ -64,8 +74,52 @@ public class SimulationState extends GameState implements ImageObserver{
 		tilemap.loadMap("/textMap.txt");
 		tilemap.loadTiles("/tileset.png");
 		tilemap.setPosition(10, 10);
-		tilemap.setTileSize(GamePanel.HEIGHT/20);
+		tilemap.setTileSize(GamePanel.HEIGHT/20); /* 750/20 = 37,5 => int(37.5) = 37 */
 		
+	}
+	
+	public void initImageFiles() {
+        try {
+  			heart = ImageIO.read(new File("ressources/icone_coeur.png"));
+  			time = ImageIO.read(new File("ressources/icone_temps.png"));
+  			treasure = ImageIO.read(new File("ressources/tresor.png"));
+  		} catch (IOException e) {
+  			System.out.println("no image");
+  			e.printStackTrace();
+  		}
+	}
+	
+	public void treasurePlacement() {
+		HashMap<String,Treasure> ts = Simulation.treasures;
+		int nbCol = tilemap.getNbCols();
+		int nbRows = tilemap.getNbRows();
+		int tMapX = tilemap.getX();
+		int tMapY = tilemap.getY();
+		int tileSize = tilemap.getTileSize();
+		
+		for (HashMap.Entry<String, Treasure> entry : ts.entrySet()) {
+			Treasure t = entry.getValue();
+			Size treasureSize = t.getSize();
+			treasurePlaced = false;
+			while(!treasurePlaced) {
+				/* Random position X [startPosition X ; Map.width - treasureSize.width] */
+				int x = (int) (tMapX + Math.random() * ((tMapX+(nbCol-1)*tileSize+5) - treasureSize.getWidth()));
+				
+				/* Random position Y [startPosition Y; Map.height - treasureSize.height] */
+				int y = (int) (tMapY + Math.random() * ((tMapY+(nbRows-1)*tileSize+5) - treasureSize.getHeight()));
+				
+				System.out.println("X : " + x + ", Y = " + y);
+				
+				if(tilemap.getPosition(x/tileSize, y/tileSize) == 7) {
+					System.out.println("Treasure Placement possible, x : " + x + ", y : " + y);
+					treasurePlaced = true;
+				}
+				else {
+					System.out.println("Placement impossible, case : " + tilemap.getPosition(x/tileSize, y/tileSize));
+				}
+			}
+		}
+				
 	}
 	
 	public void tick() {
@@ -77,10 +131,14 @@ public class SimulationState extends GameState implements ImageObserver{
 		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
 		
 ///////////////////////////MAP////////////////////////////////////////////////
+		/* Map Border */
 		g.setColor(Color.black);
 		g.fillRect(3,3, 1040, 744);
+		
+		/* Map */
 		tilemap.draw(g);
 		
+		/* Dynamic explorer's image loading, changes when explorer's direction changes */
 		for(Character c : sim.characters.values()) {
 			String name = c.getName().substring(0,c.getName().length()-1);
 			String dynFileName ="";
@@ -111,30 +169,11 @@ public class SimulationState extends GameState implements ImageObserver{
 	  		} catch (IOException e) {
 	  			System.out.println("Error Image File couldn't load");
 	  			e.printStackTrace();
-	  		}
-			
+	  		}		
 			switch(name) {
 			
 			case "Dora" : 
 				g.drawImage(imageDora, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
-//					//System.out.print("//// Dora se trouve sur : ");
-//					switch (tilemap.getPosition((c.getPosition().getX())/32, (c.getPosition().getY())/32)) {
-//					case 12:
-//						//System.out.println("arbres");
-//						break ;
-//					case 7:
-//						//System.out.println("herbe");
-//						break ;
-//					case 11:
-//						//System.out.println("rocher");
-//						break ;
-//					case 6:
-//						//System.out.println("boue");
-//						break ;
-//					case 13:
-//						//System.out.println("eau");
-//						break ;
-//					}
 				break;
 			case "Mike" : 
 				g.drawImage(imageMike, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
@@ -170,14 +209,7 @@ public class SimulationState extends GameState implements ImageObserver{
 		g.setColor(Color.black);
         g.setFont(categoryFont);
         g.drawString("VOTRE SIMULATION",1060, 30);
-        try {
-  			heart = ImageIO.read(new File("ressources/icone_coeur.png"));
-  			time = ImageIO.read(new File("ressources/icone_temps.png"));
-  			treasure = ImageIO.read(new File("ressources/tresor.png"));
-  		} catch (IOException e) {
-  			System.out.println("no image");
-  			e.printStackTrace();
-  		}
+
         g.drawImage(time, 1050, 40, 90, 80, (ImageObserver)this);
         g.drawImage(heart, 1050, 130, 90, 80, (ImageObserver)this);
         g.drawImage(heart, 1050, 220, 90, 80, (ImageObserver)this);

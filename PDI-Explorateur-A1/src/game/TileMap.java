@@ -9,6 +9,8 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import ihm.GamePanel;
+
 public class TileMap {
 	
 	//positions
@@ -122,6 +124,14 @@ public class TileMap {
 		}
 	}
 	
+	public int getNbCols() {
+		return nbCols;
+	}
+	
+	public int getNbRows() {
+		return nbRows;
+	}
+	
 	public int getTileSize() {
 		return tileSize;
 	}
@@ -202,6 +212,18 @@ public class TileMap {
 			}
 		}
 	}
+	
+//	public static void main(String args[]) {
+//		TileMap tilemap;
+//		tilemap = new TileMap();
+//		tilemap.loadMap("/textMap.txt");
+//		tilemap.loadTiles("/tileset.png");
+//		tilemap.setPosition(10, 10);
+//		tilemap.setTileSize(GamePanel.HEIGHT/20); /* 750/20 = 37,5 => int(37.5) = 37 */
+//		
+//		System.out.println(tilemap.getNbCols());
+//		System.out.println(tilemap.getNbRows());
+//	}
 	
 	
 }

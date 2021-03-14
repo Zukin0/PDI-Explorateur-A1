@@ -22,6 +22,9 @@ import character.builders.explorers.MikeBuilder;
 import character.builders.explorers.RemyBuilder;
 import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
+import data.Position;
+import data.Size;
+import data.Treasure;
 import thread.ExplorerThread;
 import thread.WildAnimalsThread;
 
@@ -31,6 +34,8 @@ public class Simulation {
 	public static ArrayList<Thread> threads = new ArrayList<Thread>();
 	public static HashMap<String,Character> characters = new HashMap<String, Character>();
 	public static HashMap<String,WildAnimals> animals = new HashMap<String, WildAnimals>();
+	
+	public static HashMap<String,Treasure> treasures = new HashMap<String, Treasure>();
 	
 	private ExDirector exCreator;
 	private WaDirector waCreator;
@@ -58,6 +63,7 @@ public class Simulation {
 		initBuilders();
 		createExplorers(listExp, exEquipment);
 		createAnimals();
+		createTreasures();
 		addListCharacters();
 	}
 	
@@ -158,6 +164,17 @@ public class Simulation {
 		}
 	}
 	
+	public void createTreasures() {
+		int nbTreasures = difficulty.getTreasureNB();
+		
+		for(int i=1;i<=nbTreasures;i++) {
+			String name = "treasure" + i;
+			Treasure t = new Treasure(name,new Size(30,30),new Position(0,0),true);
+			
+			treasures.put(name,t);
+		}
+	}
+	
 	public void addListCharacters() {
 		for(Explorer e : explorers.values()) {
 			characters.put(e.getName(),e);
@@ -198,7 +215,7 @@ public class Simulation {
 	}
 	
 	public void setExplorers(HashMap<String,Explorer> explorers) {
-		this.explorers = explorers;
+		Simulation.explorers = explorers;
 	}
 	
 	public void setEquimentMax(Difficulty difficulty) {
