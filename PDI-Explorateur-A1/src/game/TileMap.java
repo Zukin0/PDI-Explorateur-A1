@@ -34,6 +34,8 @@ public class TileMap {
 	private static int numTilesAcross;
 	private static Tile[][] tiles;
 	
+	public static int blockTile[] = {1,2,3,4,5,8,9,10,11,12};
+	
 	//drawing ? 
 	
 	public TileMap() {}
@@ -122,6 +124,14 @@ public class TileMap {
 		}
 	}
 	
+	public int getNbCols() {
+		return nbCols;
+	}
+
+	public int getNbRows() {
+		return nbRows;
+	}
+	
 	public int getTileSize() {
 		return tileSize;
 	}
@@ -201,7 +211,6 @@ public class TileMap {
 				g.drawImage(tiles[r][c].getImage(), x+col*tileSize+5, y+row*tileSize+5,tileSize, tileSize, null);
 			}
 		}
-	}
-	
+	}	
 	
 }
