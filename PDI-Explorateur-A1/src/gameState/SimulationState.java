@@ -6,7 +6,10 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -41,6 +44,10 @@ public class SimulationState extends GameState implements ImageObserver{
 	private Font categoryFont = new Font("Arial", Font.BOLD, 22);
 	private Font whiteBoardFont = new Font("Arial", Font.PLAIN, 20);
 	private Font buttonFont = new Font("Arial", Font.PLAIN, 33);
+	
+	/*Variables for the white board*/
+	private int nbMaxTreasures = Simulation.treasures.size();
+	private int nbCurrentTreasures;
 	
 	private Simulation sim;
 	
@@ -226,6 +233,7 @@ public class SimulationState extends GameState implements ImageObserver{
 		}
 		
 //////////////////////CADRE BLANC////////////////////////////////////////////
+		//cadre
 		g.setColor(Color.black);
 		g.fillRect(1050 , 3, 245, 630);
 		g.setColor(Color.white);
@@ -233,6 +241,8 @@ public class SimulationState extends GameState implements ImageObserver{
 		g.setColor(Color.black);
         g.setFont(categoryFont);
         g.drawString("VOTRE SIMULATION",1060, 30);
+        
+        //images
         try {
   			heart = ImageIO.read(new File("ressources/icone_coeur.png"));
   			time = ImageIO.read(new File("ressources/icone_temps.png"));
@@ -242,23 +252,25 @@ public class SimulationState extends GameState implements ImageObserver{
   			e.printStackTrace();
   		}
         g.drawImage(time, 1050, 40, 70, 60, (ImageObserver)this);
-        g.drawImage(heart, 1050, 110, 70, 60, (ImageObserver)this);
-        g.drawImage(heart, 1050, 180, 70, 60, (ImageObserver)this);
-        g.drawImage(heart, 1050, 250, 70, 60, (ImageObserver)this);
-        g.drawImage(heart, 1050, 320, 70, 60, (ImageObserver)this);
-        g.drawImage(heart, 1050, 390, 70, 60, (ImageObserver)this);
-        g.drawImage(heart, 1050, 460, 70, 60,(ImageObserver)this);
         g.drawImage(treasure, 1060, 530, 60, 60, (ImageObserver)this);
         
+        //informations
+        nbCurrentTreasures = nbMaxTreasures - Simulation.treasures.size();
         g.drawString("07:04", 1140, 80);
         g.setFont(whiteBoardFont);
-        g.drawString("Dora1 : 3/8", 1135, 145);
-        g.drawString("Dora2 : DEAD", 1135, 215);
-        g.drawString("Mike : 8/8", 1135,280);
-        g.drawString("Joe : 8/8", 1135, 355);
-        g.drawString("Remy1 : 1/8", 1135, 430);
-        g.drawString("Remy2 : DEAD", 1135, 495);
-        g.drawString("Tresors : 0", 1135, 570);
+        int i = 0;
+        for(Character c : sim.explorers.values()) {
+        	if (c.getLifePoint()==0) {
+        		g.drawString(c.getName()+" : DEAD", 1135, 145+i*70);
+            	i++;
+        	}
+        	else {
+        		g.drawString(c.getName()+" : "+c.getLifePoint()+"/"+c.getLifePointMax(), 1135, 145+i*70);
+        		g.drawImage(heart, 1050, 110+i*70, 70, 60,(ImageObserver)this);
+            	i++;
+        	}
+        }
+        g.drawString("Tresors : "+nbCurrentTreasures, 1135, 570);
         
         //button
         g.setColor(Color.black);
@@ -276,6 +288,26 @@ public class SimulationState extends GameState implements ImageObserver{
 	
 	public void mousePressed(MouseEvent m) {
 		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715) {
+			PrintWriter writer;
+			try {
+				writer = new PrintWriter("ressources/donnees_sim.txt", "UTF-8");
+				writer.println("(07:09=time)");
+				writer.println("(money)");
+				writer.println("(nb combats)");
+				writer.println("(nb animaux morts)");
+				writer.println("(nb morts)");
+				writer.println("(vie)");
+				writer.println("(vie)");
+				writer.println("(vie)");
+				writer.println("(vie)");
+				writer.println("(vie)");
+				writer.println("(vie)");
+				writer.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 			gsm.gameStates.push(new RecapState(gsm));
 		}
 	}

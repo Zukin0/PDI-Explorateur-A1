@@ -41,6 +41,9 @@ public class RecapState extends GameState implements ImageObserver{
 		super(gsm);
 	}
 
+	public void readFile(String nom) {
+		
+	}
 
 	public void init() {
 		
@@ -118,7 +121,7 @@ public class RecapState extends GameState implements ImageObserver{
 		g.fillRect(1085, 655, 170, 57);
 		g.setFont(buttonFont);
 		g.setColor(Color.black);
-        g.drawString("Recap",1120, 695);
+        g.drawString("Menu",1125, 695);
 	}
 
 	public void keyPressed(int k) {}
