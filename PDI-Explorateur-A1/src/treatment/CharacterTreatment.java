@@ -1,4 +1,7 @@
 package treatment;
+
+import java.util.Arrays;
+
 import character.Character;
 import character.Explorer;
 import data.Position;
@@ -31,7 +34,6 @@ public class CharacterTreatment {
 		break;
 		}
 		a.setDir(dir);
-		//System.out.println("\nCHANGED DIRECTION => " + a.getName() + " : " + str + "\n");
 	}
 	
 	public static void move(Character a) {
@@ -57,38 +59,6 @@ public class CharacterTreatment {
 		case 3 : posG.setX(posX-speed);
 		break;
 		}
-		//System.out.println(a.getName() + " : " +  posG.toString());
-	}
-	
-	public static void moveE(Explorer e) {
-		Position posG = e.getPosition();
-		int posX = posG.getX();
-		int posY = posG.getY();
-		int speed = e.getSpeed();
-		int movement = 1;
-		
-		while ((movement<=speed)/*&&(!ExplorerThread.collision(e))*/) {
-			switch(e.getDir()) {
-			
-			//Up
-			case 0 : posG.setY(posY-movement);
-			break;
-			
-			//Down
-			case 1 : posG.setY(posY+movement);
-			break;
-			
-			//Right
-			case 2 : posG.setX(posX+movement);
-			break;
-			
-			//Left
-			case 3 : posG.setX(posX-movement);
-			break;
-			}
-			movement++;
-		}
-		
 	}
 	
 	public static Position predictPos(Character c) {
@@ -140,7 +110,7 @@ public class CharacterTreatment {
 		return false;
 	}
 	
-	public void suppCharacter(Character c) {
-		
+	public static boolean contains(int[] arr, final int key) {
+	    return Arrays.stream(arr).anyMatch(i -> i == key);
 	}
 }

@@ -28,7 +28,7 @@ public class SelectionState extends GameState implements ImageObserver {
 	
 	private boolean machette = false;
 	
-	private int nbMinExplorateurs = 3;
+	private int nbMinExplorateurs = 1;
 	private int nbMaxExplorateurs = 6;
 	private int nbExplorateurs = 0;
 	private int nbTreasures = 0;

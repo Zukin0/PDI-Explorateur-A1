@@ -10,41 +10,35 @@ import data.*;
 import game.Simulation;
 import game.SimulationUtility;
 import game.TileMap;
+import gameState.SimulationState;
 import tests.TestObstacles;
 import treatment.CharacterTreatment;
 import treatment.MeetAnimal;
 
 public class ExplorerThread implements Runnable{
-	Explorer e;
+	private Explorer e;
+	private TileMap tilemap;
 	
 	int timer;
 	
 	public ExplorerThread(Explorer e) {
 		this.e = e; 
+		tilemap = SimulationState.tilemap;
 	}
 	
 	public void run() {
 		int cpt = 0;
 		CharacterTreatment.changeDir(e);
-		// need while(!dead & running)
 		while(!e.isDead()) {
 			SimulationUtility.unitTime();		
-			/*
-			 * Change direction every X iterations
-			 */
+			/* Explorer is fleeing */
 			if(e.isEscaping() == true) {
 				cpt = 0;
 				System.out.println(e.getName() + " : JE FUIS PENDANT " + Constant.NUMBER_ESCAPE_ITERATIONS + " ms VERS :" + e.getDir());
 				while(cpt != Constant.NUMBER_ESCAPE_ITERATIONS) {
-					SimulationUtility.unitTime();	
-					if(!CharacterTreatment.isBorderWindow(CharacterTreatment.predictPos(e), e.getSize().getWidth(), e.getSize().getHeight())) {
-						//CharacterTreatment.move(e);
-						if(!side(e)) {
-							//CharacterTreatment.move(e);
-							CharacterTreatment.moveE(e);
-						}else if(side(e)) {
-							CharacterTreatment.changeDir(e);
-						}
+					SimulationUtility.unitTime();
+					if(!collision(e)) {
+						CharacterTreatment.move(e);
 					}
 					cpt++;
 
@@ -58,19 +52,8 @@ public class ExplorerThread implements Runnable{
 					CharacterTreatment.changeDir(e);
 					cpt = 0;
 				}
-				if(!CharacterTreatment.isBorderWindow(CharacterTreatment.predictPos(e), e.getSize().getWidth(), e.getSize().getHeight())) {
-//					Position futurPos = CharacterTreatment.predictPos(e);
-//					WildAnimals wa = CollisionAnimal(futurPos);
-//					if( wa != null ) { 
-//						MeetAnimal.meetAnimals(e, wa);
-//					}
-//					else if(isCollisionObstacle()) {
-//						
-//					}
-//					else {
-//						CharacterTreatment.move(e);
-//					}
-					
+				if(!collision(e)) {
+
 					/*
 					 * TESTING BRUTE LE TEMPS D'AVOIR LE CODE DE YOHAN
 					 */
@@ -84,143 +67,92 @@ public class ExplorerThread implements Runnable{
 						MeetAnimal.meetAnimals(e, wa);
 					}
 					else {
-						if(!side(e)) {
-							//CharacterTreatment.move(e);
-							CharacterTreatment.moveE(e);
-						}else if(side(e)) {
-							CharacterTreatment.changeDir(e);
-						}
+						CharacterTreatment.move(e);
 					}
-					
-					/*
-					 * FIN TESTING BRUTE
-					 */
-					//CharacterTreatment.move(e);
 				}
 				cpt++;
 			}
 		}
 	}
 	
-	/*collision obstacle et trésors
-	 * test EMMA
-	 * pb a gérer : si jamais sa pos arriver après un obstacle il traverse qd meme je dois tester tout le chemin 
-	 * genre si il avance de deux cases je dois teste + et ++
-	 * faudrait faire un test sur son chemin du style
-	 * while j avance et que j ai pas un obs et que j ai pas atteint objectif (pos suivante) alors c bon
-	 * des que je trouve un obs mettre false*/
-//public static boolean collision(Explorer e) {
-//		boolean collision  = false;
-//		//division par 32 car les explorateurs ont une position en pixels alors que la map est un tableau 20x28
-////		int posX = (CharacterTreatment.predictPos(e).getX()-TileMap.offsetX)/37;
-////		int posY = (CharacterTreatment.predictPos(e).getY()-TileMap.offsetY)/37;
-//		
-//		int posX = CharacterTreatment.predictPos(e).getX();
-//		int posY = CharacterTreatment.predictPos(e).getY();
-//		
-//		int cWidth = e.getSize().getWidth();
-//		int cHeight = e.getSize().getHeight();
-//		
-//		int xLeft = (int) (posX - TileMap.offsetX) / 37;
-//		int xRight = (int) (posX + cWidth - TileMap.offsetX)/ 37;
-//		int yTop = (int) (posY- TileMap.offsetY) / 37;
-//		int yBottom = (int) (posY + cHeight- TileMap.offsetY) / 37;
-		
-		//System.out.println(e.getName() + " : " + e.getDir() + ", posX : " + xLeft + ", posY : " + yTop);
-		
-//		switch(e.getDir()) {
-//		
-//		//Up
-//		case 0 : System.out.println(e.getName() + " : Up, posX : " + xLeft + ", posY : " + yTop);
-//		break;
-//		
-//		//Down
-//		case 1 : System.out.println(e.getName() + " : Down, posX : " + xLeft + ", posY : " + yBottom);
-//		break;
-//		
-//		//Right
-//		case 2 : System.out.println(e.getName() + " : Right, posX : " + xRight+ ", posY : " + yTop);
-//		break;
-//		
-//		//Left
-//		case 3 : System.out.println(e.getName() + " : Left, posX : " + xLeft+ ", posY : " + yTop);
-//		break;
-//		}
+	public boolean collision(Explorer e) {
+		int tMapX = tilemap.getX();
+		int tMapY = tilemap.getY();
+		int tileSize = tilemap.getTileSize();
 
+		int futurXLeft = CharacterTreatment.predictPos(e).getX();
+		int futurXRight = futurXLeft + e.getSize().getWidth();
+		int futurYTop = CharacterTreatment.predictPos(e).getY();
+		int futurYBottom = futurYTop + e.getSize().getHeight();
 		
-//		System.out.println(TileMap.getType(5, 6));
+		int row1 = 0,row2 = 0,col1 = 0,col2 = 0;
 		
-		/*if (TileMap.map[posX][posY]!=7) {
-			//connaitre l'obstacle
-			switch(TileMap.map[posX][posY]) {
+		switch(e.getDir()) {
+		
+		//Up => Need Top/left and Top/Right corners
+		case 0 : 
+			row1 = (int)(futurYTop-5-tMapY)/tileSize;
+			col1 = (int)(futurXLeft-5-tMapX)/tileSize;
+			
+			row2 = (int)(futurYTop-5-tMapY)/tileSize;
+			col2 = (int)(futurXRight-5-tMapX)/tileSize;
+			break;
+		
+		//Down => Need Down/left and Down/Right corners
+		case 1 : 
+			row1 = (int)(futurYBottom-5-tMapY)/tileSize;
+			col1 = (int)(futurXLeft-5-tMapX)/tileSize;
+			
+			row2 = (int)(futurYBottom-5-tMapY)/tileSize;
+			col2 = (int)(futurXRight-5-tMapX)/tileSize;
+			break;
+		
+		//Right => Need Top/Right and Bottom/Right corners
+		case 2 : 
+			row1 = (int)(futurYTop-5-tMapY)/tileSize;
+			col1 = (int)(futurXRight-5-tMapX)/tileSize;
+			
+			row2 = (int)(futurYBottom-5-tMapY)/tileSize;
+			col2 = (int)(futurXRight-5-tMapX)/tileSize;
+			break;
+		
+		//Left => Need Top/left and Bottom/Left corners
+		case 3 :
+			row1 = (int)(futurYTop-5-tMapY)/tileSize;
+			col1 = (int)(futurXLeft-5-tMapX)/tileSize;
+			
+			row2 = (int)(futurYBottom-5-tMapY)/tileSize;
+			col2 = (int)(futurXLeft-5-tMapX)/tileSize;
+			break;
+		}
+		
+		int tile1 = tilemap.getPosition(row1,col1);
+		int tile2 = tilemap.getPosition(row2,col2);
+		
+		if(CharacterTreatment.contains(TileMap.blockTile, tile1) || CharacterTreatment.contains(TileMap.blockTile, tile2)) {
+			//System.out.println("Blocked tile1 : " + tile1);
+			TestObstacles.meetObstacles(e, "blocked");
+			return true;
+		}
+		else {
+			switch(tile1) {
 			case 6 :
-				System.out.println(e.getName() + " : Boue");
-				//TestObstacles.meetObstacles(e, "mud");
-				break;
-			case 11 :
-				System.out.println(e.getName() + " : Rocher");
-				//TestObstacles.meetObstacles(e, "stone");
-				break;
-			case 12 :
-				System.out.println(e.getName() + " : Arbres");
-				//TestObstacles.meetObstacles(e, "tree");
+				TestObstacles.meetObstacles(e, "mud");
 				break;
 			case 13 :
-				System.out.println(e.getName() + " : Eau");
-				//TestObstacles.meetObstacles(e, "water");
-				break;
-			case 14 :
-				System.out.println(e.getName() + " : Tresor");
-				//TestObstacles.meetObstacles(e, "treasure");
+				TestObstacles.meetObstacles(e, "water");
 				break;
 			}
-			collision = true;
-		}/*else {
-			collision=false;
-		}*/
-//		return collision;
-//		//division par 32 car les explorateurs ont une position en pixels alors que la map est un tableau 20x28
-//		int futurPosX = CharacterTreatment.predictPos(e).getX()/32;
-//		int futurPosY = CharacterTreatment.predictPos(e).getY()/32;
-//		if (TileMap.map[futurPosX][futurPosY]==7) {
-//			return false;
-//		}else {
-//			//connaitre l'obstacle
-//			switch(TileMap.map[futurPosX][futurPosY]) {
-//			case 6 :
-//				System.out.println("6");
-//				TestObstacles.meetObstacles(e, "mud");
-//				break;
-//			case 11 :
-//				System.out.println("11");
-//				TestObstacles.meetObstacles(e, "stone");
-//				break;
-//			case 12 :
-//				System.out.println("12");
-//				TestObstacles.meetObstacles(e, "tree");
-//				break;
-//			case 13 :
-//				System.out.println("13");
-//				TestObstacles.meetObstacles(e, "water");
-//				break;
-//			case 14 :
-//				TestObstacles.meetObstacles(e, "treasure");
-//				break;
-//			}
-//			return true;
-//		}
-//	}
-	
-	//je suis sur les bords ?
-	public static boolean side(Explorer e) {
-		boolean side=false;
-		int dir = e.getDir();
-		int posX = e.getPosition().getX()/32;
-		int posY = e.getPosition().getY()/32;
-		if(((posX==1)&&(dir==3))|| ((posX==26)&&(dir==2)) || ((posY==1)&&(dir==0)) || ((posY==15)&&(dir==1))){
-			side=true;
+			
+			switch(tile2) {
+			case 6 :
+				TestObstacles.meetObstacles(e, "mud");
+				break;
+			case 13 :
+				TestObstacles.meetObstacles(e, "water");
+				break;
+			}	
+			return false;
 		}
-		return side;
 	}
-
 }

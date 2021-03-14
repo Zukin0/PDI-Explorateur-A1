@@ -3,10 +3,10 @@ package tests;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import character.Character;
 import character.Equipment;
 import character.Explorer;
 import character.builders.explorers.DoraBuilder;
+import character.builders.explorers.JoeBuilder;
 import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
 import data.Obstacles;
@@ -17,58 +17,40 @@ import thread.ExplorerThread;
 import treatment.CharacterTreatment;
 
 public class TestObstacles {
+	
+	//private static HashMap<String,Explorer> explorers = new HashMap<String,Explorer>();
 
 	//rencontre avec les obstacles fixes et modulables
 	
 	public static void meetObstacles(Explorer e, String nameObs) {
 		
 		HashMap<String,Explorer> explorers = Simulation.explorers;
-		HashMap<String,Character> characters = Simulation.characters;
 		
-		//String name = o.getName();
 		int oldSpeed = e.getSpeed();
 		int newSpeed = e.getSpeed()*(int)50/100;
-		boolean botte = false;
-		
-		//penser a faire un while pour la boue pour reprendre sa vitesse normale
 		
 		switch(nameObs) {
 		case "water":
-			//prendre de l'eau et comm avec se potes
-			System.out.println(e.getName() + " :j'ai trouvé de l'eau qui a besoin");
+			//take water and ask who need some
+			System.out.println("j'ai trouvé de l'eau qui est mal en point ?");
+			needWater(explorers);
 			CharacterTreatment.changeDir(e);
 			break;
 		case "mud":
-			//ralentir si on a pas les bottes
-			if (e.getEquipment().isEmpty()) {
-				botte = false;
+			//slow down
+			if (!hasEquipment(e)) {
+				System.out.println("j'ai pas de bottes alors je ralenti");
+				e.setSpeed(newSpeed);
 			}else {
-				for (Equipment equipments : e.getEquipment()) {
-					if (equipments.getName().equals("bottes")) {
-						botte = true;
-						break;
-					}else {
-						botte = false;
-					}
-				}
-				if (botte==false) {
-					System.out.println(e.getName() + " :j'ai pas de bottes alors je ralenti");
-					e.setSpeed(newSpeed);
-				}else {
-					System.out.println(e.getName() + " :ouf j'ai des bottes");
-				}
+				System.out.println("ouf j'ai des bottes");
 			}
 			e.setSpeed(oldSpeed);
-			System.out.println(e.getName() + " : Je sors de la boue je retrouve ma vitesse : "+e.getSpeed());
+			System.out.println("Je sors de la boue je retrouve ma vitesse : "+e.getSpeed());
 			break;
-		case "tree":
-			//changer de direction
-			System.out.println(e.getName() + " : je rencontre un arbre alors je change de direction");
-			CharacterTreatment.changeDir(e);
-			break;
-		case "stone": 
-			//changer de direction
-			System.out.println(e.getName() + " : je rencontre une roche alors je change de direction");
+		case "blocked":
+			//tree, stone or side
+			//change direction
+			System.out.println("je suis bloquée je change de direction");
 			CharacterTreatment.changeDir(e);
 			break;
 		case "treasure": 
@@ -80,6 +62,45 @@ public class TestObstacles {
 		
 	}
 	
+	public static boolean hasEquipment(Explorer e) {
+		boolean botte = false;
+		if (e.getEquipment().isEmpty()) {
+			botte = false;
+		}else {
+			for (Equipment equipments : e.getEquipment()) {
+				if (equipments.getName().equals("bottes")) {
+					botte = true;
+					break;
+				}else {
+					botte = false;
+				}
+			}
+		}
+		return botte;
+	}
+	
+	public static void needWater(HashMap<String,Explorer> explorers) {
+		int minPV = 200;
+		int pv = 0;
+		Explorer applicant=null;
+		for (Explorer explorer : explorers.values()){
+			pv = explorer.getLifePoint();
+			if (pv<minPV) {
+				minPV=pv;
+				applicant = explorer;
+			}
+		}
+		int gain = applicant.getLifePoint()*(int)50/100;
+		System.out.println("bonjour je suis "+ applicant.getName() +" et j'ai besoin d'eau j ai plus que : "+applicant.getLifePoint());
+		if (applicant.getLifePoint()+gain< applicant.getLifePointMax()) {
+			applicant.setLifePoint(applicant.getLifePoint()+gain);
+		}else {
+			applicant.setLifePoint(applicant.getLifePointMax());
+		}
+		
+		System.out.println("maintenant j ai : "+applicant.getLifePoint());
+	}
+	
 	public static void main (String[] args) {
 		
 		//create explorer
@@ -89,6 +110,31 @@ public class TestObstacles {
 		creatorE.setExplorerBuilder(bDora);
 		creatorE.BuildExplorer();
 		Explorer e = creatorE.getExplorer();
+		
+		ExBuilder bDora3 = new DoraBuilder();
+		creatorE.setExplorerBuilder(bDora3);
+		creatorE.BuildExplorer();
+		Explorer e4 = creatorE.getExplorer() ;
+		
+		ExBuilder bJoe = new JoeBuilder();
+		creatorE.setExplorerBuilder(bJoe);
+		creatorE.BuildExplorer();
+		Explorer e2 = creatorE.getExplorer();
+		
+		ExBuilder bDora2 = new DoraBuilder();
+		creatorE.setExplorerBuilder(bDora2);
+		creatorE.BuildExplorer();
+		Explorer e3 = creatorE.getExplorer() ;
+		e3.setName("Dora2");
+		
+		
+//		explorers.put("Dora1", e);
+//		explorers.put("Dora2", e3);
+//		explorers.put("Dora3", e4);
+//		explorers.put("Joe1", e2);
+		
+		//changer les pv
+		e3.setLifePoint(16);
 		
 		String nameB = "bottes";
 		String powerB = "ne perd pas de tps";
@@ -114,8 +160,9 @@ public class TestObstacles {
 		
 		meetObstacles(e,"water");
 		meetObstacles(e,"mud");
-		meetObstacles(e,"stone");
-		meetObstacles(e,"tree");
+		meetObstacles(e,"blocked");
+		//meetObstacles(e,"stone");
+		//meetObstacles(e,"tree");
 		
 	}
 	
