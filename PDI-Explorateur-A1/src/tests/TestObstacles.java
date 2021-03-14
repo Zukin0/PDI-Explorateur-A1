@@ -27,7 +27,7 @@ public class TestObstacles {
 		HashMap<String,Explorer> explorers = Simulation.explorers;
 		
 		int oldSpeed = e.getSpeed();
-		int newSpeed = e.getSpeed()*(int)50/100;
+		int newSpeed = (int)(e.getSpeed()/50);
 		
 		switch(nameObs) {
 		case "water":

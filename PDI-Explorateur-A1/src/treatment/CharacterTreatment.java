@@ -9,6 +9,7 @@ import data.MapObjects;
 import data.Position;
 import data.Size;
 import data.Treasure;
+import game.Simulation;
 import game.TileMap;
 import ihm.GamePanel;
 import thread.ExplorerThread;
@@ -125,12 +126,13 @@ public class CharacterTreatment {
 		
 		//Checking
 		if(pChar.getAura() >= dis) {
-			System.out.println("Dans la zone");
+			//System.out.println("Dans la zone");
 			if(mC.getClass() == WildAnimals.class)
 				MeetAnimal.meetAnimals((Explorer) pChar, (WildAnimals) mC);
 //			
 			if(mC.getClass() == Treasure.class)
 				eT.find();
+				Simulation.toRemove.add(mC.getName());
 		}
 		else {
 //			System.out.println("Pas dans la zone");

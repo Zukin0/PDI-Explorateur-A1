@@ -26,7 +26,7 @@ public class WildAnimalsThread implements Runnable{
 		// need while(!dead & running)
 		a.setPosTerr(new Position(a.getPosition().getX()-(a.getTerritorySize().getWidth()/2), a.getPosition().getY()-(a.getTerritorySize().getHeight()/2)));
 		CharacterTreatment.changeDir(a);
-		while(true) {
+		while(!a.isDead()) {
 			SimulationUtility.unitTime();		
 			/*
 			 * Change direction every X iterations

@@ -13,10 +13,12 @@ public class WildAnimals extends Character{
 		super(name, size, position, movable, lifePoint, lifePointMax, attackPoint, attackPointMax, speed, aura);
 		setTerritorySize(new Size(widthTerritory,heightTerritory));
 		posTerr = new Position(position.getX(), position.getY());
+		this.setDead(false);
 	}
 	
 	public WildAnimals() {
 		super("", new Size(0, 0), new Position(0,0), true, 0, 0, 0, 0, 0, 0);
+		setDead(false);
 	}
 
 	public Size getTerritorySize() {

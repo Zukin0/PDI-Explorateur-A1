@@ -32,6 +32,7 @@ public class ExplorerThread implements Runnable{
 		int cpt = 0;
 		CharacterTreatment.changeDir(e);
 		while(!e.isDead()) {
+
 			SimulationUtility.unitTime();
 			for(WildAnimals a : Simulation.animals.values()) {
 				CharacterTreatment.auraCheck(e, a, this);
@@ -66,22 +67,11 @@ public class ExplorerThread implements Runnable{
 					 * TESTING BRUTE LE TEMPS D'AVOIR LE CODE DE YOHAN
 					 */
 					CharacterTreatment.move(e);
-//					WaDirector creatorA = new WaDirector();
-//					WaBuilder bWolf = new WolfBuilder();
-//					creatorA.setWildAnimalsBuilder(bWolf);
-//					creatorA.BuildWildAnimals();
-//					WildAnimals wa = creatorA.getAnimal();
-//					int rand = (int)(Math.random() * 100);
-//					if( wa != null && rand == 0) { 
-//						MeetAnimal.meetAnimals(e, wa);
-//					}
-//					else {
-//						
-//					}
 				}
 				cpt++;
 			}
 		}
+		System.out.println(e.getName() + " : Stop moving");
 	}
 	
 	public boolean collision(Explorer e) {
@@ -167,6 +157,6 @@ public class ExplorerThread implements Runnable{
 	
 	public synchronized void find() {
 		treasureFind++;
-		System.out.println("Trésor trouver on en est a : " + treasureFind);
+		//System.out.println("Trésor trouver on en est a : " + treasureFind);
 	}
 }

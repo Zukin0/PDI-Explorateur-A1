@@ -22,6 +22,7 @@ import character.builders.explorers.MikeBuilder;
 import character.builders.explorers.RemyBuilder;
 import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
+import data.MapObjects;
 import data.Position;
 import data.Size;
 import data.Treasure;
@@ -37,6 +38,8 @@ public class Simulation {
 	
 	public static HashMap<String,Treasure> treasures = new HashMap<String, Treasure>();
 	public static ArrayList<String> listExp = new ArrayList<String>();
+	
+	public static ArrayList<String> toRemove = new ArrayList<String>();
 	
 	private ExDirector exCreator;
 	private WaDirector waCreator;

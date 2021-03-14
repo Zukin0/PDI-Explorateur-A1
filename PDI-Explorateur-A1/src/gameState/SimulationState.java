@@ -27,6 +27,7 @@ import character.Character;
 import character.Explorer;
 import character.WildAnimals;
 import data.Constant;
+import data.MapObjects;
 import data.Position;
 import data.Size;
 import data.Treasure;
@@ -191,14 +192,28 @@ public class SimulationState extends GameState implements ImageObserver{
 		t.start();
 	}
 	
+	public void cleanHashMaps() {
+		for(String name : Simulation.toRemove) {
+			if(name.contains("treasure")) {
+				Simulation.treasures.remove(name);
+			}
+			else if(name.contains("Remy") || name.contains("Mike") || name.contains("Joe") || name.contains("Dora")) {
+				Simulation.characters.remove(name);
+				Simulation.explorers.remove(name);
+			}
+			else if(name.contains("Wolf") || name.contains("Bear") || name.contains("Eagle")) {
+				Simulation.characters.remove(name);
+				Simulation.animals.remove(name);
+			}
+		}
+	}
+	
 	public void tick() {
-		/*if(sim.explorers.size() == 0) {
-			System.out.println("TOUS LES EXPLORATEURS SONT MORT : FIN DE LA PARTIE");
-			System.exit(0);
-		}*/
+		
 	}
 
 	public void draw(Graphics g) {
+		cleanHashMaps();
 		g.setColor(BEIGE);
 		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
 		
