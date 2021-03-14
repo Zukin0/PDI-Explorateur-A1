@@ -85,10 +85,12 @@ public class SimulationState extends GameState implements ImageObserver{
 	/*Boolean*/
 	private boolean treasurePlaced;
 	private boolean animalPlaced;
+	private boolean recapAccessible = false;
 	
 	
 	/* Chronometer */
 	private RealTime timer = new RealTime();
+	private Thread t = new Thread(timer);
 	
 	public SimulationState(GameStateManager gsm) {
 		super(gsm);
@@ -187,15 +189,14 @@ public class SimulationState extends GameState implements ImageObserver{
 	}
 	
 	public void startTimer() {
-		Thread t = new Thread(timer);
 		t.start();
 	}
 	
 	public void tick() {
-		/*if(sim.explorers.size() == 0) {
-			System.out.println("TOUS LES EXPLORATEURS SONT MORT : FIN DE LA PARTIE");
-			System.exit(0);
-		}*/
+		if(Simulation.explorers.isEmpty()||Simulation.treasures.isEmpty()) {
+			recapAccessible = true;
+			t.stop();
+		}
 	}
 
 	public void draw(Graphics g) {
@@ -348,6 +349,7 @@ public class SimulationState extends GameState implements ImageObserver{
 			i++;
 		}
         g.drawString("Tresors : "+nbCurrentTreasures, 1135, 570);
+        System.out.println(nbCurrentTreasures +"//////////:");
         
         //button
         g.setColor(Color.black);
@@ -364,7 +366,7 @@ public class SimulationState extends GameState implements ImageObserver{
 	public void keyReleased(int k) {}
 	
 	public void mousePressed(MouseEvent m) {
-		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715) {
+		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715&&recapAccessible) {
 			PrintWriter writer;
 			try {
 				writer = new PrintWriter("ressources/donnees_sim.txt", "UTF-8");
