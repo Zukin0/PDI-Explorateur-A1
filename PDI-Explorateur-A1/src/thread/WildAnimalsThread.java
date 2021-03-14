@@ -39,9 +39,6 @@ public class WildAnimalsThread implements Runnable{
 			if(isInsideTerritory(CharacterTreatment.predictPos(a)) && !collision(a)) {
 				CharacterTreatment.move(a);
 			}
-			else {
-				System.out.println(a.getName() + " : Can't Move" );
-			}
 			cpt++;
 		}
 	}

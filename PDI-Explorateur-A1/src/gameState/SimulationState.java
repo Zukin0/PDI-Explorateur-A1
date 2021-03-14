@@ -268,8 +268,12 @@ public class SimulationState extends GameState implements ImageObserver{
 //				g.drawRect(wa.getPosTerr().getX(),wa.getPosTerr().getY(), wa.getTerritorySize().getHeight(), wa.getTerritorySize().getHeight());
 //				g.setColor(Color.red);
 			}
+			else {
+				g.drawOval(c.getPosition().getX()-(c.getAura()/2)+(c.getSize().getWidth()/2), c.getPosition().getY()-(c.getAura()/2)+(c.getSize().getHeight()/2), c.getAura(), c.getAura());
+			}
 //			g.setColor(Color.red);
 //			g.drawRect(c.getPosition().getX(), c.getPosition().getY(), c.getSize().getWidth(), c.getSize().getHeight());
+
 		}
 		
 		/* Draw Treasures */
@@ -277,6 +281,7 @@ public class SimulationState extends GameState implements ImageObserver{
 			Treasure t = entry.getValue();
 			g.drawImage(treasure, t.getPosition().getX(), t.getPosition().getY(), t.getSize().getWidth(), t.getSize().getHeight(),(ImageObserver)this);
 		}
+		
 		
 //////////////////////CADRE BLANC////////////////////////////////////////////
 		//cadre
