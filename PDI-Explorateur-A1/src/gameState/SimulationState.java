@@ -67,6 +67,7 @@ public class SimulationState extends GameState implements ImageObserver{
 		init();
 		initImageFiles();
 		treasurePlacement();
+		animalsPlacement();
 	}
 
 
@@ -100,7 +101,6 @@ public class SimulationState extends GameState implements ImageObserver{
 		
 		for (HashMap.Entry<String, Treasure> entry : ts.entrySet()) {
 			Treasure t = entry.getValue();
-			Size treasureSize = t.getSize();
 			treasurePlaced = false;
 			while(!treasurePlaced) {
 				/* Random position X [startPosition X ; Map.width] */
@@ -115,20 +115,21 @@ public class SimulationState extends GameState implements ImageObserver{
 				int col = (int) (y-5-tMapY)/tileSize;
 				
 
-//				System.out.println("X : " + row + ", Y = " + col);
 				if(tilemap.getPosition(row,col) == 7) {
-//					System.out.println("Treasure Placement possible, x : " + (int)(x-5-tMapX)/tileSize + ", y : " + (int) (y-5-tMapY)/tileSize);
-					
 					t.setPosition(new Position(col*tileSize+5+tMapX,row*tileSize+5+tMapY));
-//					System.out.println(col*tileSize+5+tMapX + " " + row*tileSize+5+tMapY);
 					treasurePlaced = true;
-				}
-				else {
-//					System.out.println("Placement impossible, case : " + tilemap.getPosition((int)(x-5-tMapX)/tileSize,(int) (y-5-tMapY)/tileSize));
 				}
 			}
 		}
 				
+	}
+	
+	public void animalsPlacement() {
+		HashMap<String,WildAnimals> waMap = Simulation.animals;
+		
+		for(HashMap.Entry<String,WildAnimals> entry : waMap.entrySet()) {
+			
+		}
 	}
 	
 	public void tick() {
