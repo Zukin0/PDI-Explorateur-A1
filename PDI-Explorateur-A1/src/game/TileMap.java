@@ -24,7 +24,7 @@ public class TileMap {
 	private int ymax;
 	
 	//map
-	private static int[][] map;
+	public static int[][] map;
 	private int tileSize=32;
 	private int nbRows ;
 	private int nbCols ;

@@ -1,7 +1,9 @@
 package treatment;
 import character.Character;
+import character.Explorer;
 import data.Position;
 import ihm.GamePanel;
+import thread.ExplorerThread;
 
 public class CharacterTreatment {
 	
@@ -54,6 +56,37 @@ public class CharacterTreatment {
 		break;
 		}
 		//System.out.println(a.getName() + " : " +  posG.toString());
+	}
+	
+	public static void moveE(Explorer e) {
+		Position posG = e.getPosition();
+		int posX = posG.getX();
+		int posY = posG.getY();
+		int speed = e.getSpeed();
+		int movement = 1;
+		
+		while ((movement<=speed)&&(!ExplorerThread.collision(e))) {
+			switch(e.getDir()) {
+			
+			//Up
+			case 0 : posG.setY(posY-movement);
+			break;
+			
+			//Down
+			case 1 : posG.setY(posY+movement);
+			break;
+			
+			//Right
+			case 2 : posG.setX(posX+movement);
+			break;
+			
+			//Left
+			case 3 : posG.setX(posX-movement);
+			break;
+			}
+			movement++;
+		}
+		
 	}
 	
 	public static Position predictPos(Character c) {

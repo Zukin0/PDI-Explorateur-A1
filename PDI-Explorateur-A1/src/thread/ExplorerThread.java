@@ -9,6 +9,8 @@ import character.builders.WildAnimal.core.WaDirector;
 import data.*;
 import game.Simulation;
 import game.SimulationUtility;
+import game.TileMap;
+import tests.TestObstacles;
 import treatment.CharacterTreatment;
 import treatment.MeetAnimal;
 
@@ -36,7 +38,13 @@ public class ExplorerThread implements Runnable{
 				while(cpt != Constant.NUMBER_ESCAPE_ITERATIONS) {
 					SimulationUtility.unitTime();	
 					if(!CharacterTreatment.isBorderWindow(CharacterTreatment.predictPos(e), e.getSize().getWidth(), e.getSize().getHeight())) {
-						CharacterTreatment.move(e);
+						//CharacterTreatment.move(e);
+						if(!side(e)) {
+							//CharacterTreatment.move(e);
+							CharacterTreatment.moveE(e);
+						}else if(side(e)) {
+							CharacterTreatment.changeDir(e);
+						}
 					}
 					cpt++;
 
@@ -76,7 +84,12 @@ public class ExplorerThread implements Runnable{
 						MeetAnimal.meetAnimals(e, wa);
 					}
 					else {
-						CharacterTreatment.move(e);
+						if(!side(e)) {
+							//CharacterTreatment.move(e);
+							CharacterTreatment.moveE(e);
+						}else if(side(e)) {
+							CharacterTreatment.changeDir(e);
+						}
 					}
 					
 					/*
@@ -89,8 +102,89 @@ public class ExplorerThread implements Runnable{
 		}
 	}
 	
-	public void collsion() {
+	/*collision obstacle et trésors
+	 * test EMMA
+	 * pb a gérer : si jamais sa pos arriver après un obstacle il traverse qd meme je dois tester tout le chemin 
+	 * genre si il avance de deux cases je dois teste + et ++
+	 * faudrait faire un test sur son chemin du style
+	 * while j avance et que j ai pas un obs et que j ai pas atteint objectif (pos suivante) alors c bon
+	 * des que je trouve un obs mettre false*/
+	public static boolean collision(Explorer e) {
+		boolean collision  = false;
+		//division par 32 car les explorateurs ont une position en pixels alors que la map est un tableau 20x28
+		int posX = e.getPosition().getX()/32;
+		int posY = e.getPosition().getY()/32;
 		
+		if (TileMap.map[posX][posY]!=7) {
+			//connaitre l'obstacle
+			switch(TileMap.map[posX][posY]) {
+			case 6 :
+				System.out.println("6");
+				TestObstacles.meetObstacles(e, "mud");
+				break;
+			case 11 :
+				System.out.println("11");
+				TestObstacles.meetObstacles(e, "stone");
+				break;
+			case 12 :
+				System.out.println("12");
+				TestObstacles.meetObstacles(e, "tree");
+				break;
+			case 13 :
+				System.out.println("13");
+				TestObstacles.meetObstacles(e, "water");
+				break;
+			case 14 :
+				TestObstacles.meetObstacles(e, "treasure");
+				break;
+			}
+			collision = true;
+		}/*else {
+			collision=false;
+		}*/
+		return collision;
+//		//division par 32 car les explorateurs ont une position en pixels alors que la map est un tableau 20x28
+//		int futurPosX = CharacterTreatment.predictPos(e).getX()/32;
+//		int futurPosY = CharacterTreatment.predictPos(e).getY()/32;
+//		if (TileMap.map[futurPosX][futurPosY]==7) {
+//			return false;
+//		}else {
+//			//connaitre l'obstacle
+//			switch(TileMap.map[futurPosX][futurPosY]) {
+//			case 6 :
+//				System.out.println("6");
+//				TestObstacles.meetObstacles(e, "mud");
+//				break;
+//			case 11 :
+//				System.out.println("11");
+//				TestObstacles.meetObstacles(e, "stone");
+//				break;
+//			case 12 :
+//				System.out.println("12");
+//				TestObstacles.meetObstacles(e, "tree");
+//				break;
+//			case 13 :
+//				System.out.println("13");
+//				TestObstacles.meetObstacles(e, "water");
+//				break;
+//			case 14 :
+//				TestObstacles.meetObstacles(e, "treasure");
+//				break;
+//			}
+//			return true;
+//		}
+	}
+	
+	//je suis sur les bords ?
+	public static boolean side(Explorer e) {
+		boolean side=false;
+		int dir = e.getDir();
+		int posX = e.getPosition().getX()/32;
+		int posY = e.getPosition().getY()/32;
+		if(((posX==1)&&(dir==3))|| ((posX==26)&&(dir==2)) || ((posY==1)&&(dir==0)) || ((posY==15)&&(dir==1))){
+			side=true;
+		}
+		return side;
 	}
 
 }
