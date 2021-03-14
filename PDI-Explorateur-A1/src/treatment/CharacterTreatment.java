@@ -1,9 +1,14 @@
 package treatment;
 import character.Character;
 import character.Explorer;
+import character.WildAnimals;
+import character.builders.WildAnimal.WolfBuilder;
+import character.builders.WildAnimal.core.WaBuilder;
+import character.builders.WildAnimal.core.WaDirector;
 import character.builders.explorers.DoraBuilder;
 import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
+import data.MapObjects;
 import data.Position;
 import ihm.GamePanel;
 
@@ -109,15 +114,18 @@ public class CharacterTreatment {
 		return false;
 	}
 	
-	public static void auraCheck(Character pChar, Position eChar) {
+	public static void auraCheck(Character pChar, MapObjects mC) {
 		
 		//Calcul distance between two entity	
-		double dis = Math.sqrt(Math.pow(pChar.getPosition().getX() - eChar.getX(), 2) + Math.pow(pChar.getPosition().getY() - eChar.getY(), 2));	
+		double dis = Math.sqrt(Math.pow(pChar.getPosition().getX() - mC.getPosition().getX(), 2) + Math.pow(pChar.getPosition().getY() - mC.getPosition().getY(), 2));	
 		System.out.println("la distance et de : " + dis);
 		
 		//Checking
 		if(pChar.getAura() >= dis) {
 			System.out.println("Dans la zone");
+			if(mC.getClass() == WildAnimals.class)
+				MeetAnimal.meetAnimals((Explorer) pChar, (WildAnimals) mC);
+//			if(mC.getClass() == ????)
 		}
 		else {
 			System.out.println("Pas dans la zone");
@@ -132,8 +140,10 @@ public class CharacterTreatment {
 	public static void main(String []args) {
 		//Create the builder director
 				ExDirector creator = new ExDirector() ;
+				WaDirector Ac = new WaDirector();
 				//Create specifique builder
 				ExBuilder bDora = new DoraBuilder() ;
+				WaBuilder bWolf = new WolfBuilder() ;
 				
 				Position un = new Position(1, 2);
 				Position deux = new Position (150, 10);
@@ -142,19 +152,22 @@ public class CharacterTreatment {
 				//Set the builder type and create the explorer this type
 				creator.setExplorerBuilder(bDora);
 				creator.BuildExplorer();
-				
+				Ac.setWildAnimalsBuilder(bWolf);
+				Ac.BuildWildAnimals();;
 				//Finally store the explorer created.
 				Explorer e = creator.getExplorer() ;
+				WildAnimals a = Ac.getAnimal();
 				
 				//New one
 				creator.BuildExplorer();
 				Explorer e2 = creator.getExplorer() ;
 				
 				e.setPosition(un);
-				e2.setPosition(trois);
+				e2.setPosition(deux);
+				a.setPosition(trois);
 				
-				auraCheck(e, e2.getPosition());
-	
+				auraCheck(e, e2);
+
 				
 	}
 }
