@@ -45,9 +45,13 @@ public class SimulationState extends GameState implements ImageObserver{
 	private Font whiteBoardFont = new Font("Arial", Font.PLAIN, 20);
 	private Font buttonFont = new Font("Arial", Font.PLAIN, 33);
 	
-	/*Variables for the white board*/
+	/*Variables for the white board and recap*/
 	private int nbMaxTreasures = Simulation.treasures.size();
-	private int nbCurrentTreasures;
+	private int nbCurrentTreasures = 0;
+	private int nbFights = 0;
+	private int nbAnimalsDead = 0;
+	private int money = 0;
+	private int nbExplorersDead = 0;
 	
 	private Simulation sim;
 	
@@ -291,17 +295,19 @@ public class SimulationState extends GameState implements ImageObserver{
 			PrintWriter writer;
 			try {
 				writer = new PrintWriter("ressources/donnees_sim.txt", "UTF-8");
-				writer.println("(07:09=time)");
-				writer.println("(money)");
-				writer.println("(nb combats)");
-				writer.println("(nb animaux morts)");
-				writer.println("(nb morts)");
-				writer.println("(vie)");
-				writer.println("(vie)");
-				writer.println("(vie)");
-				writer.println("(vie)");
-				writer.println("(vie)");
-				writer.println("(vie)");
+				writer.println("");
+				writer.println("07:09=time");
+				writer.println("13");
+				writer.println(nbCurrentTreasures);
+				writer.println(nbFights);
+				writer.println(nbAnimalsDead);
+				writer.println(nbExplorersDead);
+				writer.println("vie");
+				writer.println("vie");
+				writer.println("vie");
+				writer.println("vie");
+				writer.println("vie");
+				writer.print("vie"); //attention le dernier pas de ln sinon ça va mettre un null
 				writer.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();

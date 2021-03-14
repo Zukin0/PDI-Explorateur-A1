@@ -8,11 +8,18 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
+import game.Simulation;
 import ihm.Game;
 import ihm.GamePanel;
 
@@ -28,6 +35,21 @@ public class RecapState extends GameState implements ImageObserver{
 	private Font texteFont = new Font("Century Goth", Font.PLAIN, 20);
 	private Font buttonFont = new Font("Arial", Font.PLAIN, 33);
 	
+	/*Variables for the white board and recap*/
+	private String time = "0";
+	private String currentMoney = "0";
+	private String nbCurrentTreasures = "0";
+	private String nbFights = "0";
+	private String nbAnimalsDead ="0";
+	private String nbExplorersDead = "0";
+	private String lifeExplo1 = "0";
+	private String lifeExplo2 = "0";
+	private String lifeExplo3 = "0";
+	private String lifeExplo4 = "0";
+	private String lifeExplo5 = "0";
+	private String lifeExplo6 = "0";
+	
+	//images
 	private BufferedImage map=null;
 	private BufferedImage heart=null;
 	private BufferedImage clock=null;
@@ -39,10 +61,6 @@ public class RecapState extends GameState implements ImageObserver{
 	
 	public RecapState(GameStateManager gsm) {
 		super(gsm);
-	}
-
-	public void readFile(String nom) {
-		
 	}
 
 	public void init() {
@@ -96,21 +114,54 @@ public class RecapState extends GameState implements ImageObserver{
         g.drawImage(heart, 20, 630, 60, 60, (ImageObserver) this);
         g.drawImage(heart, 20,685, 60,60, (ImageObserver) this);
         
+        readFile("ressources/donnees_sim.txt");
+        
         //texte
         g.setColor(Color.black);
 		g.setFont(texteFont);
-		g.drawString("Votre simulation a duré 7 minutes et 19 secondes",95, 120);
-		g.drawString("Il vous reste 10 $",95, 175);
-		g.drawString("Vous avez trouvé 3 trésors !",95, 230);
-		g.drawString("Vous avez combattu 7 fois",95, 285);
-		g.drawString("Vous avez tué 5 animaux, bravo !",95, 340);
-		g.drawString("2 de vos explorateurs sont morts ...",95, 395);
-		g.drawString("Il reste 3 points de vie à Dora1 ",95, 450);
-		g.drawString("Il reste 1 points de vie à Dora2",95, 505);
-		g.drawString("Mike1 est mort",95, 560);
-		g.drawString("Il reste 7 points de vie à Joe1",95, 615);
-		g.drawString("Mike2 est mort",95, 670);
-		g.drawString("Il reste 4 points de vie à Remy1",95, 725);
+		g.drawString("Temps de votre simulation : "+time,95, 120);
+		g.drawString("Il vous reste "+currentMoney+" $",95, 175);
+		g.drawString("Vous avez trouvé "+nbCurrentTreasures+" trésors !",95, 230);
+		g.drawString("Vous avez combattu "+nbFights+" fois",95, 285);
+		g.drawString("Vous avez tué "+nbAnimalsDead+" animaux, bravo !",95, 340);
+		g.drawString(nbExplorersDead+" de vos explorateurs sont morts ...",95, 395);
+		
+		if (lifeExplo1.equals("0")) {
+			g.drawString("Dora1 est mort",95, 450);
+		} 
+		else {
+			g.drawString("Il reste "+lifeExplo1+" points de vie à Dora1 ",95, 450);
+		}
+		if (lifeExplo2.equals("0")) {
+			g.drawString("Mike1 est mort",95, 505);
+		} 
+		else {
+			g.drawString("Il reste "+lifeExplo2+" points de vie à Mike1 ",95, 505);
+		}
+		if (lifeExplo3.equals("0")) {
+			g.drawString("Remy1 est mort",95, 560);
+		} 
+		else {
+			g.drawString("Il reste "+lifeExplo3+" points de vie à Remy1 ",95, 560);
+		}
+		if (lifeExplo4.equals("0")) {
+			g.drawString("Dora2 est mort",95, 615);
+		} 
+		else {
+			g.drawString("Il reste "+lifeExplo4+" points de vie à Dora2 ",95, 615);
+		}
+		if (lifeExplo5.equals("0")) {
+			g.drawString("Mike2 est mort",95, 670);
+		} 
+		else {
+			g.drawString("Il reste "+lifeExplo5+" points de vie à Mike2 ",95, 670);
+		}
+		if (lifeExplo1.equals("0")) {
+			g.drawString("Joe1 est mort",95, 725);
+		} 
+		else {
+			g.drawString("Il reste "+lifeExplo6+" points de vie à Joe1 ",95, 725);
+		}
 		
 		g.drawString("Blablabla.....",650, 360);
 		
@@ -122,6 +173,29 @@ public class RecapState extends GameState implements ImageObserver{
 		g.setFont(buttonFont);
 		g.setColor(Color.black);
         g.drawString("Menu",1125, 695);
+	}
+	
+	public void readFile(String s) {
+		try {
+			FileInputStream file = new FileInputStream(s);
+			Scanner scanner = new Scanner(file); 
+			time = scanner.nextLine();
+			currentMoney = scanner.nextLine();
+			nbCurrentTreasures = scanner.nextLine();
+			nbFights =scanner.nextLine();
+			nbAnimalsDead = scanner.nextLine();
+			nbExplorersDead = scanner.nextLine();
+			lifeExplo1 = scanner.nextLine();
+			lifeExplo2 = scanner.nextLine();
+			lifeExplo3 = scanner.nextLine();
+			lifeExplo4 = scanner.nextLine();
+			lifeExplo5 = scanner.nextLine();
+			lifeExplo6 = scanner.nextLine();
+		    scanner.close();  
+		}			
+			catch (Exception e) {
+				e.printStackTrace();
+			}
 	}
 
 	public void keyPressed(int k) {}
