@@ -113,12 +113,25 @@ public class TileMap {
 				}
 			}
 			
-//			for (int row = 0; row<nbRows;row++) {
-//				for (int col = 0; col<nbCols; col++) {
-//					System.out.print(map[row][col]+" ");
-//				}
-//				System.out.println();
-//			}
+			Random random = new Random();
+			int x;
+			int y;
+			x = random.nextInt(28);
+			y = random.nextInt(20);
+			while (map[x][y]!=7) {
+				x = random.nextInt(28);
+				y = random.nextInt(20);
+			}
+			map[x][y] = 14;
+			
+			
+			
+			for (int row = 0; row<nbRows;row++) {
+				for (int col = 0; col<nbCols; col++) {
+					System.out.print(map[row][col]+" ");
+				}
+				System.out.println();
+			}
 			
 		}
 		catch (Exception e) {

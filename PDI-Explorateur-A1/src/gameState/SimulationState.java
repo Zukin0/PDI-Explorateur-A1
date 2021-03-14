@@ -6,7 +6,10 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -35,10 +38,16 @@ public class SimulationState extends GameState implements ImageObserver{
 	
 	//création des couleurs nécessaires à l'interface
 	private Color BEIGE = new Color(255,250,240);
+	private Color DARK_BEIGE = new Color(193, 146, 115);
 	
 	//création des polices
 	private Font categoryFont = new Font("Arial", Font.BOLD, 22);
 	private Font whiteBoardFont = new Font("Arial", Font.PLAIN, 20);
+	private Font buttonFont = new Font("Arial", Font.PLAIN, 33);
+	
+	/*Variables for the white board*/
+	private int nbMaxTreasures = Simulation.treasures.size();
+	private int nbCurrentTreasures;
 	
 	private Simulation sim;
 	
@@ -109,7 +118,7 @@ public class SimulationState extends GameState implements ImageObserver{
 				/* Random position Y [startPosition Y; Map.height] */
 				int y = (int) (tMapY + Math.random() * (tMapY+(nbCol-1)*tileSize+5));
 				
-				/* Calcul d�duit de la classe TileMap sur le placement des tiles */
+				/* Calcul d�duit de la classe TileMap sur le placement des tiles */
 				/* Col = (xPoS - OffSetX)/tileSize, Row = (YPoS - OffSetY)/tileSize */
 				int row = (int)(x-5-tMapX)/tileSize;
 				int col = (int) (y-5-tMapY)/tileSize;
@@ -133,6 +142,10 @@ public class SimulationState extends GameState implements ImageObserver{
 	}
 	
 	public void tick() {
+		/*if(sim.explorers.size() == 0) {
+			System.out.println("TOUS LES EXPLORATEURS SONT MORT : FIN DE LA PARTIE");
+			System.exit(0);
+		}*/
 	}
 
 	public void draw(Graphics g) {
@@ -208,6 +221,7 @@ public class SimulationState extends GameState implements ImageObserver{
 				g.setColor(Color.black);
 				WildAnimals wa = (WildAnimals)c;
 				g.drawRect(wa.getPosTerr().getX(),wa.getPosTerr().getY(), wa.getTerritorySize().getHeight(), wa.getTerritorySize().getHeight());
+				g.setColor(Color.red);
 			}
 //			g.setColor(Color.red);
 //			g.drawRect(c.getPosition().getX(), c.getPosition().getY(), c.getSize().getWidth(), c.getSize().getHeight());
@@ -220,40 +234,86 @@ public class SimulationState extends GameState implements ImageObserver{
 		}
 		
 //////////////////////CADRE BLANC////////////////////////////////////////////
+		//cadre
 		g.setColor(Color.black);
-		g.fillRect(1050 , 3, 245, 744);
-		g.setColor(BEIGE);
-		g.fillRect(1052 , 5, 241, 740);
+		g.fillRect(1050 , 3, 245, 630);
+		g.setColor(Color.white);
+		g.fillRect(1052 , 5, 241, 626);
 		g.setColor(Color.black);
         g.setFont(categoryFont);
         g.drawString("VOTRE SIMULATION",1060, 30);
-
-        g.drawImage(time, 1050, 40, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 130, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 220, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 310, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 400, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 490, 90, 80, (ImageObserver)this);
-        g.drawImage(heart, 1050, 580, 90, 80, (ImageObserver)this);
-        g.drawImage(treasure, 1060, 660, 80, 80, (ImageObserver)this);
         
-        g.drawString("07:04", 1170, 90);
+        //images
+        try {
+  			heart = ImageIO.read(new File("ressources/icone_coeur.png"));
+  			time = ImageIO.read(new File("ressources/icone_temps.png"));
+  			treasure = ImageIO.read(new File("ressources/tresor.png"));
+  		} catch (IOException e) {
+  			System.out.println("no image");
+  			e.printStackTrace();
+  		}
+        g.drawImage(time, 1050, 40, 70, 60, (ImageObserver)this);
+        g.drawImage(treasure, 1060, 530, 60, 60, (ImageObserver)this);
+        
+        //informations
+        nbCurrentTreasures = nbMaxTreasures - Simulation.treasures.size();
+        g.drawString("07:04", 1140, 80);
         g.setFont(whiteBoardFont);
-        g.drawString("Dora1 : 3/8", 1145, 175);
-        g.drawString("Dora2 : DEAD", 1145, 265);
-        g.drawString("Mike : 8/8", 1145, 355);
-        g.drawString("Joe : 8/8", 1145, 445);
-        g.drawString("Remy1 : 1/8", 1145, 535);
-        g.drawString("Remy2 : DEAD", 1145, 625);
-        g.drawString("Tresors : 0", 1145, 715);
+        int i = 0;
+        for(Character c : sim.explorers.values()) {
+        	if (c.getLifePoint()==0) {
+        		g.drawString(c.getName()+" : DEAD", 1135, 145+i*70);
+            	i++;
+        	}
+        	else {
+        		g.drawString(c.getName()+" : "+c.getLifePoint()+"/"+c.getLifePointMax(), 1135, 145+i*70);
+        		g.drawImage(heart, 1050, 110+i*70, 70, 60,(ImageObserver)this);
+            	i++;
+        	}
+        }
+        g.drawString("Tresors : "+nbCurrentTreasures, 1135, 570);
+        
+        //button
+        g.setColor(Color.black);
+		g.fillRect(1080, 650, 180, 67);
+        g.setColor(DARK_BEIGE);
+		g.fillRect(1085, 655, 170, 57);
+		g.setFont(buttonFont);
+		g.setColor(Color.black);
+        g.drawString("Recap",1120, 695);
 	}
 
 	public void keyPressed(int k) {}
 
 	public void keyReleased(int k) {}
+	
+	public void mousePressed(MouseEvent m) {
+		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715) {
+			PrintWriter writer;
+			try {
+				writer = new PrintWriter("ressources/donnees_sim.txt", "UTF-8");
+				writer.println("(07:09=time)");
+				writer.println("(money)");
+				writer.println("(nb combats)");
+				writer.println("(nb animaux morts)");
+				writer.println("(nb morts)");
+				writer.println("(vie)");
+				writer.println("(vie)");
+				writer.println("(vie)");
+				writer.println("(vie)");
+				writer.println("(vie)");
+				writer.println("(vie)");
+				writer.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			gsm.gameStates.push(new RecapState(gsm));
+		}
+	}
 
 	public void mouseClicked(MouseEvent m) {}
-
 
 	public void mouseReleased(MouseEvent m) {}
 
@@ -266,14 +326,11 @@ public class SimulationState extends GameState implements ImageObserver{
 		return sim;
 	}
 
-
 	public void setSim(Simulation sim) {
 		this.sim = sim;
 	}
 	public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
 		return false;
 	}
-	public void mousePressed(MouseEvent m) {
-		
-	}
+
 }

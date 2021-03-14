@@ -748,11 +748,11 @@ public class SelectionState extends GameState implements ImageObserver {
 				/* Verify each name zone if it is selected, then "break" if true */
 				if (m.getX()>= 1115 && m.getX()<= 1180 && m.getY()>=(215+60*i) && m.getY()<= (245+60*i)) { 
 					if(isSelectedTab==i) { // Unselect explorer i 
-						System.out.println("Unselect Explorer n°"+ (i+1) + ": Index => "+ i);
+						System.out.println("Unselect Explorer nï¿½"+ (i+1) + ": Index => "+ i);
 						isSelectedTab = -1;
 					}
 					else {
-						System.out.println("Select Explorer n°"+ (i+1) + ": Index => "+ i);
+						System.out.println("Select Explorer nï¿½"+ (i+1) + ": Index => "+ i);
 						isSelectedTab=i;
 					}
 					break;
@@ -770,6 +770,10 @@ public class SelectionState extends GameState implements ImageObserver {
 				sim.createThreads();
 			}
 		}
+	}
+	
+	public int getNbTreasures() {
+		return nbTreasures;
 	}
 
 	public void mouseReleased(MouseEvent m) {}
