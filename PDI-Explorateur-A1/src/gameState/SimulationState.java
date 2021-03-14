@@ -86,10 +86,12 @@ public class SimulationState extends GameState implements ImageObserver{
 	/*Boolean*/
 	private boolean treasurePlaced;
 	private boolean animalPlaced;
+	private boolean recapAccessible = false;
 	
 	
 	/* Chronometer */
 	private RealTime timer = new RealTime();
+	private Thread t = new Thread(timer);
 	
 	public SimulationState(GameStateManager gsm) {
 		super(gsm);
@@ -188,7 +190,6 @@ public class SimulationState extends GameState implements ImageObserver{
 	}
 	
 	public void startTimer() {
-		Thread t = new Thread(timer);
 		t.start();
 	}
 	
@@ -209,7 +210,10 @@ public class SimulationState extends GameState implements ImageObserver{
 	}
 	
 	public void tick() {
-		
+		if(Simulation.explorers.isEmpty()||Simulation.treasures.isEmpty()) {
+			recapAccessible = true;
+			t.stop();
+		}
 	}
 
 	public void draw(Graphics g) {
@@ -379,7 +383,7 @@ public class SimulationState extends GameState implements ImageObserver{
 	public void keyReleased(int k) {}
 	
 	public void mousePressed(MouseEvent m) {
-		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715) {
+		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715&&recapAccessible) {
 			PrintWriter writer;
 			try {
 				writer = new PrintWriter("ressources/donnees_sim.txt", "UTF-8");

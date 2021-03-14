@@ -68,7 +68,7 @@ public class TestObstacles {
 			botte = false;
 		}else {
 			for (Equipment equipments : e.getEquipment()) {
-				if (equipments.getName().equals("bottes")) {
+				if (equipments.getName().equals("Bottes")) {
 					botte = true;
 					break;
 				}else {
