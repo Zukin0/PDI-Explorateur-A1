@@ -9,6 +9,8 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import ihm.GamePanel;
+
 public class TileMap {
 	
 	//positions
@@ -22,7 +24,7 @@ public class TileMap {
 	private int ymax;
 	
 	//map
-	private static int[][] map;
+	public static int[][] map;
 	private int tileSize=32;
 	private int nbRows ;
 	private int nbCols ;
@@ -135,6 +137,14 @@ public class TileMap {
 		}
 	}
 	
+	public int getNbCols() {
+		return nbCols;
+	}
+	
+	public int getNbRows() {
+		return nbRows;
+	}
+	
 	public int getTileSize() {
 		return tileSize;
 	}
@@ -212,6 +222,8 @@ public class TileMap {
 				int c = rc % numTilesAcross;
 				
 				g.drawImage(tiles[r][c].getImage(), x+col*tileSize+5, y+row*tileSize+5,tileSize, tileSize, null);
+				//g.drawRect(x+col*tileSize+5, y+row*tileSize+5, tileSize, tileSize);
+				//g.drawString(row + "," + col, x+col*tileSize+5, y+row*tileSize+5 + 20);
 			}
 		}
 	}

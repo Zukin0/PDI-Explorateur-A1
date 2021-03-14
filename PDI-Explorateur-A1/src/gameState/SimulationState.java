@@ -7,6 +7,9 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
@@ -20,6 +23,9 @@ import game.TileMap;
 import character.Character;
 import character.Explorer;
 import character.WildAnimals;
+import data.Position;
+import data.Size;
+import data.Treasure;
 import ihm.GamePanel;
 
 public class SimulationState extends GameState implements ImageObserver{
@@ -39,17 +45,30 @@ public class SimulationState extends GameState implements ImageObserver{
 	private Simulation sim;
 	
 	//initialisation des images
+	/*Explorer*/
 	private BufferedImage imageDora=null;
 	private BufferedImage imageJoe=null;
 	private BufferedImage imageMike=null;
 	private BufferedImage imageRemy=null;
+	
+	/*Animals*/
+	private BufferedImage imageWolf=null;
+	private BufferedImage imageBear=null;
+	private BufferedImage imageEagle=null;
+	
+	/*Others*/
 	private BufferedImage time=null;
 	private BufferedImage heart=null;
 	private BufferedImage treasure=null;
 	
+	/*Boolean*/
+	private boolean treasurePlaced;
+	
 	public SimulationState(GameStateManager gsm) {
 		super(gsm);
 		init();
+		initImageFiles();
+		treasurePlacement();
 	}
 
 
@@ -58,8 +77,60 @@ public class SimulationState extends GameState implements ImageObserver{
 		tilemap.loadMap("/textMap.txt");
 		tilemap.loadTiles("/tileset.png");
 		tilemap.setPosition(10, 10);
-		tilemap.setTileSize(GamePanel.HEIGHT/20);
+		tilemap.setTileSize(GamePanel.HEIGHT/20); /* 750/20 = 37,5 => int(37.5) = 37 */
 		
+	}
+	
+	public void initImageFiles() {
+        try {
+  			heart = ImageIO.read(new File("ressources/icone_coeur.png"));
+  			time = ImageIO.read(new File("ressources/icone_temps.png"));
+  			treasure = ImageIO.read(new File("ressources/tresor.png"));
+  		} catch (IOException e) {
+  			System.out.println("no image");
+  			e.printStackTrace();
+  		}
+	}
+	
+	public void treasurePlacement() {
+		HashMap<String,Treasure> ts = Simulation.treasures;
+		int nbCol = tilemap.getNbCols();
+		int nbRows = tilemap.getNbRows();
+		int tMapX = tilemap.getX();
+		int tMapY = tilemap.getY();
+		int tileSize = tilemap.getTileSize();
+		
+		for (HashMap.Entry<String, Treasure> entry : ts.entrySet()) {
+			Treasure t = entry.getValue();
+			Size treasureSize = t.getSize();
+			treasurePlaced = false;
+			while(!treasurePlaced) {
+				/* Random position X [startPosition X ; Map.width] */
+				int x = (int) (tMapX + Math.random() * (tMapX+(nbRows-1)*tileSize+5));
+				
+				/* Random position Y [startPosition Y; Map.height] */
+				int y = (int) (tMapY + Math.random() * (tMapY+(nbCol-1)*tileSize+5));
+				
+				/* Calcul d�duit de la classe TileMap sur le placement des tiles */
+				/* Col = (xPoS - OffSetX)/tileSize, Row = (YPoS - OffSetY)/tileSize */
+				int row = (int)(x-5-tMapX)/tileSize;
+				int col = (int) (y-5-tMapY)/tileSize;
+				
+
+//				System.out.println("X : " + row + ", Y = " + col);
+				if(tilemap.getPosition(row,col) == 7) {
+//					System.out.println("Treasure Placement possible, x : " + (int)(x-5-tMapX)/tileSize + ", y : " + (int) (y-5-tMapY)/tileSize);
+					
+					t.setPosition(new Position(col*tileSize+5+tMapX,row*tileSize+5+tMapY));
+//					System.out.println(col*tileSize+5+tMapX + " " + row*tileSize+5+tMapY);
+					treasurePlaced = true;
+				}
+				else {
+//					System.out.println("Placement impossible, case : " + tilemap.getPosition((int)(x-5-tMapX)/tileSize,(int) (y-5-tMapY)/tileSize));
+				}
+			}
+		}
+				
 	}
 	
 	public void tick() {
@@ -73,81 +144,85 @@ public class SimulationState extends GameState implements ImageObserver{
 		//background
 		g.setColor(BEIGE);
 		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
-						
-		//title
-		//g.setColor(Color.black);
-		//g.setFont(titleFont);
-		//g.drawString("SIMULATION",20, 60);
 		
 ///////////////////////////MAP////////////////////////////////////////////////
+		/* Map Border */
 		g.setColor(Color.black);
 		g.fillRect(3,3, 1040, 744);
+		
+		/* Map */
 		tilemap.draw(g);
 		
+		/* Dynamic explorer's image loading, changes when explorer's direction changes */
 		for(Character c : sim.characters.values()) {
-			if(SimulationUtility.isInstance(c, Explorer.class)) {
-				String name = c.getName().substring(0,c.getName().length()-1);
-				
-				try {
-		  			imageDora = ImageIO.read(new File("ressources/dora_face.png"));
-		  			imageRemy = ImageIO.read(new File("ressources/remy_face.png"));
-		  			imageMike = ImageIO.read(new File("ressources/mike_face.png"));
-		  			imageJoe = ImageIO.read(new File("ressources/joe_face.png"));
-		  		} catch (IOException e) {
-		  			System.out.println("no image");
-		  			e.printStackTrace();
-		  		}
-				
-				switch(name) {
-				
-				case "Dora" : 
-					g.drawImage(imageDora, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
-					System.out.print("//// Dora se trouve sur : ");
-					switch (tilemap.getPosition((c.getPosition().getX())/32, (c.getPosition().getY())/32)) {
-					case 12:
-						System.out.println("arbres");
-						break ;
-					case 7:
-						System.out.println("herbe");
-						break ;
-					case 11:
-						System.out.println("rocher");
-						break ;
-					case 6:
-						System.out.println("boue");
-						break ;
-					case 13:
-						System.out.println("eau");
-						break ;
-					}
-					break;
-				case "Mike" : 
-					g.drawImage(imageMike, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
-					break;
-				case "Joe" : 
-					g.drawImage(imageJoe, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
-					break;
-				case "Remy" : 
-					g.drawImage(imageRemy, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
-					break;
-				}
+			String name = c.getName().substring(0,c.getName().length()-1);
+			String dynFileName ="";
+			switch(c.getDir()) {
+			case 0 : /* Up */
+				dynFileName = "dos";
+				break;
+			case 1 : /* Down */
+				dynFileName = "face";
+				break;
+			case 2 : /* Right */
+				dynFileName = "droite";
+				break;
+			case 3 : /* Left */
+				dynFileName = "gauche";
+				break;
+			
 			}
-			else {
+			try {
+	  			imageDora = ImageIO.read(new File("ressources/dora_" + dynFileName + ".png"));
+	  			imageRemy = ImageIO.read(new File("ressources/remy_" + dynFileName + ".png"));
+	  			imageMike = ImageIO.read(new File("ressources/mike_" + dynFileName + ".png"));
+	  			imageJoe = ImageIO.read(new File("ressources/joe_" + dynFileName + ".png"));
+	  			
+	  			imageWolf = ImageIO.read(new File("ressources/loup_" + dynFileName + ".png"));
+	  			imageBear = ImageIO.read(new File("ressources/ours_" + dynFileName + ".png"));
+	  			imageEagle = ImageIO.read(new File("ressources/aigle_" + dynFileName + ".png"));
+	  		} catch (IOException e) {
+	  			System.out.println("Error Image File couldn't load");
+	  			e.printStackTrace();
+	  		}		
+			switch(name) {
+			
+			case "Dora" : 
+				g.drawImage(imageDora, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
+				break;
+			case "Mike" : 
+				g.drawImage(imageMike, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
+				break;
+			case "Joe" : 
+				g.drawImage(imageJoe, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
+				break;
+			case "Remy" : 
+				g.drawImage(imageRemy, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
+				break;
+			case "Wolf" : 
+				g.drawImage(imageWolf, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
+				break;
+			case "Bear" : 
+				g.drawImage(imageBear, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
+				break;
+			case "Eagle" : 
+				g.drawImage(imageEagle, c.getPosition().getX(), c.getPosition().getY(), (ImageObserver)this);
+				break;
+			}
+			if(SimulationUtility.isInstance(c, WildAnimals.class)) {
 				g.setColor(Color.black);
 				WildAnimals wa = (WildAnimals)c;
 				g.drawRect(wa.getPosTerr().getX(),wa.getPosTerr().getY(), wa.getTerritorySize().getHeight(), wa.getTerritorySize().getHeight());
 				g.setColor(Color.red);
 			}
-			//g.fillRect(c.getPosition().getX(), c.getPosition().getY(), c.getSize().getWidth(), c.getSize().getHeight());
-			/*try {
-				Image sprite = ImageIO.read(new File("ressources/dora.png"));
-				g.drawImage(sprite , c.getPosition().getX() , c.getPosition().getY(), null);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}*/
-			
-			//g.fillRect(c.getPosition().getX(), c.getPosition().getX(), c.getSize().getWidth(), c.getSize().getHeight());
-			//g.fillRect(c.getPosition().getX(), c.getPosition().getX(), c.getSize().getWidth(), c.getSize().getHeight());
+//			g.setColor(Color.red);
+//			g.drawRect(c.getPosition().getX(), c.getPosition().getY(), c.getSize().getWidth(), c.getSize().getHeight());
+		}
+		
+		/* Draw Treasures */
+		for(HashMap.Entry<String,Treasure> entry : Simulation.treasures.entrySet()) {
+			Treasure t = entry.getValue();
+			g.drawImage(treasure, t.getPosition().getX(), t.getPosition().getY(), t.getSize().getWidth(), t.getSize().getHeight(),(ImageObserver)this);
 		}
 		
 //////////////////////CADRE BLANC////////////////////////////////////////////
@@ -224,4 +299,5 @@ public class SimulationState extends GameState implements ImageObserver{
 	public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
 		return false;
 	}
+
 }
