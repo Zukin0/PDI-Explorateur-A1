@@ -287,7 +287,7 @@ public class MeetAnimal{
 	}
 	
 	public static void deathAnimal(WildAnimals a,ArrayList<String> toRemove) {
-		//a.setDead(true);
+		a.setDead(true);
 		toRemove.add(a.getName());
 	}
 

@@ -60,6 +60,7 @@ public class SimulationState extends GameState implements ImageObserver{
 	private int nbCurrentTreasures = 0;
 	private int nbFights = 0;
 	private int nbAnimalsDead = 0;
+	private int nbAnimals = 0;
 	private int money = 0;
 	private int nbExplorersDead = 0;
 	
@@ -186,6 +187,7 @@ public class SimulationState extends GameState implements ImageObserver{
 					animalPlaced = true;
 				}
 			}
+			nbAnimals++;
 		}
 	}
 	
@@ -207,12 +209,33 @@ public class SimulationState extends GameState implements ImageObserver{
 				Simulation.animals.remove(name);
 			}
 		}
+		Simulation.toRemove.clear();
+	}
+	
+	public String writeTimer() {
+        int hours = timer.getHour().getValue();
+        int minutes = timer.getMinute().getValue();
+        int seconds = timer.getSecond().getValue();
+    	String hoursExt = "0";
+    	String minutesExt = "0";
+    	String secondsExt = "0";
+        if(hours >= 10) {
+        	hoursExt = "";
+        }
+        if(minutes >= 10) {
+        	minutesExt = "";
+        }
+        if(seconds >= 10) {
+        	secondsExt = "";
+        }
+        return hoursExt + hours + ":" + minutesExt+ minutes + ":" + secondsExt+seconds;
 	}
 	
 	public void tick() {
 		if(Simulation.explorers.isEmpty()||Simulation.treasures.isEmpty()) {
 			recapAccessible = true;
-			t.stop();
+			timer.setRunning(false);
+			
 		}
 	}
 
@@ -332,22 +355,9 @@ public class SimulationState extends GameState implements ImageObserver{
         nbCurrentTreasures = nbMaxTreasures - Simulation.treasures.size();
         
         /* Timer */
-        int hours = timer.getHour().getValue();
-        int minutes = timer.getMinute().getValue();
-        int seconds = timer.getSecond().getValue();
-    	String hoursExt = "0";
-    	String minutesExt = "0";
-    	String secondsExt = "0";
-        if(hours >= 10) {
-        	hoursExt = "";
-        }
-        if(minutes >= 10) {
-        	minutesExt = "";
-        }
-        if(seconds >= 10) {
-        	secondsExt = "";
-        }
-        g.drawString(hoursExt + hours + ":" + minutesExt+ minutes + ":" + secondsExt+seconds, 1140, 80);
+        String chrono = writeTimer();
+
+        g.drawString(chrono, 1140, 80);
         
         g.setFont(whiteBoardFont);
         
@@ -377,19 +387,32 @@ public class SimulationState extends GameState implements ImageObserver{
 		g.setColor(Color.black);
         g.drawString("Recap",1120, 695);
 	}
+	
+	public int calculateDeath() {
+		int nbExplorersDead=0;
+        for(String name : Simulation.listExp) {
+        	if(!Simulation.explorers.containsKey(name)) {
+        		nbExplorersDead++;
+        	}
+        }
+        return nbExplorersDead;
+	}
 
 	public void keyPressed(int k) {}
 
 	public void keyReleased(int k) {}
 	
 	public void mousePressed(MouseEvent m) {
-		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715&&recapAccessible) {
+		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715/*&&recapAccessible*/) {
+			timer.setRunning(false);
 			PrintWriter writer;
+			nbAnimalsDead = nbAnimals - sim.animals.size();
+			nbExplorersDead = calculateDeath();
 			try {
 				writer = new PrintWriter("ressources/donnees_sim.txt", "UTF-8");
 				writer.println("");
-				writer.println("07:09=time");
-				writer.println("13");
+				writer.println(writeTimer());
+				writer.println("");
 				writer.println(nbCurrentTreasures);
 				writer.println(nbFights);
 				writer.println(nbAnimalsDead);

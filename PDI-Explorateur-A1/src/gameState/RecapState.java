@@ -19,6 +19,9 @@ import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
+import character.Explorer;
+import data.Treasure;
+import character.Character;
 import game.Simulation;
 import ihm.Game;
 import ihm.GamePanel;
@@ -41,7 +44,7 @@ public class RecapState extends GameState implements ImageObserver{
 	private String nbCurrentTreasures = "0";
 	private String nbFights = "0";
 	private String nbAnimalsDead ="0";
-	private String nbExplorersDead = "0";
+	private String nbExplorersDead;
 	private String lifeExplo1 = "0";
 	private String lifeExplo2 = "0";
 	private String lifeExplo3 = "0";
@@ -64,14 +67,43 @@ public class RecapState extends GameState implements ImageObserver{
 	}
 
 	public void init() {
-		
+	}
+	
+	public void resetSimulation() {
+		for(Character c : Simulation.characters.values()) {
+			Simulation.toRemove.add(c.getName());
+			c.setDead(true);
+		}
+		for(Treasure t : Simulation.treasures.values()) {
+			Simulation.toRemove.add(t.getName());
+		}
+		Simulation.threads.clear();
+		Simulation.listExp.clear();
 	}
 	
 	public void tick() {
 	
 	}
-
+	
+	public void clearAll() {
+		for(String name : Simulation.toRemove) {
+			if(name.contains("treasure")) {
+				Simulation.treasures.remove(name);
+			}
+			else if(name.contains("Remy") || name.contains("Mike") || name.contains("Joe") || name.contains("Dora")) {
+				Simulation.characters.remove(name);
+				Simulation.explorers.remove(name);
+			}
+			else if(name.contains("Wolf") || name.contains("Bear") || name.contains("Eagle")) {
+				Simulation.characters.remove(name);
+				Simulation.animals.remove(name);
+			}
+		}
+		Simulation.toRemove.clear();
+	}
+	
 	public void draw(Graphics g) {
+		clearAll();
 		//background
 		g.setColor(BEIGE);
 		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
@@ -107,12 +139,6 @@ public class RecapState extends GameState implements ImageObserver{
         g.drawImage(fight, 20, 245, 60, 60, (ImageObserver) this);
         g.drawImage(animals, 20, 300,60, 60, (ImageObserver) this);
         g.drawImage(dead, 20, 355, 60, 60, (ImageObserver) this);
-        g.drawImage(heart, 20, 410, 60, 60, (ImageObserver) this);
-        g.drawImage(heart, 20, 465, 60, 60, (ImageObserver) this);
-        g.drawImage(heart, 20, 520,60,60, (ImageObserver) this);
-        g.drawImage(heart, 20, 575,60,60, (ImageObserver) this);
-        g.drawImage(heart, 20, 630, 60, 60, (ImageObserver) this);
-        g.drawImage(heart, 20,685, 60,60, (ImageObserver) this);
         
         readFile("ressources/donnees_sim.txt");
         
@@ -121,47 +147,61 @@ public class RecapState extends GameState implements ImageObserver{
 		g.setFont(texteFont);
 		g.drawString("Temps de votre simulation : "+time,95, 120);
 		g.drawString("Il vous reste "+currentMoney+" $",95, 175);
-		g.drawString("Vous avez trouvé "+nbCurrentTreasures+" trésors !",95, 230);
+		g.drawString("Vous avez trouve "+nbCurrentTreasures+" tresors !",95, 230);
 		g.drawString("Vous avez combattu "+nbFights+" fois",95, 285);
-		g.drawString("Vous avez tué "+nbAnimalsDead+" animaux, bravo !",95, 340);
+		g.drawString("Vous avez tue "+nbAnimalsDead+" animaux, bravo !",95, 340);
 		g.drawString(nbExplorersDead+" de vos explorateurs sont morts ...",95, 395);
 		
-		if (lifeExplo1.equals("0")) {
-			g.drawString("Dora1 est mort",95, 450);
-		} 
-		else {
-			g.drawString("Il reste "+lifeExplo1+" points de vie à Dora1 ",95, 450);
-		}
-		if (lifeExplo2.equals("0")) {
-			g.drawString("Mike1 est mort",95, 505);
-		} 
-		else {
-			g.drawString("Il reste "+lifeExplo2+" points de vie à Mike1 ",95, 505);
-		}
-		if (lifeExplo3.equals("0")) {
-			g.drawString("Remy1 est mort",95, 560);
-		} 
-		else {
-			g.drawString("Il reste "+lifeExplo3+" points de vie à Remy1 ",95, 560);
-		}
-		if (lifeExplo4.equals("0")) {
-			g.drawString("Dora2 est mort",95, 615);
-		} 
-		else {
-			g.drawString("Il reste "+lifeExplo4+" points de vie à Dora2 ",95, 615);
-		}
-		if (lifeExplo5.equals("0")) {
-			g.drawString("Mike2 est mort",95, 670);
-		} 
-		else {
-			g.drawString("Il reste "+lifeExplo5+" points de vie à Mike2 ",95, 670);
-		}
-		if (lifeExplo1.equals("0")) {
-			g.drawString("Joe1 est mort",95, 725);
-		} 
-		else {
-			g.drawString("Il reste "+lifeExplo6+" points de vie à Joe1 ",95, 725);
-		}
+		 int i = 0;
+	        for(String name : Simulation.listExp) {
+	        	if(!Simulation.explorers.containsKey(name)) {
+	        		g.drawString(name+" est mort",95, 450+55*i);
+	        		g.drawImage(dead, 20, 410+55*i, 60, 60, (ImageObserver) this);
+	        		i++;
+	        	}
+	        }
+			for(Explorer e : Simulation.explorers.values()) {
+				g.drawImage(heart, 20, 410+55*i, 60, 60, (ImageObserver) this);
+				g.drawString("Il reste "+e.getLifePoint()+" points de vie a "+ e.getName(),95, 450+55*i);
+				i++;
+			}
+		
+//		if (lifeExplo1.equals("0")) {
+//			g.drawString("Dora1 est mort",95, 450);
+//		} 
+//		else {
+//			g.drawString("Il reste "+lifeExplo1+" points de vie à Dora1 ",95, 450);
+//		}
+//		if (lifeExplo2.equals("0")) {
+//			g.drawString("Mike1 est mort",95, 505);
+//		} 
+//		else {
+//			g.drawString("Il reste "+lifeExplo2+" points de vie à Mike1 ",95, 505);
+//		}
+//		if (lifeExplo3.equals("0")) {
+//			g.drawString("Remy1 est mort",95, 560);
+//		} 
+//		else {
+//			g.drawString("Il reste "+lifeExplo3+" points de vie à Remy1 ",95, 560);
+//		}
+//		if (lifeExplo4.equals("0")) {
+//			g.drawString("Dora2 est mort",95, 615);
+//		} 
+//		else {
+//			g.drawString("Il reste "+lifeExplo4+" points de vie à Dora2 ",95, 615);
+//		}
+//		if (lifeExplo5.equals("0")) {
+//			g.drawString("Mike2 est mort",95, 670);
+//		} 
+//		else {
+//			g.drawString("Il reste "+lifeExplo5+" points de vie à Mike2 ",95, 670);
+//		}
+//		if (lifeExplo1.equals("0")) {
+//			g.drawString("Joe1 est mort",95, 725);
+//		} 
+//		else {
+//			g.drawString("Il reste "+lifeExplo6+" points de vie à Joe1 ",95, 725);
+//		}
 		
 		g.drawString("Blablabla.....",650, 360);
 		
@@ -178,7 +218,8 @@ public class RecapState extends GameState implements ImageObserver{
 	public void readFile(String s) {
 		try {
 			FileInputStream file = new FileInputStream(s);
-			Scanner scanner = new Scanner(file); 
+			Scanner scanner = new Scanner(file);
+			String vide = scanner.nextLine();
 			time = scanner.nextLine();
 			currentMoney = scanner.nextLine();
 			nbCurrentTreasures = scanner.nextLine();
@@ -206,6 +247,7 @@ public class RecapState extends GameState implements ImageObserver{
 
 	public void mousePressed(MouseEvent m) {
 		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715) {
+			resetSimulation();
 			while (!(gsm.gameStates.isEmpty())) {
 				gsm.gameStates.pop();
 			}

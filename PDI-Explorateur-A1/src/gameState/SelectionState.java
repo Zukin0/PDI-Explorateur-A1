@@ -28,7 +28,7 @@ public class SelectionState extends GameState implements ImageObserver {
 	
 	private boolean machette = false;
 	
-	private int nbMinExplorateurs = 1;
+	private int nbMinExplorateurs = 3;
 	private int nbMaxExplorateurs = 6;
 	private int nbExplorateurs = 0;
 	private int nbTreasures = 0;
@@ -365,7 +365,7 @@ public class SelectionState extends GameState implements ImageObserver {
         g.drawString("Prix : "+priceBinoculars+" $",550,725);
         //boots
         g.setFont(infosFont);
-        g.drawString("Empêche l'ensevelissement",750,700);
+        g.drawString("Empeche l'ensevelissement",750,700);
         g.drawString("Prix : "+priceBoots+" $",750,725);
         
 ////////////////////////////WHITE BOARD/////////////////////////////////////
