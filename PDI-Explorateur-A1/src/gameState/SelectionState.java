@@ -639,11 +639,9 @@ public class SelectionState extends GameState implements ImageObserver {
 		/* Remove */
 		else if (m.getX()>= 338 && m.getX()<= 363 && m.getY()>=578 && m.getY()<= 610) {
 			if (isSelectedTab != -1) {
-				money = money + priceWeapon;
-				System.out.println("Remove Machettes");
 				String name = listExplorers.get(isSelectedTab);
 				ArrayList<String> equipmentTmp = exEquipements.get(name);
-				if (equipmentTmp.size()!=0) {
+				if (equipmentTmp.size()!=0 && equipmentTmp.contains("Machettes")) {
 					equipmentTmp.remove("Machettes");
 					money = money + priceWeapon;
 				}
@@ -689,7 +687,7 @@ public class SelectionState extends GameState implements ImageObserver {
 			if (isSelectedTab != -1) {
 				String name = listExplorers.get(isSelectedTab);
 				ArrayList<String> equipmentTmp = exEquipements.get(name);
-				if (equipmentTmp.size()!=0) {
+				if (equipmentTmp.size()!=0 && equipmentTmp.contains("Jumelles")) {
 					equipmentTmp.remove("Jumelles");
 					money = money + priceBinoculars;
 				}
@@ -732,10 +730,9 @@ public class SelectionState extends GameState implements ImageObserver {
 		/* Remove */
 		else if (m.getX()>= 741 && m.getX()<= 765 && m.getY()>=576 && m.getY()<= 603) {
 			if (isSelectedTab != -1) {
-				money = money + priceBoots;
 				String name = listExplorers.get(isSelectedTab);
 				ArrayList<String> equipmentTmp = exEquipements.get(name);
-				if (equipmentTmp.size()!=0) {
+				if (equipmentTmp.size()!=0 && equipmentTmp.contains("Bottes")) {
 					equipmentTmp.remove("Bottes");
 					money = money + priceBoots;
 				}

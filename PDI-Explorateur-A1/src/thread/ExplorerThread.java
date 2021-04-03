@@ -75,6 +75,8 @@ public class ExplorerThread implements Runnable{
 	}
 	
 	public boolean collision(Explorer e) {
+		boolean slowed = false;
+		
 		int tMapX = tilemap.getX();
 		int tMapY = tilemap.getY();
 		int tileSize = tilemap.getTileSize();
@@ -137,6 +139,7 @@ public class ExplorerThread implements Runnable{
 			switch(tile1) {
 			case 6 :
 				TestObstacles.meetObstacles(e, "mud");
+				slowed = true;
 				break;
 			case 13 :
 				TestObstacles.meetObstacles(e, "water");
@@ -146,11 +149,16 @@ public class ExplorerThread implements Runnable{
 			switch(tile2) {
 			case 6 :
 				TestObstacles.meetObstacles(e, "mud");
+				slowed = true;
 				break;
 			case 13 :
 				TestObstacles.meetObstacles(e, "water");
 				break;
 			}	
+			
+			if(!slowed) {
+				e.setSpeed(e.getBaseSpeed());
+			}
 			return false;
 		}
 	}

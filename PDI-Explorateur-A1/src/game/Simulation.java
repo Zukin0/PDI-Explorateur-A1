@@ -130,6 +130,13 @@ public class Simulation {
 				eqCreator.BuildEquipment();
 				Equipment eq = eqCreator.getEquipment();
 				eqList.add(eq);
+				
+				switch(eq.getName()) {
+				case "Machettes" : e.setAttackPoint(e.getAttackPoint() + eq.getPower());;
+					break;
+				case "Jumelles" : e.setAura(e.getAura() + eq.getPower());
+					break;
+				}
 			}
 			
 			/* Add Equipment List to Explorer and add to instance's HashMap */

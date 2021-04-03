@@ -22,6 +22,7 @@ public class MikeBuilder extends ExBuilder{
 				explorer.setAttackPoint(9);
 				explorer.setAttackPointMax(10);
 				
+				explorer.setBaseSpeed(6);
 				explorer.setSpeed(6);
 				explorer.setAura(100);
 			}

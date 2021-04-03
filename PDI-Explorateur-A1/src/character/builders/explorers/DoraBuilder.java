@@ -21,6 +21,7 @@ public class DoraBuilder extends ExBuilder{
 				explorer.setAttackPoint(3);
 				explorer.setAttackPointMax(10);
 				
+				explorer.setBaseSpeed(6);
 				explorer.setSpeed(6);
 				explorer.setAura(100);
 			}

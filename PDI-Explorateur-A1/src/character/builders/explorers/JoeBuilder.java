@@ -20,6 +20,7 @@ public class JoeBuilder extends ExBuilder{
 		explorer.setAttackPoint(5);
 		explorer.setAttackPointMax(10);
 		
+		explorer.setBaseSpeed(6);
 		explorer.setSpeed(6);
 		explorer.setAura(100);
 	}
