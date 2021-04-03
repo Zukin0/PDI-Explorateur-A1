@@ -47,6 +47,36 @@ public class ExplorerThread implements Runnable{
 				e.setEscaping(false);
 				cpt = 0;
 			}
+			else if (e.isWaiting() == true) {
+				cpt = 0;
+				System.out.println(e.getName() + " : J'ATTEND MON AMI PENDANT "+Constant.NUMBER_WAIT_ITERATIONS+" ms");
+				while(cpt != Constant.NUMBER_WAIT_ITERATIONS) {
+					SimulationUtility.unitTime();
+					if(!collision(e)) {
+						//ne doit pas bouger
+						CharacterTreatment.stay(e);
+					}
+					cpt++;
+				}
+				System.out.println(e.getName() + " : J'ARRETE D'ATTENDRE");
+				e.setWaiting(false);
+				cpt = 0;
+			}
+			else if (e.isHelping() == true) {
+				cpt = 0;
+				System.out.println(e.getName() + " : JE VAIS AIDER MON AMI, JE LE CHERCHE PENDANT "+Constant.NUMBER_HELP_ITERATIONS+" ms");
+				while(cpt != Constant.NUMBER_HELP_ITERATIONS) {
+					SimulationUtility.unitTime();
+					if(!collision(e)) {
+						//ne doit pas bouger
+						CharacterTreatment.move(e);
+					}
+					cpt++;
+				}
+				System.out.println(e.getName() + " : J'ARRETE D'ATTENDRE");
+				e.setHelping(false);
+				cpt = 0;
+			}
 			else {
 				if(cpt == Constant.NUMBER_EXPLORE_ITERATIONS) {
 					CharacterTreatment.changeDir(e);

@@ -14,6 +14,7 @@ import character.builders.explorers.MikeBuilder;
 import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
 import game.Simulation;
+import data.Position;
 
 public class MeetAnimal{
 	
@@ -71,33 +72,53 @@ public class MeetAnimal{
 			if (outcome == "deathExplo") {
 				deathExplorer(e, simulation, explorers, characters);
 			}
+			if (outcome == "deathBoth") {
+				deathExplorer(e, simulation, explorers, characters);
+				//deathAnimal(a, animals, characters);
+			}
+//			if (outcome == "deathAnimal") {
+//				deathAnimal(a, animals, characters);
+//			}
 			break;
 		case "call":
 			//call a friend
+			e.setWaiting(true);
 			System.out.println(e.getName() + " : Besoin d'aide, ma position : "+
 								e.getPosition().getX()+", "+e.getPosition().getY()+"\n");
 			helper = findHelper(e, explorers);
+			helper.setHelping(true);
+			//goHelp(e, helper);
 			//add explorer and helper life points and attack points
 			//change explorer capacities to fight 
 			e.setAttackPoint(e.getAttackPoint()+helper.getAttackPoint());
 			e.setLifePoint(e.getLifePoint()+helper.getLifePoint());
-			//goHelp(e, helper);
 			outcome = fight(e, a); 
 			//if he dies : kill both of explorers
 			//otherwise : distribute explorer capacities
 			if (outcome == "deathExplo") {
 				deathExplorer(e, simulation, explorers, characters);
 				deathExplorer(helper, simulation, explorers, characters);
-			}else {
+			}
+			else if (outcome == "deathBoth") {
+				deathExplorer(e, simulation, explorers, characters);
+				deathExplorer(helper, simulation, explorers, characters);
+				//deathAnimal(a, animals, characters);
+			}
+			else {
 				int attack = e.getAttackPoint()/2;
 				int life = e.getLifePoint()/2;
 				e.setAttackPoint(attack);
 				e.setLifePoint(life);
 				helper.setAttackPoint(attack);
 				helper.setLifePoint(life);
+				e.setWaiting(false);
+				helper.setHelping(false);
+				CharacterTreatment.changeDir(e);
+				CharacterTreatment.changeDir(helper);
 			}
-			CharacterTreatment.changeDir(e);
-			CharacterTreatment.changeDir(helper);
+//			if (outcome == "deathAnimal") {
+//				deathAnimal(a, animals, characters);
+//			}
 			break;
 		case "escape":
 			//go away for n seconds
@@ -144,7 +165,7 @@ public class MeetAnimal{
 			//explorer and animal are dead
 			//comm
 			System.out.println("Je suis "+e.getName()+" et je vais mourir et j'ai tue un animal\n");
-			outcome = "deathExplo";
+			outcome = "deathBoth";
 		}
 		else if(lpA==0) {
 			//animal is dead
@@ -227,6 +248,13 @@ public class MeetAnimal{
 		}
 	}
 	
+	public static Position direction(Explorer e) {
+		int x = e.getPosition().getX();
+		int y = e.getPosition().getY() ;
+		Position pos = new Position(x,y);
+		return pos;
+	}
+	
 	public static void deathExplorer(Explorer e, int simulation, HashMap<String,Explorer> explorers, HashMap<String,Character> characters) {
 
 		float gain = 0;
@@ -277,6 +305,11 @@ public class MeetAnimal{
 			}
 			break;
 		}
+	}
+	
+	public static void deathAnimal(WildAnimals a, HashMap<String,WildAnimals> animals, HashMap<String,Character> characters) {
+		animals.remove(a.getName());
+		characters.remove(a.getName());
 	}
 
 	public static void main (String[] args) {

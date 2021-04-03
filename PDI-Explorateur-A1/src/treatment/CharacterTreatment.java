@@ -59,6 +59,14 @@ public class CharacterTreatment {
 		}
 	}
 	
+	public static void stay(Explorer e) {
+		Position posG = e.getPosition();
+		int posX = posG.getX();
+		int posY = posG.getY();
+		posG.setX(posX);
+		posG.setY(posY);
+	}
+	
 	public static Position predictPos(Character c) {
 		Position pos = c.getPosition();
 		int speed = c.getSpeed();
