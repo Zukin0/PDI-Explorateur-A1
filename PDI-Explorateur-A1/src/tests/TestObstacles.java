@@ -9,7 +9,11 @@ import character.builders.explorers.DoraBuilder;
 import character.builders.explorers.JoeBuilder;
 import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
+import data.Obstacles;
+import data.Position;
+import data.Size;
 import game.Simulation;
+import thread.ExplorerThread;
 import treatment.CharacterTreatment;
 
 public class TestObstacles {
@@ -23,30 +27,30 @@ public class TestObstacles {
 		HashMap<String,Explorer> explorers = Simulation.explorers;
 		
 		int oldSpeed = e.getSpeed();
-		int newSpeed = e.getSpeed()*(int)50/100;
+		int newSpeed = (int)(e.getSpeed()/50);
 		
 		switch(nameObs) {
 		case "water":
 			//take water and ask who need some
-			System.out.println("j'ai trouvé de l'eau qui est mal en point ?");
+			//System.out.println("j'ai trouvé de l'eau qui est mal en point ?");
 			needWater(explorers);
 			CharacterTreatment.changeDir(e);
 			break;
 		case "mud":
 			//slow down
 			if (!hasEquipment(e)) {
-				System.out.println("j'ai pas de bottes alors je ralenti");
+				//System.out.println("j'ai pas de bottes alors je ralenti");
 				e.setSpeed(newSpeed);
 			}else {
-				System.out.println("ouf j'ai des bottes");
+				//System.out.println("ouf j'ai des bottes");
 			}
 			e.setSpeed(oldSpeed);
-			System.out.println("Je sors de la boue je retrouve ma vitesse : "+e.getSpeed());
+			//System.out.println("Je sors de la boue je retrouve ma vitesse : "+e.getSpeed());
 			break;
 		case "blocked":
 			//tree, stone or side
 			//change direction
-			System.out.println("je suis bloquée je change de direction");
+			//System.out.println("je suis bloquée je change de direction");
 			CharacterTreatment.changeDir(e);
 			break;
 		case "treasure": 
@@ -64,7 +68,7 @@ public class TestObstacles {
 			botte = false;
 		}else {
 			for (Equipment equipments : e.getEquipment()) {
-				if (equipments.getName().equals("bottes")) {
+				if (equipments.getName().equals("Bottes")) {
 					botte = true;
 					break;
 				}else {
@@ -87,14 +91,14 @@ public class TestObstacles {
 			}
 		}
 		int gain = applicant.getLifePoint()*(int)50/100;
-		System.out.println("bonjour je suis "+ applicant.getName() +" et j'ai besoin d'eau j ai plus que : "+applicant.getLifePoint());
+		//System.out.println("bonjour je suis "+ applicant.getName() +" et j'ai besoin d'eau j ai plus que : "+applicant.getLifePoint());
 		if (applicant.getLifePoint()+gain< applicant.getLifePointMax()) {
 			applicant.setLifePoint(applicant.getLifePoint()+gain);
 		}else {
 			applicant.setLifePoint(applicant.getLifePointMax());
 		}
 		
-		System.out.println("maintenant j ai : "+applicant.getLifePoint());
+		//System.out.println("maintenant j ai : "+applicant.getLifePoint());
 	}
 	
 	public static void main (String[] args) {

@@ -18,19 +18,28 @@ import treatment.MeetAnimal;
 public class ExplorerThread implements Runnable{
 	private Explorer e;
 	private TileMap tilemap;
+	volatile int treasureFind ;
 	
 	int timer;
 	
 	public ExplorerThread(Explorer e) {
 		this.e = e; 
 		tilemap = SimulationState.tilemap;
+		treasureFind = 0;
 	}
 	
 	public void run() {
 		int cpt = 0;
 		CharacterTreatment.changeDir(e);
 		while(!e.isDead()) {
-			SimulationUtility.unitTime();		
+
+			SimulationUtility.unitTime();
+			for(WildAnimals a : Simulation.animals.values()) {
+				CharacterTreatment.auraCheck(e, a, this);
+			}
+			for(Treasure t : Simulation.treasures.values()) {
+				CharacterTreatment.auraCheck(e, t, this);
+			}
 			/* Explorer is fleeing */
 			if(e.isEscaping() == true) {
 				cpt = 0;
@@ -87,22 +96,12 @@ public class ExplorerThread implements Runnable{
 					/*
 					 * TESTING BRUTE LE TEMPS D'AVOIR LE CODE DE YOHAN
 					 */
-					WaDirector creatorA = new WaDirector();
-					WaBuilder bWolf = new WolfBuilder();
-					creatorA.setWildAnimalsBuilder(bWolf);
-					creatorA.BuildWildAnimals();
-					WildAnimals wa = creatorA.getAnimal();
-					int rand = (int)(Math.random() * 100);
-					if( wa != null && rand == 0) { 
-						MeetAnimal.meetAnimals(e, wa);
-					}
-					else {
-						CharacterTreatment.move(e);
-					}
+					CharacterTreatment.move(e);
 				}
 				cpt++;
 			}
 		}
+		System.out.println(e.getName() + " : Stop moving");
 	}
 	
 	public boolean collision(Explorer e) {
@@ -181,8 +180,13 @@ public class ExplorerThread implements Runnable{
 			case 13 :
 				TestObstacles.meetObstacles(e, "water");
 				break;
-			}
+			}	
 			return false;
 		}
+	}
+	
+	public synchronized void find() {
+		treasureFind++;
+		//System.out.println("Trésor trouver on en est a : " + treasureFind);
 	}
 }

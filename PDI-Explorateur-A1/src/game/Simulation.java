@@ -22,6 +22,10 @@ import character.builders.explorers.MikeBuilder;
 import character.builders.explorers.RemyBuilder;
 import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
+import data.MapObjects;
+import data.Position;
+import data.Size;
+import data.Treasure;
 import thread.ExplorerThread;
 import thread.WildAnimalsThread;
 
@@ -31,6 +35,11 @@ public class Simulation {
 	public static ArrayList<Thread> threads = new ArrayList<Thread>();
 	public static HashMap<String,Character> characters = new HashMap<String, Character>();
 	public static HashMap<String,WildAnimals> animals = new HashMap<String, WildAnimals>();
+	
+	public static HashMap<String,Treasure> treasures = new HashMap<String, Treasure>();
+	public static ArrayList<String> listExp = new ArrayList<String>();
+	
+	public static ArrayList<String> toRemove = new ArrayList<String>();
 	
 	private ExDirector exCreator;
 	private WaDirector waCreator;
@@ -52,12 +61,14 @@ public class Simulation {
 	private Difficulty difficulty;
 	public static int strategy;
 	
-	public Simulation(int difficulty, int strategy, ArrayList<String> listExp, HashMap<String,ArrayList<String>> exEquipment) {
+	public Simulation(Difficulty difficulty, int strategy, ArrayList<String> listExp, HashMap<String,ArrayList<String>> exEquipment) {
+		this.listExp = listExp;
 		this.strategy = strategy;
-		//this.difficulty = difficulty;
+		this.difficulty = difficulty;
 		initBuilders();
 		createExplorers(listExp, exEquipment);
 		createAnimals();
+		createTreasures();
 		addListCharacters();
 	}
 	
@@ -128,11 +139,44 @@ public class Simulation {
 	}
 	
 	public void createAnimals() {
-		waCreator.setWildAnimalsBuilder(bWolf);
-		waCreator.BuildWildAnimals();
-		WildAnimals w1 = waCreator.getAnimal();
-		w1.setName("Wolf1");
-		animals.put(w1.getName(),w1);
+		int nbAnimals = difficulty.getAnimalsNB();
+		String name = "";
+		int nbWolf = 1, nbEagle = 1, nbBear = 1;
+		for(int i=0; i<nbAnimals; i++) {
+			/* Number between 0 and 2 => [0,2] */
+			int rand = (int) (Math.random() * 3) ;
+			switch(rand) {
+				case 0 : 
+					waCreator.setWildAnimalsBuilder(bWolf);
+					nbWolf++;
+					name = "Wolf" + nbWolf;
+					break;
+				case 1 :
+					waCreator.setWildAnimalsBuilder(bBear);
+					nbBear++;
+					name = "Bear" + nbBear;
+					break;
+				case 2 : 
+					waCreator.setWildAnimalsBuilder(bEagle);
+					nbEagle++;
+					name = "Eagle" + nbEagle;
+					break;
+			}
+			waCreator.BuildWildAnimals();
+			WildAnimals w1 = waCreator.getAnimal();
+			w1.setName(name);
+			animals.put(w1.getName(),w1);
+		}
+	}
+	
+	public void createTreasures() {
+		int nbTreasures = difficulty.getTreasureNB();
+		for(int i=1;i<=nbTreasures;i++) {
+			String name = "treasure" + i;
+			Treasure t = new Treasure(name,new Size(30,30),new Position(0,0),true);
+			
+			treasures.put(name,t);
+		}
 	}
 	
 	public void addListCharacters() {
@@ -146,14 +190,11 @@ public class Simulation {
 	
 	public void createThreads() {
 		for(Character c : characters.values()) {
-			System.out.println("Testing");
 			Thread t = null;
 			if(SimulationUtility.isInstance(c, Explorer.class)) {
-				System.out.println("Explorer");
 				t = new Thread(new ExplorerThread((Explorer)c));
 			}
 			else {
-				System.out.println("Animal");
 				t = new Thread(new WildAnimalsThread((WildAnimals)c));
 			}
 			threads.add(t);
@@ -178,7 +219,7 @@ public class Simulation {
 	}
 	
 	public void setExplorers(HashMap<String,Explorer> explorers) {
-		this.explorers = explorers;
+		Simulation.explorers = explorers;
 	}
 	
 	public void setEquimentMax(Difficulty difficulty) {

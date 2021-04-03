@@ -1,5 +1,6 @@
 package treatment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -22,6 +23,8 @@ public class MeetAnimal{
 		
 		HashMap<String,Explorer> explorers = Simulation.explorers;
 		HashMap<String,Character> characters = Simulation.characters;
+		HashMap<String,WildAnimals> animals = Simulation.animals;
+		ArrayList<String> toRemove = Simulation.toRemove;
 		String outcome = null;
 		String action = null;
 		Explorer helper = null;
@@ -69,16 +72,12 @@ public class MeetAnimal{
 		case "fight":
 			//fight 
 			outcome = fight(e, a);
-			if (outcome == "deathExplo") {
-				deathExplorer(e, simulation, explorers, characters);
+			if (outcome == "deathExplo" || outcome.equals("deathBoth")) {
+				deathExplorer(e, simulation, explorers, characters,toRemove);
 			}
-			if (outcome == "deathBoth") {
-				deathExplorer(e, simulation, explorers, characters);
-				//deathAnimal(a, animals, characters);
+			if(outcome == "deathAnimal" || outcome.equals("deathBoth")) {
+				deathAnimal(a, toRemove);
 			}
-//			if (outcome == "deathAnimal") {
-//				deathAnimal(a, animals, characters);
-//			}
 			break;
 		case "call":
 			//call a friend
@@ -95,30 +94,23 @@ public class MeetAnimal{
 			outcome = fight(e, a); 
 			//if he dies : kill both of explorers
 			//otherwise : distribute explorer capacities
-			if (outcome == "deathExplo") {
-				deathExplorer(e, simulation, explorers, characters);
-				deathExplorer(helper, simulation, explorers, characters);
-			}
-			else if (outcome == "deathBoth") {
-				deathExplorer(e, simulation, explorers, characters);
-				deathExplorer(helper, simulation, explorers, characters);
-				//deathAnimal(a, animals, characters);
-			}
-			else {
+			if (outcome == "deathExplo" || outcome.equals("deathBoth")) {
+				deathExplorer(e, simulation, explorers, characters,toRemove);
+				deathExplorer(helper, simulation, explorers, characters,toRemove);
+			}else {
 				int attack = e.getAttackPoint()/2;
 				int life = e.getLifePoint()/2;
 				e.setAttackPoint(attack);
 				e.setLifePoint(life);
 				helper.setAttackPoint(attack);
 				helper.setLifePoint(life);
-				e.setWaiting(false);
-				helper.setHelping(false);
-				CharacterTreatment.changeDir(e);
-				CharacterTreatment.changeDir(helper);
 			}
-//			if (outcome == "deathAnimal") {
-//				deathAnimal(a, animals, characters);
-//			}
+			CharacterTreatment.changeDir(e);
+			CharacterTreatment.changeDir(helper);
+			
+			if(outcome == "deathAnimal" || outcome.equals("deathBoth")) {
+				deathAnimal(a,toRemove);
+			}
 			break;
 		case "escape":
 			//go away for n seconds
@@ -255,7 +247,7 @@ public class MeetAnimal{
 		return pos;
 	}
 	
-	public static void deathExplorer(Explorer e, int simulation, HashMap<String,Explorer> explorers, HashMap<String,Character> characters) {
+	public static void deathExplorer(Explorer e, int simulation, HashMap<String,Explorer> explorers, HashMap<String,Character> characters,ArrayList<String> toRemove) {
 
 		float gain = 0;
 		int gain2 =0;
@@ -265,23 +257,20 @@ public class MeetAnimal{
 		//fermer le thread
 
 		e.setDead(true);
-		explorers.remove(e.getName());
-		characters.remove(e.getName());
+		toRemove.add(e.getName());
+		
 		switch(simulation) {
 		case 0:
 			//lower probaFight for every explorers
 			for (Explorer explorer : explorers.values()){
 				gain = explorer.getProbaFight()*(float)10/100;
 				if (explorer.getProbaFight()-gain>=0 && explorer.getProbaCall()+(gain/2)<=100 && explorer.getProbaCall()+(gain/2)<=100){
-					System.out.println("Je suis "+explorer.getName()+" et j'avais une proba de combat de : "+explorer.getProbaFight());
-					System.out.println("Je suis "+explorer.getName()+" et j'avais une proba de fuite de : "+explorer.getProbaEscape());
-					System.out.println("Je suis "+explorer.getName()+" et j'avais une proba d'appeler de : "+explorer.getProbaCall()+"\n");
+//					System.out.println("Je suis "+explorer.getName()+" et j'avais une proba de combat de : "+explorer.getProbaFight());
+//					System.out.println("Je suis "+explorer.getName()+" et j'avais une proba de fuite de : "+explorer.getProbaEscape());
+//					System.out.println("Je suis "+explorer.getName()+" et j'avais une proba d'appeler de : "+explorer.getProbaCall()+"\n");
 					explorer.setProbaFight(explorer.getProbaFight()-gain);
 					explorer.setProbaCall(explorer.getProbaCall()+(gain/2));
 					explorer.setProbaEscape(explorer.getProbaEscape()+(gain/2));
-					System.out.println("Je suis "+explorer.getName()+" et j'ai une proba de combat de : "+explorer.getProbaFight());
-					System.out.println("Je suis "+explorer.getName()+" et j'ai une proba de fuite de : "+explorer.getProbaEscape());
-					System.out.println("Je suis "+explorer.getName()+" et j'ai une proba d'appeler de : "+explorer.getProbaCall()+"\n");
 				}
 			}
 			break;
@@ -290,26 +279,26 @@ public class MeetAnimal{
 			for (Explorer explorer : explorers.values()) {
 				gain2 = explorer.getAttackPoint()*(int)20/100;
 				if (explorer.getAttackPoint()+gain2<=explorer.getAttackPointMax()) {
-					System.out.println("Je suis "+explorer.getName()+" et j'avais : "+explorer.getAttackPoint()+" points d'attaque\n");
+//					System.out.println("Je suis "+explorer.getName()+" et j'avais : "+explorer.getAttackPoint()+" points d'attaque\n");
 					explorer.setAttackPoint(explorer.getAttackPoint()+gain2);
-					System.out.println("Je suis "+explorer.getName()+" et j'ai : "+explorer.getAttackPoint()+" points d'attaque\n");
+//					System.out.println("Je suis "+explorer.getName()+" et j'ai : "+explorer.getAttackPoint()+" points d'attaque\n");
 				}
 			}
 			break;
 		case 2:
 			//higher vision for every explorers
 			for (Explorer explorer : explorers.values()) {
-				System.out.println("Je suis "+explorer.getName()+" et j'avais une vision de : "+explorer.getAura()+"\n");
+//				System.out.println("Je suis "+explorer.getName()+" et j'avais une vision de : "+explorer.getAura()+"\n");
 				explorer.setAura(explorer.getAura()+2);
-				System.out.println("Je suis "+explorer.getName()+" et j'ai une vision de : "+explorer.getAura()+"\n");
+//				System.out.println("Je suis "+explorer.getName()+" et j'ai une vision de : "+explorer.getAura()+"\n");
 			}
 			break;
 		}
 	}
 	
-	public static void deathAnimal(WildAnimals a, HashMap<String,WildAnimals> animals, HashMap<String,Character> characters) {
-		animals.remove(a.getName());
-		characters.remove(a.getName());
+	public static void deathAnimal(WildAnimals a,ArrayList<String> toRemove) {
+		a.setDead(true);
+		toRemove.add(a.getName());
 	}
 
 	public static void main (String[] args) {

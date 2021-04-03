@@ -4,7 +4,13 @@ import java.util.Arrays;
 
 import character.Character;
 import character.Explorer;
+import character.WildAnimals;
+import data.MapObjects;
 import data.Position;
+import data.Size;
+import data.Treasure;
+import game.Simulation;
+import game.TileMap;
 import ihm.GamePanel;
 import thread.ExplorerThread;
 
@@ -118,5 +124,26 @@ public class CharacterTreatment {
 	
 	public static boolean contains(int[] arr, final int key) {
 	    return Arrays.stream(arr).anyMatch(i -> i == key);
+	}
+	
+	public static void auraCheck(Character pChar, MapObjects mC, ExplorerThread eT) {
+		
+		//Calcul distance between two entity	
+		double dis = Math.sqrt(Math.pow(pChar.getPosition().getX() - mC.getPosition().getX(), 2) + Math.pow(pChar.getPosition().getY() - mC.getPosition().getY(), 2));	
+//		System.out.println("la distance et de : " + dis);
+		
+		//Checking
+		if(pChar.getAura() >= dis) {
+			//System.out.println("Dans la zone");
+			if(mC.getClass() == WildAnimals.class)
+				MeetAnimal.meetAnimals((Explorer) pChar, (WildAnimals) mC);
+//			
+			if(mC.getClass() == Treasure.class)
+				eT.find();
+				Simulation.toRemove.add(mC.getName());
+		}
+		else {
+//			System.out.println("Pas dans la zone");
+		}	
 	}
 }

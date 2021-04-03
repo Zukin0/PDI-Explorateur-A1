@@ -9,6 +9,8 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import ihm.GamePanel;
+
 public class TileMap {
 	
 	//positions
@@ -111,12 +113,12 @@ public class TileMap {
 				}
 			}
 			
-			for (int row = 0; row<nbRows;row++) {
-				for (int col = 0; col<nbCols; col++) {
-					System.out.print(map[row][col]+" ");
-				}
-				System.out.println();
-			}
+//			for (int row = 0; row<nbRows;row++) {
+//				for (int col = 0; col<nbCols; col++) {
+//					System.out.print(map[row][col]+" ");
+//				}
+//				System.out.println();
+//			}
 			
 		}
 		catch (Exception e) {
@@ -127,7 +129,7 @@ public class TileMap {
 	public int getNbCols() {
 		return nbCols;
 	}
-
+	
 	public int getNbRows() {
 		return nbRows;
 	}
@@ -209,6 +211,8 @@ public class TileMap {
 				int c = rc % numTilesAcross;
 				
 				g.drawImage(tiles[r][c].getImage(), x+col*tileSize+5, y+row*tileSize+5,tileSize, tileSize, null);
+				//g.drawRect(x+col*tileSize+5, y+row*tileSize+5, tileSize, tileSize);
+				//g.drawString(row + "," + col, x+col*tileSize+5, y+row*tileSize+5 + 20);
 			}
 		}
 	}	

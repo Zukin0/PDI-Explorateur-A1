@@ -15,6 +15,7 @@ public class Explorer extends Character{
 	private boolean isWaiting;
 	private boolean isHelping;
 	private boolean isDead;
+
 	
 	public Explorer(String name, Size size, Position position, boolean movable, int lifePoint, int lifePointMax,
 			int attackPoint, int attackPointMax, int speed, int aura, float probaFight, float probaEscape, float probaCall,
@@ -82,6 +83,7 @@ public class Explorer extends Character{
 	public boolean isEscaping() {
 		return isEscaping;
 	}
+
 	public boolean isWaiting() {
 		return isWaiting;
 	}
@@ -91,7 +93,7 @@ public class Explorer extends Character{
 	public boolean isDead() {
 		return isDead;
 	}
-	
+
 	public void setProbaFight(float probaFight) {
 		this.probaFight = probaFight;
 	}
@@ -113,6 +115,7 @@ public class Explorer extends Character{
 	public void setEscaping(boolean isEscaping) {
 		this.isEscaping = isEscaping;
 	}
+
 	public void setWaiting(boolean isWaiting) {
 		this.isWaiting = isWaiting;
 	}
@@ -122,4 +125,5 @@ public class Explorer extends Character{
 	public void setDead(boolean isDead) {
 		this.isDead = isDead;
 	}
+
 }
