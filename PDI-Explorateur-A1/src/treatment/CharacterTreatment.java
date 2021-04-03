@@ -65,6 +65,40 @@ public class CharacterTreatment {
 		}
 	}
 	
+	public static void goHelp(Explorer e, Explorer helper) {
+		if (e!=null) {
+			int xFinish = e.getPosition().getX();
+			int yFinish = e.getPosition().getY();
+			int xStart = e.getPosition().getX();
+			int yStart = e.getPosition().getY();
+		
+			int x = xFinish - xStart;
+			int y = yFinish - yStart;
+			if(Math.abs(x) > Math.abs(y)) {
+				if(x < 0) {
+					//left
+					helper.setDir(3);
+				} else {
+					//right
+					helper.setDir(2);
+				}
+			}else {
+				if(y < 0) {
+					//up
+					helper.setDir(0);
+				} else {
+					//down
+					helper.setDir(1);
+				}
+			}
+		
+			if(xStart==xFinish && yStart==yFinish) {
+				helper.setNearExp(true);
+			}
+		}
+		
+	}
+	
 	public static Position predictPos(Character c) {
 		Position pos = c.getPosition();
 		int speed = c.getSpeed();
