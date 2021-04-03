@@ -10,8 +10,8 @@ public class Constant {
 	public static final int SIMULATION_SPEED = 100;
 	public static final int INTERVAL_DIRECTION_CHANGE = 3000;
 	public static final int TIME_ESCAPING = 5000;
-	public static final int TIME_WAITING = 5000;
-	public static final int TIME_HELPING = 5000;
+	public static final int TIME_WAITING = 10000;
+	public static final int TIME_HELPING = 10000;
 	
 	/*
 	 * Number of movements characters move before changing direction

@@ -27,7 +27,7 @@ public class TestObstacles {
 		HashMap<String,Explorer> explorers = Simulation.explorers;
 		
 		int oldSpeed = e.getSpeed();
-		int newSpeed = (int)(e.getSpeed()/50);
+		int newSpeed = (int)(e.getSpeed()/2);
 		
 		switch(nameObs) {
 		case "water":
@@ -43,6 +43,7 @@ public class TestObstacles {
 				e.setSpeed(newSpeed);
 			}else {
 				//System.out.println("ouf j'ai des bottes");
+				
 			}
 			e.setSpeed(oldSpeed);
 			//System.out.println("Je sors de la boue je retrouve ma vitesse : "+e.getSpeed());
@@ -80,7 +81,7 @@ public class TestObstacles {
 	}
 	
 	public static void needWater(HashMap<String,Explorer> explorers) {
-		int minPV = 200;
+		int minPV = 150;
 		int pv = 0;
 		Explorer applicant=null;
 		for (Explorer explorer : explorers.values()){
@@ -92,7 +93,7 @@ public class TestObstacles {
 		}
 		int gain = applicant.getLifePoint()*(int)50/100;
 		//System.out.println("bonjour je suis "+ applicant.getName() +" et j'ai besoin d'eau j ai plus que : "+applicant.getLifePoint());
-		if (applicant.getLifePoint()+gain< applicant.getLifePointMax()) {
+		if ((applicant.getLifePoint()+gain)< applicant.getLifePointMax()) {
 			applicant.setLifePoint(applicant.getLifePoint()+gain);
 		}else {
 			applicant.setLifePoint(applicant.getLifePointMax());

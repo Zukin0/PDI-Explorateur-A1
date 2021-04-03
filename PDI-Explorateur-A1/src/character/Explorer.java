@@ -14,12 +14,13 @@ public class Explorer extends Character{
 	private boolean isEscaping;
 	private boolean isWaiting;
 	private boolean isHelping;
+	private boolean isNearExp;
 	private boolean isDead;
 
 	
 	public Explorer(String name, Size size, Position position, boolean movable, int lifePoint, int lifePointMax,
 			int attackPoint, int attackPointMax, int speed, int aura, float probaFight, float probaEscape, float probaCall,
-			ArrayList<Equipment> equipment, int equipmentMax, int price, boolean isEscaping, boolean isWaiting, boolean isHelping) {
+			ArrayList<Equipment> equipment, int equipmentMax, int price, boolean isEscaping, boolean isWaiting, boolean isHelping,boolean isNearExp) {
 		super(name, size, position, movable, lifePoint, lifePointMax, attackPoint, attackPointMax, speed, aura);
 		this.probaFight = probaFight;
 		this.probaEscape = probaEscape;
@@ -30,6 +31,7 @@ public class Explorer extends Character{
 		this.isEscaping = isEscaping;
 		this.isWaiting = isWaiting;
 		this.isHelping = isHelping;
+		this.isNearExp = isNearExp;
 		this.setDead(false);
 	}
 	
@@ -44,6 +46,7 @@ public class Explorer extends Character{
 		isEscaping = false;
 		isWaiting  = false; 
 		isHelping = false;
+		isNearExp = false;
 		setDead(false);
 	}
 	
@@ -90,6 +93,9 @@ public class Explorer extends Character{
 	public boolean isHelping() {
 		return isHelping;
 	}
+	public boolean isNearExp() {
+		return isNearExp;
+	}
 	public boolean isDead() {
 		return isDead;
 	}
@@ -121,6 +127,9 @@ public class Explorer extends Character{
 	}
 	public void setHelping(boolean isHelping) {
 		this.isHelping = isHelping;
+	}
+	public void setNearExp(boolean isNearExp) {
+		this.isNearExp = isNearExp;
 	}
 	public void setDead(boolean isDead) {
 		this.isDead = isDead;

@@ -61,10 +61,8 @@ public class ExplorerThread implements Runnable{
 				System.out.println(e.getName() + " : J'ATTEND MON AMI PENDANT "+Constant.NUMBER_WAIT_ITERATIONS+" ms");
 				while(cpt != Constant.NUMBER_WAIT_ITERATIONS) {
 					SimulationUtility.unitTime();
-					if(!collision(e)) {
-						//ne doit pas bouger
-						CharacterTreatment.stay(e);
-					}
+					//ne bouge pas alors on ne fait pas de move on fait rien
+					System.out.println(e.getName() + " : J'ATTENDS");
 					cpt++;
 				}
 				System.out.println(e.getName() + " : J'ARRETE D'ATTENDRE");
@@ -77,7 +75,16 @@ public class ExplorerThread implements Runnable{
 				while(cpt != Constant.NUMBER_HELP_ITERATIONS) {
 					SimulationUtility.unitTime();
 					if(!collision(e)) {
-						//ne doit pas bouger
+						//doit aller vers son ami
+						Explorer eInDanger=null;
+						for(Explorer explorer : Simulation.explorers.values()) {
+							if(explorer.isWaiting()==true) {
+								eInDanger=explorer;
+							}
+						}
+						//change
+						CharacterTreatment.goHelp(eInDanger, e);
+						//move
 						CharacterTreatment.move(e);
 					}
 					cpt++;
@@ -187,6 +194,6 @@ public class ExplorerThread implements Runnable{
 	
 	public synchronized void find() {
 		treasureFind++;
-		//System.out.println("Trésor trouver on en est a : " + treasureFind);
+		//System.out.println("Tresor trouver on en est a : " + treasureFind);
 	}
 }
