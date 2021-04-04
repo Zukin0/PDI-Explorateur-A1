@@ -7,7 +7,7 @@ public class BootsBuilder  extends EqBuilder{
 	public void upEquipment() {
 		
 		equipment.setName("Bottes");
-		equipment.setPower("");
+		equipment.setPower(30);
 		equipment.setPrice(0);
 	}
 }

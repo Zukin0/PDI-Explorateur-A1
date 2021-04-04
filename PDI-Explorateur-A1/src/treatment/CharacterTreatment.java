@@ -9,6 +9,7 @@ import data.MapObjects;
 import data.Position;
 import data.Size;
 import data.Treasure;
+import game.Simulation;
 import game.TileMap;
 import ihm.GamePanel;
 import thread.ExplorerThread;
@@ -62,6 +63,40 @@ public class CharacterTreatment {
 		case 3 : posG.setX(posX-speed);
 		break;
 		}
+	}
+	
+	public static void goHelp(Explorer e, Explorer helper) {
+		if (e!=null) {
+			int xFinish = e.getPosition().getX();
+			int yFinish = e.getPosition().getY();
+			int xStart = e.getPosition().getX();
+			int yStart = e.getPosition().getY();
+		
+			int x = xFinish - xStart;
+			int y = yFinish - yStart;
+			if(Math.abs(x) > Math.abs(y)) {
+				if(x < 0) {
+					//left
+					helper.setDir(3);
+				} else {
+					//right
+					helper.setDir(2);
+				}
+			}else {
+				if(y < 0) {
+					//up
+					helper.setDir(0);
+				} else {
+					//down
+					helper.setDir(1);
+				}
+			}
+		
+			if(xStart==xFinish && yStart==yFinish) {
+				helper.setNearExp(true);
+			}
+		}
+		
 	}
 	
 	public static Position predictPos(Character c) {
@@ -125,12 +160,13 @@ public class CharacterTreatment {
 		
 		//Checking
 		if(pChar.getAura() >= dis) {
-			System.out.println("Dans la zone");
+			//System.out.println("Dans la zone");
 			if(mC.getClass() == WildAnimals.class)
 				MeetAnimal.meetAnimals((Explorer) pChar, (WildAnimals) mC);
 //			
 			if(mC.getClass() == Treasure.class)
 				eT.find();
+				Simulation.toRemove.add(mC.getName());
 		}
 		else {
 //			System.out.println("Pas dans la zone");

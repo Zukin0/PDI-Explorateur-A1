@@ -23,10 +23,14 @@ import game.TileMap;
 import character.Character;
 import character.Explorer;
 import character.WildAnimals;
+import data.MapObjects;
+import data.Constant;
 import data.Position;
+import data.Size;
 import data.Treasure;
 import ihm.GamePanel;
 import time.RealTime;
+import time.Time;
 
 public class SimulationState extends GameState implements ImageObserver{
 	
@@ -190,14 +194,52 @@ public class SimulationState extends GameState implements ImageObserver{
 		t.start();
 	}
 	
+	public void cleanHashMaps() {
+		for(String name : Simulation.toRemove) {
+			if(name.contains("treasure")) {
+				Simulation.treasures.remove(name);
+			}
+			else if(name.contains("Remy") || name.contains("Mike") || name.contains("Joe") || name.contains("Dora")) {
+				Simulation.characters.remove(name);
+				Simulation.explorers.remove(name);
+			}
+			else if(name.contains("Wolf") || name.contains("Bear") || name.contains("Eagle")) {
+				Simulation.characters.remove(name);
+				Simulation.animals.remove(name);
+			}
+		}
+		Simulation.toRemove.clear();
+	}
+	
+	public String writeTimer() {
+        int hours = timer.getHour().getValue();
+        int minutes = timer.getMinute().getValue();
+        int seconds = timer.getSecond().getValue();
+    	String hoursExt = "0";
+    	String minutesExt = "0";
+    	String secondsExt = "0";
+        if(hours >= 10) {
+        	hoursExt = "";
+        }
+        if(minutes >= 10) {
+        	minutesExt = "";
+        }
+        if(seconds >= 10) {
+        	secondsExt = "";
+        }
+        return hoursExt + hours + ":" + minutesExt+ minutes + ":" + secondsExt+seconds;
+	}
+	
 	public void tick() {
 		if(Simulation.explorers.isEmpty()||Simulation.treasures.isEmpty()) {
 			recapAccessible = true;
-			t.stop();
+			timer.setRunning(false);
+			
 		}
 	}
 
 	public void draw(Graphics g) {
+		cleanHashMaps();
 		g.setColor(BEIGE);
 		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
 		
@@ -310,25 +352,9 @@ public class SimulationState extends GameState implements ImageObserver{
         
         //informations
         nbCurrentTreasures = nbMaxTreasures - Simulation.treasures.size();
-        System.out.println("nb tresors laaaaa"+nbCurrentTreasures+"\n");
         
-        /* Timer */
-        hours = timer.getHour().getValue();
-        minutes = timer.getMinute().getValue();
-        seconds = timer.getSecond().getValue();
-    	hoursExt = "0";
-    	minutesExt = "0";
-    	secondsExt = "0";
-        if(hours >= 10) {
-        	hoursExt = "";
-        }
-        if(minutes >= 10) {
-        	minutesExt = "";
-        }
-        if(seconds >= 10) {
-        	secondsExt = "";
-        }
-        g.drawString(hoursExt + hours + ":" + minutesExt+ minutes + ":" + secondsExt+seconds, 1140, 80);
+        String chrono = writeTimer();
+        g.drawString(chrono, 1140, 80);
         
         g.setFont(whiteBoardFont);
         
@@ -358,22 +384,36 @@ public class SimulationState extends GameState implements ImageObserver{
 		g.setColor(Color.black);
         g.drawString("Recap",1120, 695);
 	}
+	
+	public int calculateDeath() {
+		int nbExplorersDead=0;
+        for(String name : Simulation.listExp) {
+        	if(!Simulation.explorers.containsKey(name)) {
+        		nbExplorersDead++;
+        	}
+        }
+        return nbExplorersDead;
+	}
 
 	public void keyPressed(int k) {}
 
 	public void keyReleased(int k) {}
 	
 	public void mousePressed(MouseEvent m) {
-		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715&&recapAccessible) {
+		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715/*&&recapAccessible*/) {
+			timer.setRunning(false);
 			PrintWriter writer;
-			for(String name : Simulation.listExp) {
+			/*for(String name : Simulation.listExp) {
 	        	if(!Simulation.explorers.containsKey(name)) {
 	        		nbExplorersDead++;
 	        	}
-	        }
+	        }*/
+			//nbAnimalsDead = nbAnimals - sim.animals.size();
+			nbExplorersDead = calculateDeath();
 			try {
 				writer = new PrintWriter("ressources/donnees_sim.txt", "UTF-8");
-				writer.println(hoursExt + hours + ":" + minutesExt+ minutes + ":" + secondsExt+seconds);
+				//writer.println(hoursExt + hours + ":" + minutesExt+ minutes + ":" + secondsExt+seconds);
+				writer.println(writeTimer());
 				writer.println(nbCurrentTreasures);
 				writer.println(nbFights);
 				writer.println(nbAnimalsDead);

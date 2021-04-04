@@ -113,12 +113,12 @@ public class TileMap {
 				}
 			}
 			
-			for (int row = 0; row<nbRows;row++) {
-				for (int col = 0; col<nbCols; col++) {
-					System.out.print(map[row][col]+" ");
-				}
-				System.out.println();
-			}
+//			for (int row = 0; row<nbRows;row++) {
+//				for (int col = 0; col<nbCols; col++) {
+//					System.out.print(map[row][col]+" ");
+//				}
+//				System.out.println();
+//			}
 			
 		}
 		catch (Exception e) {

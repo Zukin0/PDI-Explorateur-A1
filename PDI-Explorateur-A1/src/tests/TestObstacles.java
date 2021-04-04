@@ -26,8 +26,8 @@ public class TestObstacles {
 		
 		HashMap<String,Explorer> explorers = Simulation.explorers;
 		
-		int oldSpeed = e.getSpeed();
-		int newSpeed = e.getSpeed()*(int)50/100;
+		int oldSpeed = e.getBaseSpeed();
+		int newSpeed = (int)(e.getBaseSpeed()/4);
 		
 		switch(nameObs) {
 		case "water":
@@ -41,10 +41,7 @@ public class TestObstacles {
 			if (!hasEquipment(e)) {
 				//System.out.println("j'ai pas de bottes alors je ralenti");
 				e.setSpeed(newSpeed);
-			}else {
-				//System.out.println("ouf j'ai des bottes");
 			}
-			e.setSpeed(oldSpeed);
 			//System.out.println("Je sors de la boue je retrouve ma vitesse : "+e.getSpeed());
 			break;
 		case "blocked":
@@ -68,7 +65,7 @@ public class TestObstacles {
 			botte = false;
 		}else {
 			for (Equipment equipments : e.getEquipment()) {
-				if (equipments.getName().equals("bottes")) {
+				if (equipments.getName().equals("Bottes")) {
 					botte = true;
 					break;
 				}else {
@@ -80,7 +77,7 @@ public class TestObstacles {
 	}
 	
 	public static void needWater(HashMap<String,Explorer> explorers) {
-		int minPV = 200;
+		int minPV = 150;
 		int pv = 0;
 		Explorer applicant=null;
 		for (Explorer explorer : explorers.values()){
@@ -92,7 +89,7 @@ public class TestObstacles {
 		}
 		int gain = applicant.getLifePoint()*(int)50/100;
 		//System.out.println("bonjour je suis "+ applicant.getName() +" et j'ai besoin d'eau j ai plus que : "+applicant.getLifePoint());
-		if (applicant.getLifePoint()+gain< applicant.getLifePointMax()) {
+		if ((applicant.getLifePoint()+gain)< applicant.getLifePointMax()) {
 			applicant.setLifePoint(applicant.getLifePoint()+gain);
 		}else {
 			applicant.setLifePoint(applicant.getLifePointMax());
@@ -101,69 +98,69 @@ public class TestObstacles {
 		//System.out.println("maintenant j ai : "+applicant.getLifePoint());
 	}
 	
-	public static void main (String[] args) {
-		
-		//create explorer
-		ExDirector creatorE = new ExDirector();
-		
-		ExBuilder bDora = new DoraBuilder();
-		creatorE.setExplorerBuilder(bDora);
-		creatorE.BuildExplorer();
-		Explorer e = creatorE.getExplorer();
-		
-		ExBuilder bDora3 = new DoraBuilder();
-		creatorE.setExplorerBuilder(bDora3);
-		creatorE.BuildExplorer();
-		Explorer e4 = creatorE.getExplorer() ;
-		
-		ExBuilder bJoe = new JoeBuilder();
-		creatorE.setExplorerBuilder(bJoe);
-		creatorE.BuildExplorer();
-		Explorer e2 = creatorE.getExplorer();
-		
-		ExBuilder bDora2 = new DoraBuilder();
-		creatorE.setExplorerBuilder(bDora2);
-		creatorE.BuildExplorer();
-		Explorer e3 = creatorE.getExplorer() ;
-		e3.setName("Dora2");
-		
-		
-//		explorers.put("Dora1", e);
-//		explorers.put("Dora2", e3);
-//		explorers.put("Dora3", e4);
-//		explorers.put("Joe1", e2);
-		
-		//changer les pv
-		e3.setLifePoint(16);
-		
-		String nameB = "bottes";
-		String powerB = "ne perd pas de tps";
-		int priceB = 10;
-		Equipment bottes  = new Equipment(nameB,powerB,priceB);
-		
-		String nameJ = "jumelles";
-		String powerJ = "voit loin";
-		int priceJ = 10;
-		Equipment jumelles  = new Equipment(nameJ,powerJ,priceJ);
-		
-		String nameH = "hache";
-		String powerH = "je suis plus fort";
-		int priceH = 10;
-		Equipment hache  = new Equipment(nameH,powerH,priceH);
-		
-		ArrayList<Equipment> equipDora = new ArrayList<Equipment>();
-		
-		equipDora.add(hache);
-		equipDora.add(jumelles);
-		
-		e.setEquiment(equipDora);
-		
-		meetObstacles(e,"water");
-		meetObstacles(e,"mud");
-		meetObstacles(e,"blocked");
-		//meetObstacles(e,"stone");
-		//meetObstacles(e,"tree");
-		
-	}
+//	public static void main (String[] args) {
+//		
+//		//create explorer
+//		ExDirector creatorE = new ExDirector();
+//		
+//		ExBuilder bDora = new DoraBuilder();
+//		creatorE.setExplorerBuilder(bDora);
+//		creatorE.BuildExplorer();
+//		Explorer e = creatorE.getExplorer();
+//		
+//		ExBuilder bDora3 = new DoraBuilder();
+//		creatorE.setExplorerBuilder(bDora3);
+//		creatorE.BuildExplorer();
+//		Explorer e4 = creatorE.getExplorer() ;
+//		
+//		ExBuilder bJoe = new JoeBuilder();
+//		creatorE.setExplorerBuilder(bJoe);
+//		creatorE.BuildExplorer();
+//		Explorer e2 = creatorE.getExplorer();
+//		
+//		ExBuilder bDora2 = new DoraBuilder();
+//		creatorE.setExplorerBuilder(bDora2);
+//		creatorE.BuildExplorer();
+//		Explorer e3 = creatorE.getExplorer() ;
+//		e3.setName("Dora2");
+//		
+//		
+////		explorers.put("Dora1", e);
+////		explorers.put("Dora2", e3);
+////		explorers.put("Dora3", e4);
+////		explorers.put("Joe1", e2);
+//		
+//		//changer les pv
+//		e3.setLifePoint(16);
+//		
+//		String nameB = "bottes";
+//		String powerB = "ne perd pas de tps";
+//		int priceB = 10;
+//		Equipment bottes  = new Equipment(nameB,powerB,priceB);
+//		
+//		String nameJ = "jumelles";
+//		String powerJ = "voit loin";
+//		int priceJ = 10;
+//		Equipment jumelles  = new Equipment(nameJ,powerJ,priceJ);
+//		
+//		String nameH = "hache";
+//		String powerH = "je suis plus fort";
+//		int priceH = 10;
+//		Equipment hache  = new Equipment(nameH,powerH,priceH);
+//		
+//		ArrayList<Equipment> equipDora = new ArrayList<Equipment>();
+//		
+//		equipDora.add(hache);
+//		equipDora.add(jumelles);
+//		
+//		e.setEquiment(equipDora);
+//		
+//		meetObstacles(e,"water");
+//		meetObstacles(e,"mud");
+//		meetObstacles(e,"blocked");
+//		//meetObstacles(e,"stone");
+//		//meetObstacles(e,"tree");
+//		
+//	}
 	
 }

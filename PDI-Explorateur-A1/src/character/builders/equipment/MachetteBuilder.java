@@ -7,7 +7,7 @@ public class MachetteBuilder extends EqBuilder{
 	public void upEquipment() {
 		
 		equipment.setName("Machettes");
-		equipment.setPower("");
+		equipment.setPower(10);
 		equipment.setPrice(0);
 	}
 }

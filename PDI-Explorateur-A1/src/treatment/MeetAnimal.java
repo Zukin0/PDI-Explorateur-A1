@@ -1,5 +1,6 @@
 package treatment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -14,6 +15,7 @@ import character.builders.explorers.MikeBuilder;
 import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
 import game.Simulation;
+import data.Position;
 
 public class MeetAnimal{
 	
@@ -21,6 +23,8 @@ public class MeetAnimal{
 		
 		HashMap<String,Explorer> explorers = Simulation.explorers;
 		HashMap<String,Character> characters = Simulation.characters;
+		HashMap<String,WildAnimals> animals = Simulation.animals;
+		ArrayList<String> toRemove = Simulation.toRemove;
 		String outcome = null;
 		String action = null;
 		Explorer helper = null;
@@ -68,8 +72,11 @@ public class MeetAnimal{
 		case "fight":
 			//fight 
 			outcome = fight(e, a);
-			if (outcome == "deathExplo") {
-				deathExplorer(e, simulation, explorers, characters);
+			if (outcome == "deathExplo" || outcome.equals("deathBoth")) {
+				deathExplorer(e, simulation, explorers, characters,toRemove);
+			}
+			if(outcome == "deathAnimal" || outcome.equals("deathBoth")) {
+				deathAnimal(a, toRemove);
 			}
 			break;
 		case "call":
@@ -77,27 +84,36 @@ public class MeetAnimal{
 			System.out.println(e.getName() + " : Besoin d'aide, ma position : "+
 								e.getPosition().getX()+", "+e.getPosition().getY()+"\n");
 			helper = findHelper(e, explorers);
-			//add explorer and helper life points and attack points
-			//change explorer capacities to fight 
-			e.setAttackPoint(e.getAttackPoint()+helper.getAttackPoint());
-			e.setLifePoint(e.getLifePoint()+helper.getLifePoint());
-			//goHelp(e, helper);
-			outcome = fight(e, a); 
-			//if he dies : kill both of explorers
-			//otherwise : distribute explorer capacities
-			if (outcome == "deathExplo") {
-				deathExplorer(e, simulation, explorers, characters);
-				deathExplorer(helper, simulation, explorers, characters);
-			}else {
-				int attack = e.getAttackPoint()/2;
-				int life = e.getLifePoint()/2;
-				e.setAttackPoint(attack);
-				e.setLifePoint(life);
-				helper.setAttackPoint(attack);
-				helper.setLifePoint(life);
+			e.setWaiting(true);
+			helper.setHelping(true);
+			if(helper.isNearExp()==true) {
+				//change explorer capacities to fight : add explorer and helper life points and attack points
+				e.setAttackPoint(e.getAttackPoint()+helper.getAttackPoint());
+				e.setLifePoint(e.getLifePoint()+helper.getLifePoint());
+				outcome = fight(e, a); 
+				//if he dies : kill both of explorers
+				//otherwise : distribute explorer capacities
+				if (outcome == "deathExplo" || outcome.equals("deathBoth")) {
+					deathExplorer(e, simulation, explorers, characters,toRemove);
+					deathExplorer(helper, simulation, explorers, characters,toRemove);
+				}else {
+					int attack = e.getAttackPoint()/2;
+					int life = e.getLifePoint()/2;
+					e.setAttackPoint(attack);
+					e.setLifePoint(life);
+					helper.setAttackPoint(attack);
+					helper.setLifePoint(life);
+					e.setWaiting(false);
+					helper.setHelping(false);
+					helper.setNearExp(false);
+					CharacterTreatment.changeDir(e);
+					CharacterTreatment.changeDir(helper);
+				}
+				if(outcome == "deathAnimal" || outcome.equals("deathBoth")) {
+					deathAnimal(a,toRemove);
+				}
 			}
-			CharacterTreatment.changeDir(e);
-			CharacterTreatment.changeDir(helper);
+			//attendre sinon
 			break;
 		case "escape":
 			//go away for n seconds
@@ -144,7 +160,7 @@ public class MeetAnimal{
 			//explorer and animal are dead
 			//comm
 			System.out.println("Je suis "+e.getName()+" et je vais mourir et j'ai tue un animal\n");
-			outcome = "deathExplo";
+			outcome = "deathBoth";
 		}
 		else if(lpA==0) {
 			//animal is dead
@@ -202,58 +218,55 @@ public class MeetAnimal{
 		
 	}
 	
-	public static void goHelp(Explorer e, Explorer helper) {
-		int xFinish = e.getPosition().getX();
-		int yFinish = e.getPosition().getY();
-		if (helper.getPosition().getX()>xFinish) {
-			while (helper.getPosition().getX()!=xFinish+1) {
-				helper.setDir(3);
-			}
-		}
-		if (helper.getPosition().getX()<xFinish) {
-			while (helper.getPosition().getX()!=xFinish-1) {
-				helper.setDir(2);
-			}
-		}
-		if (helper.getPosition().getY()>yFinish) {
-			while (helper.getPosition().getY()!=yFinish+1) {
-				helper.setDir(0);
-			}
-		}
-		if (helper.getPosition().getY()>yFinish) {
-			while (helper.getPosition().getY()!=yFinish-1) {
-				helper.setDir(1);
-			}
-		}
+//	public static void goHelp(Explorer e, Explorer helper) {
+//		int xFinish = e.getPosition().getX();
+//		int yFinish = e.getPosition().getY();
+//		if (helper.getPosition().getX()>xFinish) {
+//			while (helper.getPosition().getX()!=xFinish+1) {
+//				helper.setDir(3);
+//			}
+//		}
+//		if (helper.getPosition().getX()<xFinish) {
+//			while (helper.getPosition().getX()!=xFinish-1) {
+//				helper.setDir(2);
+//			}
+//		}
+//		if (helper.getPosition().getY()>yFinish) {
+//			while (helper.getPosition().getY()!=yFinish+1) {
+//				helper.setDir(0);
+//			}
+//		}
+//		if (helper.getPosition().getY()>yFinish) {
+//			while (helper.getPosition().getY()!=yFinish-1) {
+//				helper.setDir(1);
+//			}
+//		}
+//	}
+	
+	public static Position direction(Explorer e) {
+		int x = e.getPosition().getX();
+		int y = e.getPosition().getY() ;
+		Position pos = new Position(x,y);
+		return pos;
 	}
 	
-	public static void deathExplorer(Explorer e, int simulation, HashMap<String,Explorer> explorers, HashMap<String,Character> characters) {
+	public static void deathExplorer(Explorer e, int simulation, HashMap<String,Explorer> explorers, HashMap<String,Character> characters,ArrayList<String> toRemove) {
 
 		float gain = 0;
 		int gain2 =0;
 
-		//remove dead explorer 
-		//faut qqch d autre pour le supprimer de la simulation? avec le builder notamment
-		//fermer le thread
-
 		e.setDead(true);
-		explorers.remove(e.getName());
-		characters.remove(e.getName());
+		toRemove.add(e.getName());
+		
 		switch(simulation) {
 		case 0:
 			//lower probaFight for every explorers
 			for (Explorer explorer : explorers.values()){
 				gain = explorer.getProbaFight()*(float)10/100;
 				if (explorer.getProbaFight()-gain>=0 && explorer.getProbaCall()+(gain/2)<=100 && explorer.getProbaCall()+(gain/2)<=100){
-					System.out.println("Je suis "+explorer.getName()+" et j'avais une proba de combat de : "+explorer.getProbaFight());
-					System.out.println("Je suis "+explorer.getName()+" et j'avais une proba de fuite de : "+explorer.getProbaEscape());
-					System.out.println("Je suis "+explorer.getName()+" et j'avais une proba d'appeler de : "+explorer.getProbaCall()+"\n");
 					explorer.setProbaFight(explorer.getProbaFight()-gain);
 					explorer.setProbaCall(explorer.getProbaCall()+(gain/2));
 					explorer.setProbaEscape(explorer.getProbaEscape()+(gain/2));
-					System.out.println("Je suis "+explorer.getName()+" et j'ai une proba de combat de : "+explorer.getProbaFight());
-					System.out.println("Je suis "+explorer.getName()+" et j'ai une proba de fuite de : "+explorer.getProbaEscape());
-					System.out.println("Je suis "+explorer.getName()+" et j'ai une proba d'appeler de : "+explorer.getProbaCall()+"\n");
 				}
 			}
 			break;
@@ -262,21 +275,22 @@ public class MeetAnimal{
 			for (Explorer explorer : explorers.values()) {
 				gain2 = explorer.getAttackPoint()*(int)20/100;
 				if (explorer.getAttackPoint()+gain2<=explorer.getAttackPointMax()) {
-					System.out.println("Je suis "+explorer.getName()+" et j'avais : "+explorer.getAttackPoint()+" points d'attaque\n");
 					explorer.setAttackPoint(explorer.getAttackPoint()+gain2);
-					System.out.println("Je suis "+explorer.getName()+" et j'ai : "+explorer.getAttackPoint()+" points d'attaque\n");
 				}
 			}
 			break;
 		case 2:
 			//higher vision for every explorers
 			for (Explorer explorer : explorers.values()) {
-				System.out.println("Je suis "+explorer.getName()+" et j'avais une vision de : "+explorer.getAura()+"\n");
 				explorer.setAura(explorer.getAura()+2);
-				System.out.println("Je suis "+explorer.getName()+" et j'ai une vision de : "+explorer.getAura()+"\n");
 			}
 			break;
 		}
+	}
+	
+	public static void deathAnimal(WildAnimals a,ArrayList<String> toRemove) {
+		a.setDead(true);
+		toRemove.add(a.getName());
 	}
 
 	public static void main (String[] args) {

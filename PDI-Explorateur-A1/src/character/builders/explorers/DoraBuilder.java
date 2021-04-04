@@ -9,7 +9,7 @@ public class DoraBuilder extends ExBuilder{
 	
 			public void upMapObject() {
 				explorer.setSize(new Size(15, 20));
-				explorer.setPosition(new Position(500,500));
+				explorer.setPosition(new Position(200,600));
 				explorer.setMovable(true);
 				explorer.setName("Dora");	
 			}
@@ -21,14 +21,18 @@ public class DoraBuilder extends ExBuilder{
 				explorer.setAttackPoint(3);
 				explorer.setAttackPointMax(10);
 				
+				explorer.setBaseSpeed(6);
 				explorer.setSpeed(6);
 				explorer.setAura(100);
 			}
 
 			public void upExplorer() {
-				explorer.setProbaCall(20);
-				explorer.setProbaEscape(30);
-				explorer.setProbaFight(50);
+//				explorer.setProbaCall(20);
+//				explorer.setProbaEscape(30);
+//				explorer.setProbaFight(50);
+				explorer.setProbaCall(100);
+				explorer.setProbaEscape(0);
+				explorer.setProbaFight(0);
 				
 				explorer.setEquimentMax(2);
 				

@@ -19,6 +19,9 @@ import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
+import character.Explorer;
+import data.Treasure;
+import character.Character;
 import game.Simulation;
 import ihm.Game;
 import ihm.GamePanel;
@@ -63,14 +66,47 @@ public class RecapState extends GameState implements ImageObserver{
 	public RecapState(GameStateManager gsm) {
 		super(gsm);
 		readFile("ressources/donnees_money.txt");
-        readFile("ressources/donnees_sim.txt");
+		readFile("ressources/donnees_sim.txt");
 	}
 
-	public void init() {}
+	public void init() {
+	}
 	
-	public void tick() {}
-
+	public void tick() {
+	
+	}
+	public void resetSimulation() {
+		for(Character c : Simulation.characters.values()) {
+			Simulation.toRemove.add(c.getName());
+			c.setDead(true);
+		}
+		for(Treasure t : Simulation.treasures.values()) {
+			Simulation.toRemove.add(t.getName());
+		}
+		Simulation.threads.clear();
+		Simulation.listExp.clear();
+	}
+	
+	
+	public void clearAll() {
+		for(String name : Simulation.toRemove) {
+			if(name.contains("treasure")) {
+				Simulation.treasures.remove(name);
+			}
+			else if(name.contains("Remy") || name.contains("Mike") || name.contains("Joe") || name.contains("Dora")) {
+				Simulation.characters.remove(name);
+				Simulation.explorers.remove(name);
+			}
+			else if(name.contains("Wolf") || name.contains("Bear") || name.contains("Eagle")) {
+				Simulation.characters.remove(name);
+				Simulation.animals.remove(name);
+			}
+		}
+		Simulation.toRemove.clear();
+	}
+	
 	public void draw(Graphics g) {
+		clearAll();
 		//background
 		g.setColor(BEIGE);
 		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
@@ -217,6 +253,7 @@ public class RecapState extends GameState implements ImageObserver{
 
 	public void mousePressed(MouseEvent m) {
 		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715) {
+			resetSimulation();
 			while (!(gsm.gameStates.isEmpty())) {
 				gsm.gameStates.pop();
 			}

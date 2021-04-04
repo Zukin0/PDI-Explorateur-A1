@@ -32,6 +32,7 @@ public class ExplorerThread implements Runnable{
 		int cpt = 0;
 		CharacterTreatment.changeDir(e);
 		while(!e.isDead()) {
+
 			SimulationUtility.unitTime();
 			for(WildAnimals a : Simulation.animals.values()) {
 				CharacterTreatment.auraCheck(e, a, this);
@@ -55,6 +56,43 @@ public class ExplorerThread implements Runnable{
 				e.setEscaping(false);
 				cpt = 0;
 			}
+			else if (e.isWaiting() == true) {
+				cpt = 0;
+				System.out.println(e.getName() + " : J'ATTEND MON AMI PENDANT "+Constant.NUMBER_WAIT_ITERATIONS+" ms");
+				while(cpt != Constant.NUMBER_WAIT_ITERATIONS) {
+					SimulationUtility.unitTime();
+					//ne bouge pas alors on ne fait pas de move on fait rien
+					System.out.println(e.getName() + " : J'ATTENDS");
+					cpt++;
+				}
+				System.out.println(e.getName() + " : J'ARRETE D'ATTENDRE");
+				e.setWaiting(false);
+				cpt = 0;
+			}
+			else if (e.isHelping() == true) {
+				cpt = 0;
+				System.out.println(e.getName() + " : JE VAIS AIDER MON AMI, JE LE CHERCHE PENDANT "+Constant.NUMBER_HELP_ITERATIONS+" ms");
+				while(cpt != Constant.NUMBER_HELP_ITERATIONS) {
+					SimulationUtility.unitTime();
+					if(!collision(e)) {
+						//doit aller vers son ami
+						Explorer eInDanger=null;
+						for(Explorer explorer : Simulation.explorers.values()) {
+							if(explorer.isWaiting()==true) {
+								eInDanger=explorer;
+							}
+						}
+						//change
+						CharacterTreatment.goHelp(eInDanger, e);
+						//move
+						CharacterTreatment.move(e);
+					}
+					cpt++;
+				}
+				System.out.println(e.getName() + " : J'ARRETE D'ATTENDRE");
+				e.setHelping(false);
+				cpt = 0;
+			}
 			else {
 				if(cpt == Constant.NUMBER_EXPLORE_ITERATIONS) {
 					CharacterTreatment.changeDir(e);
@@ -66,25 +104,16 @@ public class ExplorerThread implements Runnable{
 					 * TESTING BRUTE LE TEMPS D'AVOIR LE CODE DE YOHAN
 					 */
 					CharacterTreatment.move(e);
-//					WaDirector creatorA = new WaDirector();
-//					WaBuilder bWolf = new WolfBuilder();
-//					creatorA.setWildAnimalsBuilder(bWolf);
-//					creatorA.BuildWildAnimals();
-//					WildAnimals wa = creatorA.getAnimal();
-//					int rand = (int)(Math.random() * 100);
-//					if( wa != null && rand == 0) { 
-//						MeetAnimal.meetAnimals(e, wa);
-//					}
-//					else {
-//						
-//					}
 				}
 				cpt++;
 			}
 		}
+		System.out.println(e.getName() + " : Stop moving");
 	}
 	
 	public boolean collision(Explorer e) {
+		boolean slowed = false;
+		
 		int tMapX = tilemap.getX();
 		int tMapY = tilemap.getY();
 		int tileSize = tilemap.getTileSize();
@@ -147,6 +176,7 @@ public class ExplorerThread implements Runnable{
 			switch(tile1) {
 			case 6 :
 				TestObstacles.meetObstacles(e, "mud");
+				slowed = true;
 				break;
 			case 13 :
 				TestObstacles.meetObstacles(e, "water");
@@ -156,17 +186,22 @@ public class ExplorerThread implements Runnable{
 			switch(tile2) {
 			case 6 :
 				TestObstacles.meetObstacles(e, "mud");
+				slowed = true;
 				break;
 			case 13 :
 				TestObstacles.meetObstacles(e, "water");
 				break;
 			}	
+			
+			if(!slowed) {
+				e.setSpeed(e.getBaseSpeed());
+			}
 			return false;
 		}
 	}
 	
 	public synchronized void find() {
 		treasureFind++;
-		System.out.println("Trésor trouver on en est a : " + treasureFind);
+		//System.out.println("Tresor trouver on en est a : " + treasureFind);
 	}
 }

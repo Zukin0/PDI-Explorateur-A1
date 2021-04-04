@@ -12,11 +12,15 @@ public class Explorer extends Character{
 	private int equipmentMax;
 	private int price;
 	private boolean isEscaping;
+	private boolean isWaiting;
+	private boolean isHelping;
+	private boolean isNearExp;
 	private boolean isDead;
+
 	
 	public Explorer(String name, Size size, Position position, boolean movable, int lifePoint, int lifePointMax,
 			int attackPoint, int attackPointMax, int speed, int aura, float probaFight, float probaEscape, float probaCall,
-			ArrayList<Equipment> equipment, int equipmentMax, int price, boolean isEscaping) {
+			ArrayList<Equipment> equipment, int equipmentMax, int price, boolean isEscaping, boolean isWaiting, boolean isHelping,boolean isNearExp) {
 		super(name, size, position, movable, lifePoint, lifePointMax, attackPoint, attackPointMax, speed, aura);
 		this.probaFight = probaFight;
 		this.probaEscape = probaEscape;
@@ -25,6 +29,9 @@ public class Explorer extends Character{
 		this.equipmentMax = equipmentMax;
 		this.price = price;
 		this.isEscaping = isEscaping;
+		this.isWaiting = isWaiting;
+		this.isHelping = isHelping;
+		this.isNearExp = isNearExp;
 		this.setDead(false);
 	}
 	
@@ -37,19 +44,22 @@ public class Explorer extends Character{
 		equipmentMax = 0;
 		price = 0 ;	
 		isEscaping = false;
+		isWaiting  = false; 
+		isHelping = false;
+		isNearExp = false;
 		setDead(false);
 	}
 	
 	public String toString() {
 		return  "---------------------------- START -------------------------------- \n" +
-				"Tu viens de crée : " + getName() + "\n" + 
+				"Tu viens de crï¿½e : " + getName() + "\n" + 
 				"Il est de la taille : " + getSize() + "\n" +
 				"Deplacable : " + getMovable() + "\n" +
 				"Ses points de vie max : " + getLifePointMax() + " actuelle : " + getLifePoint() + "\n" +
 				"Ses points d'attaque : " + getAttackPoint() + "\n" + 
 				"Sa vitesse : " + getSpeed() + "\n" + 
 				"La taille de son aura : " + getAura() + "\n" + 
-				"Ses probabilités : C-" + getProbaCall() + " F-" + getProbaFight() + " E-" + getProbaEscape() + "\n" +
+				"Ses probabilitï¿½s : C-" + getProbaCall() + " F-" + getProbaFight() + " E-" + getProbaEscape() + "\n" +
 				"Sa taille d'inventaire : " + getEquipmentMax() + "\n" +
 				"Son prix : " + getPrice() + "\n" +
 				"---------------------------- END ---------------------------------- \n";				
@@ -76,10 +86,20 @@ public class Explorer extends Character{
 	public boolean isEscaping() {
 		return isEscaping;
 	}
+
+	public boolean isWaiting() {
+		return isWaiting;
+	}
+	public boolean isHelping() {
+		return isHelping;
+	}
+	public boolean isNearExp() {
+		return isNearExp;
+	}
 	public boolean isDead() {
 		return isDead;
 	}
-	
+
 	public void setProbaFight(float probaFight) {
 		this.probaFight = probaFight;
 	}
@@ -101,7 +121,18 @@ public class Explorer extends Character{
 	public void setEscaping(boolean isEscaping) {
 		this.isEscaping = isEscaping;
 	}
+
+	public void setWaiting(boolean isWaiting) {
+		this.isWaiting = isWaiting;
+	}
+	public void setHelping(boolean isHelping) {
+		this.isHelping = isHelping;
+	}
+	public void setNearExp(boolean isNearExp) {
+		this.isNearExp = isNearExp;
+	}
 	public void setDead(boolean isDead) {
 		this.isDead = isDead;
 	}
+
 }
