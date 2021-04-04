@@ -19,6 +19,8 @@ import data.Position;
 
 public class MeetAnimal{
 	
+	static int nbFights = 0;
+	
 	public static void meetAnimals(Explorer e, WildAnimals a) {
 		
 		HashMap<String,Explorer> explorers = Simulation.explorers;
@@ -131,6 +133,7 @@ public class MeetAnimal{
 		int apA = a.getAttackPoint();
 		int lpA = a.getLifePoint();
 		String outcome = null;
+		nbFights++;
 		
 		//fight while explorer !dead and animal !dead
 		while (lpE!=0 && lpA!=0) {
@@ -344,6 +347,10 @@ public class MeetAnimal{
 		//			1 : fight
 		//			2 : escape
 		meetAnimals(e, a);
+	}
+	
+	public static int getNbFights() {
+		return nbFights;
 	}
 	
 }

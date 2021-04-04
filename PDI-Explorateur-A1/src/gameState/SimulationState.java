@@ -17,6 +17,7 @@ import gameState.SelectionState;
 
 import javax.imageio.ImageIO;
 
+import game.Difficulty;
 import game.Simulation;
 import game.SimulationUtility;
 import game.TileMap;
@@ -31,6 +32,7 @@ import data.Treasure;
 import ihm.GamePanel;
 import time.RealTime;
 import time.Time;
+import treatment.MeetAnimal;
 
 public class SimulationState extends GameState implements ImageObserver{
 	
@@ -42,11 +44,9 @@ public class SimulationState extends GameState implements ImageObserver{
 	private int tMapY;
 	private int tileSize;
 	
-	//création des couleurs nécessaires à l'interface
+	/*Initialization of necessary colors and fonts*/
 	private Color BEIGE = new Color(255,250,240);
 	private Color DARK_BEIGE = new Color(193, 146, 115);
-	
-	//création des polices
 	private Font categoryFont = new Font("Arial", Font.BOLD, 22);
 	private Font whiteBoardFont = new Font("Arial", Font.PLAIN, 20);
 	private Font buttonFont = new Font("Arial", Font.PLAIN, 33);
@@ -54,13 +54,13 @@ public class SimulationState extends GameState implements ImageObserver{
 	/*Variables for the white board and recap*/
 	private int nbMaxTreasures = Simulation.treasures.size();
 	private int nbCurrentTreasures = 0;
-	private int nbFights = 0;
 	private int nbAnimalsDead = 0;
 	private int nbExplorersDead = 0;
+	private int nbMaxAnimals = Difficulty.getAnimalsNB();
 	
 	private Simulation sim;
 	
-	//initialisation des images
+	/*Images*/
 	/*Explorer*/
 	private BufferedImage imageDora=null;
 	private BufferedImage imageJoe=null;
@@ -143,7 +143,7 @@ public class SimulationState extends GameState implements ImageObserver{
 				/* Random position Y [startPosition Y; Map.height] */
 				int y = (int) (tMapY + Math.random() * (tMapY+(nbCol-1)*tileSize+5));
 				
-				/* Calcul d�duit de la classe TileMap sur le placement des tiles */
+				/* Calcul deduit de la classe TileMap sur le placement des tiles */
 				/* Col = (xPoS - OffSetX)/tileSize, Row = (YPoS - OffSetY)/tileSize */
 				int row = (int)(x-5-tMapX)/tileSize;
 				int col = (int) (y-5-tMapY)/tileSize;
@@ -234,7 +234,6 @@ public class SimulationState extends GameState implements ImageObserver{
 		if(Simulation.explorers.isEmpty()||Simulation.treasures.isEmpty()) {
 			recapAccessible = true;
 			timer.setRunning(false);
-			
 		}
 	}
 
@@ -329,7 +328,7 @@ public class SimulationState extends GameState implements ImageObserver{
 		
 		
 //////////////////////CADRE BLANC////////////////////////////////////////////
-		//cadre
+		/*Titles and squares*/
 		g.setColor(Color.black);
 		g.fillRect(1050 , 3, 245, 630);
 		g.setColor(Color.white);
@@ -338,7 +337,7 @@ public class SimulationState extends GameState implements ImageObserver{
         g.setFont(categoryFont);
         g.drawString("VOTRE SIMULATION",1060, 30);
         
-        //images
+        /*Images*/
         try {
   			heart = ImageIO.read(new File("ressources/icone_coeur.png"));
   			time = ImageIO.read(new File("ressources/icone_temps.png"));
@@ -349,8 +348,7 @@ public class SimulationState extends GameState implements ImageObserver{
   		}
         g.drawImage(time, 1050, 40, 70, 60, (ImageObserver)this);
         g.drawImage(treasure, 1060, 530, 60, 60, (ImageObserver)this);
-        
-        //informations
+
         nbCurrentTreasures = nbMaxTreasures - Simulation.treasures.size();
         
         String chrono = writeTimer();
@@ -375,7 +373,7 @@ public class SimulationState extends GameState implements ImageObserver{
 		}
         g.drawString("Tresors : "+nbCurrentTreasures, 1135, 570);
         
-        //button
+        /*Buttons*/
         g.setColor(Color.black);
 		g.fillRect(1080, 650, 180, 67);
         g.setColor(DARK_BEIGE);
@@ -403,19 +401,15 @@ public class SimulationState extends GameState implements ImageObserver{
 		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715/*&&recapAccessible*/) {
 			timer.setRunning(false);
 			PrintWriter writer;
-			/*for(String name : Simulation.listExp) {
-	        	if(!Simulation.explorers.containsKey(name)) {
-	        		nbExplorersDead++;
-	        	}
-	        }*/
-			//nbAnimalsDead = nbAnimals - sim.animals.size();
+			nbAnimalsDead = nbMaxAnimals - sim.animals.size();
 			nbExplorersDead = calculateDeath();
+			
+			/*Write a text document to get the informations for the recap state*/
 			try {
 				writer = new PrintWriter("ressources/donnees_sim.txt", "UTF-8");
-				//writer.println(hoursExt + hours + ":" + minutesExt+ minutes + ":" + secondsExt+seconds);
 				writer.println(writeTimer());
 				writer.println(nbCurrentTreasures);
-				writer.println(nbFights);
+				writer.println(MeetAnimal.getNbFights());
 				writer.println(nbAnimalsDead);
 				writer.println(nbExplorersDead);
 				for(String name : Simulation.listExp) {

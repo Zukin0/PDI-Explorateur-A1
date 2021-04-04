@@ -28,11 +28,9 @@ import ihm.GamePanel;
 
 public class RecapState extends GameState implements ImageObserver{
 	
-	//création des couleurs nécessaires à l'interface
+	/*Initialization of necessary colors and fonts*/
 	private Color BEIGE = new Color(255,250,240);
 	private Color DARK_BEIGE = new Color(193, 146, 115);
-		
-	//création des polices
 	private Font titleFont = new Font("Century Goth", Font.BOLD, 40);
 	private Font simpleFont = new Font("Century Goth", Font.BOLD, 35);
 	private Font texteFont = new Font("Century Goth", Font.PLAIN, 20);
@@ -53,7 +51,7 @@ public class RecapState extends GameState implements ImageObserver{
 	private String lifeExplo6 = "0";
 	private int nbExplo = 2;
 	
-	//images
+	/*Images*/
 	private BufferedImage map=null;
 	private BufferedImage heart=null;
 	private BufferedImage clock=null;
@@ -107,20 +105,20 @@ public class RecapState extends GameState implements ImageObserver{
 	
 	public void draw(Graphics g) {
 		clearAll();
-		//background
+		
+		/*Background*/
 		g.setColor(BEIGE);
 		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
 				
-		//title
+		/*Titles*/
 		g.setColor(Color.black);
 		g.setFont(titleFont);
 		g.drawString("RECAPITULATIF DE LA SIMULATION",20, 60);
-		
 		g.setColor(Color.black);
 		g.setFont(simpleFont);
 		g.drawString("LES LOGS DE LA SIMULATION",650, 325);
 		
-		//images
+		/*Images*/
 		try {
 			map = ImageIO.read(new File("ressources/schema_carte_sans_fond.png"));
 			heart= ImageIO.read(new File("ressources/icone_coeur.png"));
@@ -136,7 +134,7 @@ public class RecapState extends GameState implements ImageObserver{
 		}
         g.drawImage(map, 1000, 40, 200, 200, (ImageObserver) this);
         
-        //texte
+        /*Texts*/
         g.setColor(Color.black);
 		g.setFont(texteFont);
 		g.drawImage(clock, 20, 80, 60, 60, (ImageObserver) this);
@@ -189,9 +187,10 @@ public class RecapState extends GameState implements ImageObserver{
 			break;
 		}
 		
+		/*Simulation's logs*/
 		g.drawString("Blablabla.....",650, 360);
 		
-		//button
+		/*Button*/
         g.setColor(Color.black);
 		g.fillRect(1080, 650, 180, 67);
         g.setColor(DARK_BEIGE);
