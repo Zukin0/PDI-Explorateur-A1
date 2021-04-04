@@ -18,18 +18,18 @@ import game.Simulation;
 import data.Position;
 
 public class MeetAnimal{
+	private static HashMap<String,Explorer> explorers = Simulation.explorers;
+	private static HashMap<String,Character> characters = Simulation.characters;
+	private static HashMap<String,WildAnimals> animals = Simulation.animals;
+	private static ArrayList<String> toRemove = Simulation.toRemove;
+	private static int simulation = Simulation.strategy;
 	
 	public static void meetAnimals(Explorer e, WildAnimals a) {
 		
-		HashMap<String,Explorer> explorers = Simulation.explorers;
-		HashMap<String,Character> characters = Simulation.characters;
-		HashMap<String,WildAnimals> animals = Simulation.animals;
-		ArrayList<String> toRemove = Simulation.toRemove;
+
 		String outcome = null;
 		String action = null;
 		Explorer helper = null;
-		
-		int simulation = Simulation.strategy;
 		
 		//recover probabilities
 		float pf = e.getProbaFight();
@@ -71,109 +71,155 @@ public class MeetAnimal{
 		switch(action) {
 		case "fight":
 			//fight 
-			outcome = fight(e, a);
-			if (outcome == "deathExplo" || outcome.equals("deathBoth")) {
-				deathExplorer(e, simulation, explorers, characters,toRemove);
-			}
-			if(outcome == "deathAnimal" || outcome.equals("deathBoth")) {
-				deathAnimal(a, toRemove);
+			if(a.getFightAgainst().equals("")) {
+				System.out.println(e.getName() + " : FIGHT 1");
+				outcome = fight(e, a);
+				if (outcome.equals("deathExplo") || outcome.equals("deathBoth")) {
+					deathExplorer(e);
+				}
+				if(outcome.equals("deathAnimal") || outcome.equals("deathBoth")) {
+					deathAnimal(a);
+				}
 			}
 			break;
 		case "call":
 			//call a friend
-			System.out.println(e.getName() + " : Besoin d'aide, ma position : "+
-								e.getPosition().getX()+", "+e.getPosition().getY()+"\n");
-			helper = findHelper(e, explorers);
-			e.setWaiting(true);
-			helper.setHelping(true);
-			if(helper.isNearExp()==true) {
-				//change explorer capacities to fight : add explorer and helper life points and attack points
-				e.setAttackPoint(e.getAttackPoint()+helper.getAttackPoint());
-				e.setLifePoint(e.getLifePoint()+helper.getLifePoint());
-				outcome = fight(e, a); 
-				//if he dies : kill both of explorers
-				//otherwise : distribute explorer capacities
-				if (outcome == "deathExplo" || outcome.equals("deathBoth")) {
-					deathExplorer(e, simulation, explorers, characters,toRemove);
-					deathExplorer(helper, simulation, explorers, characters,toRemove);
-				}else {
-					int attack = e.getAttackPoint()/2;
-					int life = e.getLifePoint()/2;
-					e.setAttackPoint(attack);
-					e.setLifePoint(life);
-					helper.setAttackPoint(attack);
-					helper.setLifePoint(life);
-					e.setWaiting(false);
-					helper.setHelping(false);
-					helper.setNearExp(false);
-					CharacterTreatment.changeDir(e);
-					CharacterTreatment.changeDir(helper);
+			if(a.getFightAgainst().equals("")) {
+				System.out.println(e.getName() + " : Besoin d'aide, ma position : "+
+						e.getPosition().getX()+", "+e.getPosition().getY());
+				helper = findHelper(e, explorers);
+				if(helper != null) {
+					System.out.println(helper.getName() + ": JE VAIS AIDER " + e.getName());
+					a.setFightAgainst(e.getName());
+					
+					e.setEscaping(false);
+					e.setWaiting(true);
+					e.setWaitingWho(helper.getName());
+					
+					helper.setHelpingWho(e.getName());
+					helper.setHelping(true);
+					
+					a.setFightAgainst(e.getName());
 				}
-				if(outcome == "deathAnimal" || outcome.equals("deathBoth")) {
-					deathAnimal(a,toRemove);
+				else {
+					System.out.println(e.getName() + " : FIGHT 2");
+					outcome = fight(e, a);
+					if (outcome == "deathExplo" || outcome.equals("deathBoth")) {
+						a.setFightAgainst("");
+						deathExplorer(e);
+					}
+					if(outcome == "deathAnimal" || outcome.equals("deathBoth")) {
+						deathAnimal(a);
+					}
 				}
 			}
 			//attendre sinon
 			break;
 		case "escape":
 			//go away for n seconds
-			System.out.println(e.getName() + " :Un animal sauvage.. JE FUIS");
+			System.out.println(e.getName() + " : JE FUIS");
 			escapeDir(e,e.getDir());
 			e.setEscaping(true);
 			break;
 		}
 	}
 	
+	public static void duoFight(Explorer helper, Explorer victim) {
+		String outcome = null;
+		WildAnimals a = null;
+		for(WildAnimals cpt : Simulation.animals.values()) {
+			if(cpt.getFightAgainst() != null) {
+				if(cpt.getFightAgainst().equals(victim.getName())) {
+					a = cpt;
+				}
+			}
+		}
+		if(a!=null) {
+			//change explorer capacities to fight : add explorer and helper life points and attack points
+			victim.setAttackPoint(victim.getAttackPoint()+helper.getAttackPoint());
+			victim.setLifePoint(victim.getLifePoint()+helper.getLifePoint());
+			outcome = fight(victim, a); 
+
+			
+			if (outcome.equals("deathExplo") || outcome.equals("deathBoth")) {
+				a.setFightAgainst("");
+				deathExplorer(victim);
+				deathExplorer(helper);
+			}
+			else {
+				int attack = victim.getAttackPoint()/2;
+				int life = victim.getLifePoint()/2;
+				victim.setAttackPoint(attack);
+				victim.setLifePoint(life);
+				helper.setAttackPoint(attack);
+				helper.setLifePoint(life);
+				CharacterTreatment.changeDir(victim);
+				CharacterTreatment.changeDir(helper);
+			}
+			if(outcome == "deathAnimal" || outcome.equals("deathBoth")) {
+				deathAnimal(a);
+			}
+		}
+		victim.setWaiting(false);
+		victim.setWaitingWho("");
+		
+		helper.setHelping(false);
+		helper.setHelpingWho("");
+		helper.setNearExp(false);
+	}
+	
 	
 	public static String fight(Explorer e, WildAnimals a) {
-		int apE = e.getAttackPoint();
-		int lpE = e.getLifePoint();
-		int apA = a.getAttackPoint();
-		int lpA = a.getLifePoint();
 		String outcome = null;
-		
-		//fight while explorer !dead and animal !dead
-		while (lpE!=0 && lpA!=0) {
-			if(apA>lpE || apE>lpA){
-				if(apA>lpE && apE>lpA) {
-					lpE = 0;
-					lpA = 0;
-				}
-				else if(apE>lpA) {
-					lpA = 0;
+		if(a != null) {
+			int apE = e.getAttackPoint();
+			int lpE = e.getLifePoint();
+			int apA = a.getAttackPoint();
+			int lpA = a.getLifePoint();
+			//fight while explorer !dead and animal !dead
+			while (lpE!=0 && lpA!=0) {
+				if(apA>lpE || apE>lpA){
+					if(apA>lpE && apE>lpA) {
+						lpE = 0;
+						lpA = 0;
+					}
+					else if(apE>lpA) {
+						lpA = 0;
+						lpE = lpE-apA;
+					}
+					else if(apA>lpE) {
+						lpE = 0;
+						lpA = lpA-apE;
+					}
+				}else {
 					lpE = lpE-apA;
-				}
-				else if(apA>lpE) {
-					lpE = 0;
 					lpA = lpA-apE;
 				}
-			}else {
-				lpE = lpE-apA;
-				lpA = lpA-apE;
+				e.setLifePoint(lpE);
+				a.setLifePoint(lpA);
 			}
-			e.setLifePoint(lpE);
-			a.setLifePoint(lpA);
+			
+			//fight's outcome
+			if(lpE==0 && lpA==0) {
+				//explorer and animal are dead
+				//comm
+				System.out.println(e.getName()+" : TRADE KILL");
+				outcome = "deathBoth";
+			}
+			else if(lpA==0) {
+				//animal is dead
+				System.out.println(e.getName()+" WON FIGHT, LIFE LEFT : "+e.getLifePoint()+" HP");
+				outcome = "deathAnimal";
+			}
+			else if(lpE==0) {
+				//explorer is dead
+				//comm
+				System.out.println(e.getName()+" : LOST FIGHT");
+				outcome = "deathExplo";
+				a.setFightAgainst("");
+			}
+			
 		}
-		
-		//fight's outcome
-		if(lpE==0 && lpA==0) {
-			//explorer and animal are dead
-			//comm
-			System.out.println("Je suis "+e.getName()+" et je vais mourir et j'ai tue un animal\n");
-			outcome = "deathBoth";
-		}
-		else if(lpA==0) {
-			//animal is dead
-			System.out.println("Je suis "+e.getName()+" et j'ai tue un animal il me reste : "+e.getLifePoint()+" points de vie\n");
-			outcome = "deathAnimal";
-		}
-		else if(lpE==0) {
-			//explorer is dead
-			//comm
-			System.out.println("Je suis "+e.getName()+" et je vais mourir\n");
-			outcome = "deathExplo";
-		}
-		
 		return outcome;
 	}
 	
@@ -205,7 +251,7 @@ public class MeetAnimal{
 		Explorer helper = null;
 		
 		for (Explorer explorer : explorers.values()){
-			if(!explorer.equals(e)) {
+			if(!explorer.equals(e) && !explorer.isWaiting() && !explorer.isEscaping()) {
 				dis = Math.sqrt(Math.pow(e.getPosition().getX() - explorer.getPosition().getX(), 2) + Math.pow(e.getPosition().getY() - explorer.getPosition().getY(), 2));
 				if(dis<min) {
 					min=dis;
@@ -213,35 +259,8 @@ public class MeetAnimal{
 				}	
 			}
 		}
-		System.out.println("coucou je suis "+ helper.getName()+" et je viens t'aider");
 		return helper;
-		
 	}
-	
-//	public static void goHelp(Explorer e, Explorer helper) {
-//		int xFinish = e.getPosition().getX();
-//		int yFinish = e.getPosition().getY();
-//		if (helper.getPosition().getX()>xFinish) {
-//			while (helper.getPosition().getX()!=xFinish+1) {
-//				helper.setDir(3);
-//			}
-//		}
-//		if (helper.getPosition().getX()<xFinish) {
-//			while (helper.getPosition().getX()!=xFinish-1) {
-//				helper.setDir(2);
-//			}
-//		}
-//		if (helper.getPosition().getY()>yFinish) {
-//			while (helper.getPosition().getY()!=yFinish+1) {
-//				helper.setDir(0);
-//			}
-//		}
-//		if (helper.getPosition().getY()>yFinish) {
-//			while (helper.getPosition().getY()!=yFinish-1) {
-//				helper.setDir(1);
-//			}
-//		}
-//	}
 	
 	public static Position direction(Explorer e) {
 		int x = e.getPosition().getX();
@@ -250,11 +269,17 @@ public class MeetAnimal{
 		return pos;
 	}
 	
-	public static void deathExplorer(Explorer e, int simulation, HashMap<String,Explorer> explorers, HashMap<String,Character> characters,ArrayList<String> toRemove) {
+	public static void deathExplorer(Explorer e) {
 
 		float gain = 0;
 		int gain2 =0;
 
+		if(e.isHelping()) {
+			Explorer victim = Simulation.explorers.get(e.getHelpingWho());
+			victim.setWaiting(false);
+			victim.setWaitingWho("");
+		}
+		
 		e.setDead(true);
 		toRemove.add(e.getName());
 		
@@ -288,62 +313,9 @@ public class MeetAnimal{
 		}
 	}
 	
-	public static void deathAnimal(WildAnimals a,ArrayList<String> toRemove) {
+	public static void deathAnimal(WildAnimals a) {
+		System.out.println(a.getName() + " : DEAD");
 		a.setDead(true);
 		toRemove.add(a.getName());
 	}
-
-	public static void main (String[] args) {
-		//TEST
-		
-		//creat explorers
-		ExDirector creatorE = new ExDirector();
-		
-		ExBuilder bDora = new DoraBuilder();
-		creatorE.setExplorerBuilder(bDora);
-		creatorE.BuildExplorer();
-		Explorer e = creatorE.getExplorer() ;
-		
-		ExBuilder bJoe = new JoeBuilder();
-		creatorE.setExplorerBuilder(bJoe);
-		creatorE.BuildExplorer();
-		Explorer e2 = creatorE.getExplorer();
-		
-		ExBuilder bDora2 = new DoraBuilder();
-		creatorE.setExplorerBuilder(bDora2);
-		creatorE.BuildExplorer();
-		Explorer e3 = creatorE.getExplorer() ;
-		e3.setName("Dora2");
-		
-		ExBuilder bMike = new MikeBuilder();
-		creatorE.setExplorerBuilder(bMike);
-		creatorE.BuildExplorer();
-		//Explorer e4 = creatorE.getExplorer() ;
-		
-		System.out.println("--------DORA 1--------\nattack point : "+e.getAttackPoint()+"\nlife point : "+e.getLifePoint()+"\n");
-		System.out.println("--------JOE--------\nattack point : "+e2.getAttackPoint()+"\nlife point : "+e2.getLifePoint()+"\n");
-		System.out.println("--------DORA 2--------\nattack point : "+e3.getAttackPoint()+"\nlife point : "+e3.getLifePoint()+"\n");
-		
-		//creat animal
-		WaDirector creatorA = new WaDirector();
-		
-		WaBuilder bWolf = new WolfBuilder();
-		creatorA.setWildAnimalsBuilder(bWolf);
-		creatorA.BuildWildAnimals();
-		WildAnimals a = creatorA.getAnimal();
-		System.out.println("--------WOLF--------\nattack point : " + a.getAttackPoint()+"\nlife point : "+a.getLifePoint()+"\n");
-		
-//		ArrayList<Explorer> explorers = new ArrayList<Explorer>() ;
-//		explorers.add(e);
-//		explorers.add(e2);
-//		explorers.add(e3);
-//		explorers.add(e4);
-		
-		
-		//strategy 	0 : smart
-		//			1 : fight
-		//			2 : escape
-		meetAnimals(e, a);
-	}
-	
 }
