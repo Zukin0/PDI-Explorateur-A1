@@ -1,13 +1,11 @@
-
-07:09=time
-13
+00:00:40
 0
 0
 0
-0
-vie
-vie
-vie
-vie
-vie
-vie
+6
+Dora1 est mort
+Dora2 est mort
+Dora3 est mort
+Dora4 est mort
+Dora5 est mort
+Dora6 est mort

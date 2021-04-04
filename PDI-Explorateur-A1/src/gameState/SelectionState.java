@@ -9,7 +9,10 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -74,7 +77,7 @@ public class SelectionState extends GameState implements ImageObserver {
 	
 	private Simulation sim;
 	
-	private int money;
+	private static int money;
 	
 	private boolean alreadyEquiped = false;
 	
@@ -764,6 +767,21 @@ public class SelectionState extends GameState implements ImageObserver {
 			System.out.println("DEBUT DE LA SIMULATION");
 			if ((nbExplorateurs >= nbMinExplorateurs) && (nbExplorateurs <= nbMaxExplorateurs)&&(strategySelected != 3)
 					&&(difficultySelected != 3)){
+				
+				//récupérer money pour l'écrire dans le recap
+				PrintWriter writer;
+				try {
+					writer = new PrintWriter("ressources/donnees_money.txt", "UTF-8");
+					writer.println(money);
+					writer.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+				
+				
+				//lancement de la simulation
 				sim = new Simulation(dif, strategySelected, listExplorers, exEquipements);
 				SimulationState simulationState = new SimulationState(gsm);
 				gsm.gameStates.push(simulationState);

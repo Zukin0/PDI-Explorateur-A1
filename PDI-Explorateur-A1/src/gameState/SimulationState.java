@@ -11,12 +11,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.io.File;
-import java.io.IOException;
+import gameState.SelectionState;
 
 import javax.imageio.ImageIO;
 
@@ -26,13 +23,10 @@ import game.TileMap;
 import character.Character;
 import character.Explorer;
 import character.WildAnimals;
-import data.Constant;
 import data.Position;
-import data.Size;
 import data.Treasure;
 import ihm.GamePanel;
 import time.RealTime;
-import time.Time;
 
 public class SimulationState extends GameState implements ImageObserver{
 	
@@ -43,7 +37,6 @@ public class SimulationState extends GameState implements ImageObserver{
 	private int tMapX;
 	private int tMapY;
 	private int tileSize;
-	private int speed = 1;
 	
 	//création des couleurs nécessaires à l'interface
 	private Color BEIGE = new Color(255,250,240);
@@ -59,7 +52,6 @@ public class SimulationState extends GameState implements ImageObserver{
 	private int nbCurrentTreasures = 0;
 	private int nbFights = 0;
 	private int nbAnimalsDead = 0;
-	private int money = 0;
 	private int nbExplorersDead = 0;
 	
 	private Simulation sim;
@@ -91,6 +83,12 @@ public class SimulationState extends GameState implements ImageObserver{
 	/* Chronometer */
 	private RealTime timer = new RealTime();
 	private Thread t = new Thread(timer);
+	private int hours ;
+    private int minutes ;
+    private int seconds ;
+	private String hoursExt ;
+	private String minutesExt ;
+	private String secondsExt ;
 	
 	public SimulationState(GameStateManager gsm) {
 		super(gsm);
@@ -312,14 +310,15 @@ public class SimulationState extends GameState implements ImageObserver{
         
         //informations
         nbCurrentTreasures = nbMaxTreasures - Simulation.treasures.size();
+        System.out.println("nb tresors laaaaa"+nbCurrentTreasures+"\n");
         
         /* Timer */
-        int hours = timer.getHour().getValue();
-        int minutes = timer.getMinute().getValue();
-        int seconds = timer.getSecond().getValue();
-    	String hoursExt = "0";
-    	String minutesExt = "0";
-    	String secondsExt = "0";
+        hours = timer.getHour().getValue();
+        minutes = timer.getMinute().getValue();
+        seconds = timer.getSecond().getValue();
+    	hoursExt = "0";
+    	minutesExt = "0";
+    	secondsExt = "0";
         if(hours >= 10) {
         	hoursExt = "";
         }
@@ -349,7 +348,6 @@ public class SimulationState extends GameState implements ImageObserver{
 			i++;
 		}
         g.drawString("Tresors : "+nbCurrentTreasures, 1135, 570);
-        System.out.println(nbCurrentTreasures +"//////////:");
         
         //button
         g.setColor(Color.black);
@@ -368,21 +366,27 @@ public class SimulationState extends GameState implements ImageObserver{
 	public void mousePressed(MouseEvent m) {
 		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715&&recapAccessible) {
 			PrintWriter writer;
+			for(String name : Simulation.listExp) {
+	        	if(!Simulation.explorers.containsKey(name)) {
+	        		nbExplorersDead++;
+	        	}
+	        }
 			try {
 				writer = new PrintWriter("ressources/donnees_sim.txt", "UTF-8");
-				writer.println("");
-				writer.println("07:09=time");
-				writer.println("13");
+				writer.println(hoursExt + hours + ":" + minutesExt+ minutes + ":" + secondsExt+seconds);
 				writer.println(nbCurrentTreasures);
 				writer.println(nbFights);
 				writer.println(nbAnimalsDead);
 				writer.println(nbExplorersDead);
-				writer.println("vie");
-				writer.println("vie");
-				writer.println("vie");
-				writer.println("vie");
-				writer.println("vie");
-				writer.print("vie"); //attention le dernier pas de ln sinon ça va mettre un null
+				for(String name : Simulation.listExp) {
+		        	if(!Simulation.explorers.containsKey(name)) {
+		        		writer.println(name+" n'a pas survécu");
+		        	}
+		        }
+				for(Explorer e : Simulation.explorers.values()) {
+					writer.println("Il reste "+e.getLifePoint()+"/"+e.getLifePointMax()+" de points de vie à "+e.getName());
+				}
+				writer.print(""); //attention le dernier pas de ln sinon ça va mettre un null
 				writer.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
