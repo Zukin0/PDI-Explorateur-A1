@@ -26,13 +26,10 @@ public class DoraBuilder extends ExBuilder{
 			}
 
 			public void upExplorer() {
-//				explorer.setProbaCall(20);
-//				explorer.setProbaEscape(30);
-//				explorer.setProbaFight(50);
-				explorer.setProbaCall(100);
-				explorer.setProbaEscape(0);
-				explorer.setProbaFight(0);
-				
+				explorer.setProbaCall(20);
+				explorer.setProbaEscape(30);
+				explorer.setProbaFight(50);
+		
 				explorer.setEquimentMax(2);
 				
 				explorer.setPrice(2000);
