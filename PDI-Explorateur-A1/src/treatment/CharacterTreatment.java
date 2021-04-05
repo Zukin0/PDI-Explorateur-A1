@@ -1,23 +1,27 @@
 package treatment;
 
 import java.util.Arrays;
-
-import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
-
 import character.Character;
 import character.Explorer;
 import character.WildAnimals;
 import data.MapObjects;
 import data.Position;
-import data.Size;
 import data.Treasure;
 import game.Simulation;
-import game.TileMap;
 import ihm.GamePanel;
 import thread.ExplorerThread;
 
+/**
+ * @brief this class is about the character's movement
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ * */
 public class CharacterTreatment {
 	
+	/**
+	 * @brief changes the moving direction of a character
+	 * 
+	 * @param a the Character
+	 * */
 	public static void changeDir(Character a) {
 		int dir = (int)(Math.random() * 4);
 		String str = "";
@@ -42,6 +46,11 @@ public class CharacterTreatment {
 		a.setDir(dir);
 	}
 	
+	/**
+	 * @brief realized the progress of a Character on the map
+	 * 
+	 * @param a the Character
+	 * */
 	public static void move(Character a) {
 		Position posG = a.getPosition();
 		int posX = posG.getX();
@@ -67,6 +76,12 @@ public class CharacterTreatment {
 		}
 	}
 	
+	/**
+	 * @brief method called when an explorer has to help another
+	 * 
+	 * @param e the Explorer who needs help
+	 * @param helper the Explorer that is going to help the other
+	 * */
 	public static void goHelp(Explorer e, Explorer helper) {
 		if (e!=null) {
 			int xFinish = e.getPosition().getX();
@@ -102,6 +117,11 @@ public class CharacterTreatment {
 		
 	}
 	
+	/**
+	 * @brief predicts the future position of the character
+	 * 
+	 * @param c the Character
+	 * */
 	public static Position predictPos(Character c) {
 		Position pos = c.getPosition();
 		int speed = c.getSpeed();
@@ -129,6 +149,9 @@ public class CharacterTreatment {
 		
 	}
 	
+	/**
+	 * @brief 
+	 * */
 	public static boolean isPointInsideRect(Position pChar, Position pRect, int w, int h) {
 			int xChar = pChar.getX();
 			int yChar = pChar.getY();
@@ -141,6 +164,16 @@ public class CharacterTreatment {
 			return false;
 	}
 	
+	/**
+	 * @brief know if the Character is at the borders of the  window
+	 * 
+	 * @param pChar the current position of the Character
+	 * @param w
+	 * @param h
+	 * 
+	 * @return false if is not
+	 * @return true otherwise
+	 * */
 	public static boolean isBorderWindow(Position pChar, int w, int h) {
 		int xChar = pChar.getX();
 		int yChar = pChar.getY();
@@ -151,15 +184,22 @@ public class CharacterTreatment {
 		return false;
 	}
 	
+	
 	public static boolean contains(int[] arr, final int key) {
 	    return Arrays.stream(arr).anyMatch(i -> i == key);
 	}
 	
+	/**
+	 * @brief method used to check if an Character meets another or a treasure
+	 * 
+	 * @param pChar the Explorer
+	 * @param mC is a MapObject can be a WildAnimals or a Treasure
+	 * @param eT is the Explorer's thread
+	 * */
 	public static void auraCheck(Character pChar, MapObjects mC, ExplorerThread eT) {
 		
 		//Calcul distance between two entity	
 		double dis = Math.sqrt(Math.pow(pChar.getPosition().getX() - mC.getPosition().getX(), 2) + Math.pow(pChar.getPosition().getY() - mC.getPosition().getY(), 2));	
-//		System.out.println("la distance et de : " + dis);
 		
 		//Checking
 		if(pChar.getAura() >= dis) {
@@ -173,6 +213,11 @@ public class CharacterTreatment {
 		}
 	}
 	
+	/**
+	 * @brief
+	 * 
+	 * @param pChar the Explorer
+	 * */
 	public static boolean explorerSpawnable(Explorer pChar) {
 				
 		//Calcul distance between two entity
@@ -205,6 +250,14 @@ public class CharacterTreatment {
 		
 	}
 	
+	/**
+	 * @brief know if the Explorer can move or will meet an aura
+	 * 
+	 * @param e the Explorer
+	 * 
+	 * @return true if it is OK (will not meet an aura)
+	 * @return false otherwise
+	 * */
 	public static boolean isFarEnough(Explorer e) {
 		int futurX = CharacterTreatment.predictPos(e).getX();
 		int futurY = CharacterTreatment.predictPos(e).getY();

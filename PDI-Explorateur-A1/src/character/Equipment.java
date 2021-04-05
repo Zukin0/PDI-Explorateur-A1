@@ -1,5 +1,11 @@
 package character;
 
+/**
+ * @brief Data Class of the Equipment
+ * This class initializes the name, power and price
+ * 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
 public class Equipment {
 
 	private String name;

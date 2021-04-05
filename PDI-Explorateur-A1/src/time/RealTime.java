@@ -2,6 +2,11 @@ package time;
 
 import data.Constant;
 
+/**
+ * This method creates a real time with three parts (hour, minute and second) from the class Time
+ * 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
 public class RealTime implements Runnable{
 	private Time hour = new Time(0, 1, 0);
 	private Time minute = new Time(0, 15, 0);

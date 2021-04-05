@@ -1,5 +1,10 @@
 package time;
 
+/**
+ * This method increments the value of time 
+ * 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
 public class Time {
 
 	private int value;

@@ -1,7 +1,7 @@
 package data;
 
 /**
- * @brief Abtract data Class which Explorers, WildAnimal and Treasures will inherit
+ * @brief Abtract data Class which Explorers, WildAnimals and Treasures will inherit
  * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
  *
  */

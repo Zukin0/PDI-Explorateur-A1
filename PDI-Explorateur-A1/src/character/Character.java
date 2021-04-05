@@ -4,6 +4,12 @@ import data.MapObjects;
 import data.Position;
 import data.Size;
 
+/**
+ * @brief Abstract data Class extends of MapObjets which Explorers, WildAnimals and Treasures will inherit.
+ *  This class initializes some attributes that will be used by both the Explorers and WildAnimals
+ * 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ * */
 public abstract class Character extends MapObjects{
 	
 	private int lifePoint;

@@ -3,6 +3,12 @@ package character;
 import java.util.ArrayList;
 import data.*;
 
+/**
+ * @brief Data Class Explorer extends of the Character class
+ * This class initializes other attributes of an explorer
+ * 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
 public class Explorer extends Character{
 
 	private float probaFight;
@@ -57,14 +63,14 @@ public class Explorer extends Character{
 	
 	public String toString() {
 		return  "---------------------------- START -------------------------------- \n" +
-				"Tu viens de cr�e : " + getName() + "\n" + 
+				"Tu viens de cree : " + getName() + "\n" + 
 				"Il est de la taille : " + getSize() + "\n" +
 				"Deplacable : " + getMovable() + "\n" +
 				"Ses points de vie max : " + getLifePointMax() + " actuelle : " + getLifePoint() + "\n" +
 				"Ses points d'attaque : " + getAttackPoint() + "\n" + 
 				"Sa vitesse : " + getSpeed() + "\n" + 
 				"La taille de son aura : " + getAura() + "\n" + 
-				"Ses probabilit�s : C-" + getProbaCall() + " F-" + getProbaFight() + " E-" + getProbaEscape() + "\n" +
+				"Ses probabilites : C-" + getProbaCall() + " F-" + getProbaFight() + " E-" + getProbaEscape() + "\n" +
 				"Sa taille d'inventaire : " + getEquipmentMax() + "\n" +
 				"Son prix : " + getPrice() + "\n" +
 				"---------------------------- END ---------------------------------- \n";				

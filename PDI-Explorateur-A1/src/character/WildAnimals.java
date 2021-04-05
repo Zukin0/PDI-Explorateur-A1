@@ -1,8 +1,14 @@
 package character;
-import java.util.ArrayList;
+
 import data.Position;
 import data.Size;
 
+/**
+ * @brief Data Class WildAnimals extends of the Character class
+ * This class initializes other attributes of a wild animal
+ * 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
 public class WildAnimals extends Character{
 	
 	private Size territorySize;
