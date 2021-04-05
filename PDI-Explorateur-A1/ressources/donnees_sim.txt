@@ -1,11 +1,11 @@
-00:00:39
+00:01:01
+5
+8
+5
 3
-7
-1
-6
-Mike1 n'a pas survÃ©cu
-Remy1 n'a pas survÃ©cu
-Joe1 n'a pas survÃ©cu
-Dora1 n'a pas survÃ©cu
-Joe2 n'a pas survÃ©cu
-Remy2 n'a pas survÃ©cu
+Remy1 n'a pas survecu
+Joe1 n'a pas survecu
+Dora1 n'a pas survecu
+Il reste 100/100 de points de vie à Remy2
+Il reste 130/150 de points de vie à Joe2
+Il reste 100/100 de points de vie à Mike1

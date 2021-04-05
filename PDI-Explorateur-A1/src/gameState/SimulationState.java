@@ -491,11 +491,11 @@ public class SimulationState extends GameState implements ImageObserver{
 				writer.println(nbExplorersDead);
 				for(String name : Simulation.listExp) {
 		        	if(!Simulation.explorers.containsKey(name)) {
-		        		writer.println(name+" n'a pas survécu");
+		        		writer.println(name+" n'a pas survecu");
 		        	}
 		        }
 				for(Explorer e : Simulation.explorers.values()) {
-					writer.println("Il reste "+e.getLifePoint()+"/"+e.getLifePointMax()+" de points de vie à "+e.getName());
+					writer.println("Il reste "+e.getLifePoint()+"/"+e.getLifePointMax()+" de points de vie a "+e.getName());
 				}
 				writer.print("");
 				writer.close();

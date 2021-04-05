@@ -2,22 +2,30 @@ package treatment;
 
 import java.util.Arrays;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
-
 import character.Character;
 import character.Explorer;
 import character.WildAnimals;
 import data.MapObjects;
 import data.Position;
-import data.Size;
 import data.Treasure;
 import game.Simulation;
-import game.TileMap;
 import ihm.GamePanel;
 import thread.ExplorerThread;
+/**
+ * @brief Class Treatment of a Character (Explorer or Wildanimal)
+ * Implements function like move(), changeDir(), auraChecking Functions etc...
+ * 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ *
+ */
 
 public class CharacterTreatment {
 	
+	/**
+	 * @brief changes randomly the direction of a character
+	 * 
+	 * @param a The character that changes direction
+	 */
 	public static void changeDir(Character a) {
 		int dir = (int)(Math.random() * 4);
 		String str = "";
@@ -42,6 +50,11 @@ public class CharacterTreatment {
 		a.setDir(dir);
 	}
 	
+	/**
+	 * @brief Move the chacracter depending on his speed and his direction
+	 * 
+	 * @param a The character that moves
+	 */
 	public static void move(Character a) {
 		Position posG = a.getPosition();
 		int posX = posG.getX();
@@ -67,6 +80,12 @@ public class CharacterTreatment {
 		}
 	}
 	
+	/**
+	 * @brief Calculate the direction of which the helper will go to save the victim
+	 * 
+	 * @param e Explorer that needs help when facing an animal
+	 * @param helper Explorer that provides help 
+	 */
 	public static void goHelp(Explorer e, Explorer helper) {
 		if (e!=null) {
 			int xFinish = e.getPosition().getX();
@@ -94,7 +113,7 @@ public class CharacterTreatment {
 				}
 			}
 		
-			if(Math.abs(x) <=  Math.max(e.getAura(),helper.getAura())&& Math.abs(y) <= Math.max(e.getAura(),helper.getAura())) {
+			if(Math.abs(x) <=  Math.max(e.getAura(),helper.getAura())+15 && Math.abs(y) <= Math.max(e.getAura(),helper.getAura())+15) {
 				System.out.println(helper.getName() + " : IS CLOSE TO " + e.getName());
 				helper.setNearExp(true);
 			}
@@ -102,6 +121,12 @@ public class CharacterTreatment {
 		
 	}
 	
+	/**
+	 * @brief Predict the futur position of a character depending his direction and his speed
+	 * 
+	 * @param c The character itself
+	 * @return The futur position of the character
+	 */
 	public static Position predictPos(Character c) {
 		Position pos = c.getPosition();
 		int speed = c.getSpeed();
@@ -129,6 +154,18 @@ public class CharacterTreatment {
 		
 	}
 	
+	/**
+	 * @brief Check if an object is inside a rectangle
+	 * used for collision
+	 * 
+	 * @param pChar first object's position
+	 * @param pRect second object's position
+	 * @param w width of the second object
+	 * @param h height of the second object
+	 * 
+	 * @return true on success
+	 * @return false on failure
+	 */
 	public static boolean isPointInsideRect(Position pChar, Position pRect, int w, int h) {
 			int xChar = pChar.getX();
 			int yChar = pChar.getY();
@@ -141,6 +178,16 @@ public class CharacterTreatment {
 			return false;
 	}
 	
+	/**
+	 * @brief Check if an object will go outside the window
+	 * 
+	 * @param pChar The position of the object
+	 * @param w width of the object
+	 * @param h height of the object
+	 * 
+	 * @return true on success
+	 * @return false on failure
+	 */
 	public static boolean isBorderWindow(Position pChar, int w, int h) {
 		int xChar = pChar.getX();
 		int yChar = pChar.getY();
@@ -151,10 +198,26 @@ public class CharacterTreatment {
 		return false;
 	}
 	
+	/**
+	 * @brief Check if an array contains a certain object 
+	 * 
+	 * @param arr array to loop through
+	 * @param key key of the object to check
+	 * 
+	 * @return true on success
+	 * @return false on failure
+	 */
 	public static boolean contains(int[] arr, final int key) {
 	    return Arrays.stream(arr).anyMatch(i -> i == key);
 	}
 	
+	/**
+	 * @brief Check if a instance is inside the aura of an explorer
+	 * 
+	 * @param pChar the Explorer
+	 * @param mC The mapObject (Treasure or WildAnimal)
+	 * @param eT The thread of the explorer
+	 */
 	public static void auraCheck(Character pChar, MapObjects mC, ExplorerThread eT) {
 		
 		//Calcul distance between two entity	
@@ -173,6 +236,14 @@ public class CharacterTreatment {
 		}
 	}
 	
+	/**
+	 * @brief Check if an explorer can spawn at his current temporary position
+	 * 
+	 * @param pChar The explorer to spawn
+	 * 
+	 * @return true on success
+	 * @return false on failure
+	 */
 	public static boolean explorerSpawnable(Explorer pChar) {
 				
 		//Calcul distance between two entity
@@ -205,6 +276,14 @@ public class CharacterTreatment {
 		
 	}
 	
+	/**
+	 * @brief Check is no explorers are running towards each other, Social Distancing.
+	 * 
+	 * @param e The Explorer to check
+	 * 
+	 * @return true on success
+	 * @return false on failure
+	 */
 	public static boolean isFarEnough(Explorer e) {
 		int futurX = CharacterTreatment.predictPos(e).getX();
 		int futurY = CharacterTreatment.predictPos(e).getY();

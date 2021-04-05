@@ -148,11 +148,11 @@ public class RecapState extends GameState implements ImageObserver{
 		g.drawImage(money, 50,135, 60, 60, (ImageObserver) this);
 		g.drawString("Il vous reste "+currentMoney+" $",125, 175);
 		g.drawImage(treasure,50, 190, 60, 60, (ImageObserver) this);
-		g.drawString("Vous avez trouvé "+nbCurrentTreasures+" trésors !",125, 230);
+		g.drawString("Vous avez trouve "+nbCurrentTreasures+" tresors !",125, 230);
 		g.drawImage(fight, 50, 245, 60, 60, (ImageObserver) this);
 		g.drawString("Vous avez combattu "+nbFights+" fois",125, 285);
 		g.drawImage(animals, 50, 300,60, 60, (ImageObserver) this);
-		g.drawString("Vous avez tué "+nbAnimalsDead+" animaux, bravo !",125, 340);
+		g.drawString("Vous avez tue "+nbAnimalsDead+" animaux, bravo !",125, 340);
 		g.drawImage(dead, 50, 355, 60, 60, (ImageObserver) this);
 		g.drawString(nbExplorersDead+" de vos explorateurs sont morts ...",125, 395);
 		

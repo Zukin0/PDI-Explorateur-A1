@@ -137,7 +137,7 @@ public class ExplorerThread implements Runnable{
 						String outcome = MeetAnimal.fight(eInDanger, a);
 						if (outcome == "deathExplo" || outcome.equals("deathBoth")) {
 							a.setFightAgainst("");
-							MeetAnimal.deathExplorer(e);
+							MeetAnimal.deathExplorer(eInDanger);
 						}
 						if(outcome == "deathAnimal" || outcome.equals("deathBoth")) {
 							MeetAnimal.deathAnimal(a);
