@@ -2,6 +2,12 @@ package time;
 
 import data.Constant;
 
+/**
+ * @brief Implements Time thread of chronometer
+ * 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ *
+ */
 public class RealTime implements Runnable{
 	private Time hour = new Time(0, 1, 0);
 	private Time minute = new Time(0, 15, 0);
@@ -15,6 +21,9 @@ public class RealTime implements Runnable{
 		second.setValue(0);
 	}
 	
+	/**
+	 * @brief increment each second
+	 */
 	public void increment() {
 		second.increment();
 		if (second.getValue() == 0) {

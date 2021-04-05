@@ -17,8 +17,9 @@ public class MeetAnimal{
 	private static HashMap<String,Explorer> explorers = Simulation.explorers;
 	private static ArrayList<String> toRemove = Simulation.toRemove;
 	private static int simulation = Simulation.strategy;
+
+	public static int nbFights = 0;
 	
-	static int nbFights = 0;
 	
 	/**
 	 * @brief Treatment when an explorer is facing a WildAnimal
@@ -28,7 +29,6 @@ public class MeetAnimal{
 	 * @param a The WildAnimal
 	 */
 	public static void meetAnimals(Explorer e, WildAnimals a) {
-		
 
 		String outcome = null;
 		String action = null;
@@ -45,7 +45,8 @@ public class MeetAnimal{
 		
 		switch(simulation) {
 		
-		case 0 : //SMART MODE
+		case 0 : 
+			//SMART MODE
 			if (n>=0 && n<=pf) {
 				//[0-pf]
 				action= "fight";
@@ -57,10 +58,12 @@ public class MeetAnimal{
 				action= "escape";
 			}
 			break;
-		case 1 : //FIGHT MODE
+		case 1 : 
+			//FIGHT MODE
 			action= "fight";
 			break;
-		case 2 : //ESCAPE MODE
+		case 2 : 
+			//ESCAPE MODE
 			if (n>=0 && n<=pc) {
 				//[0-pc]
 				action= "call";
@@ -127,6 +130,14 @@ public class MeetAnimal{
 		}
 	}
 	
+	/**
+	 * @brief fight between two explorers and a wild animal
+	 * it occurs when an explorer called another to help him
+	 * if the helper find the second, they fight the wild animal
+	 * 
+	 * @param helper is the Explorer who comes to help the other
+	 * @param victim is the Explorer who needs help
+	 * */
 	public static void duoFight(Explorer helper, Explorer victim) {
 		String outcome = null;
 		WildAnimals a = null;
@@ -171,7 +182,16 @@ public class MeetAnimal{
 		helper.setNearExp(false);
 	}
 	
-	
+	/**
+	 * @brief fight between a wild animal and an explorer
+	 * 
+	 * @param e the Explorer
+	 * @param a the WildAnimals
+	 * 
+	 * @return deathBoth if both of the explorer and wild animal died
+	 * @return deathAnimal if only the animal died
+	 * @return deathExplo if only the explorer died
+	 * */
 	public static String fight(Explorer e, WildAnimals a) {
 		String outcome = null;
 		nbFights++;
@@ -222,11 +242,17 @@ public class MeetAnimal{
 				outcome = "deathExplo";
 				a.setFightAgainst("");
 			}
-			
 		}
+		
 		return outcome;
 	}
 	
+	/**
+	 * @brief this method changes the direction of an explorer who wants to escape, according to the current one
+	 * 
+	 * @param e the Explorer
+	 * @param dir the current direction of the explorer
+	 * */
 	public static void escapeDir(Explorer e, int dir) {
 		switch(dir) {
 		case 0:
@@ -248,6 +274,14 @@ public class MeetAnimal{
 		}
 	}
 	
+	/**
+	 * @brief this method finds the nearest explorer from the caller one
+	 * 
+	 * @param e the Explorer (the caller one)
+	 * @param explorers HashMap that contains all of the explorers
+	 * 
+	 * @return helper the nearest Explorer
+	 * */
 	public static Explorer findHelper(Explorer e, HashMap<String,Explorer> explorers) {
 		
 		double min = 100000;
@@ -263,9 +297,12 @@ public class MeetAnimal{
 				}	
 			}
 		}
+		System.out.println("coucou je suis "+ helper.getName()+" et je viens t'aider");
 		return helper;
+		
 	}
 	
+	//pas sure que cette méthode soit utiliisée
 	public static Position direction(Explorer e) {
 		int x = e.getPosition().getX();
 		int y = e.getPosition().getY() ;
@@ -273,8 +310,13 @@ public class MeetAnimal{
 		return pos;
 	}
 	
+	/**
+	 * @brief this method is called when an explorer has died during the fight
+	 * Deletes the explorer and updates other explorers according to the type of simulation
+	 * 
+	 *@param e the Explorer
+	 * */
 	public static void deathExplorer(Explorer e) {
-
 		float gain = 0;
 		int gain2 =0;
 
@@ -311,17 +353,23 @@ public class MeetAnimal{
 		case 2:
 			//higher vision for every explorers
 			for (Explorer explorer : explorers.values()) {
-				explorer.setAura(explorer.getAura()+2);
+				explorer.setAura(explorer.getAura()+5);
 			}
 			break;
 		}
 	}
-	
+
+	/**
+	 * @brief this method is called when a wild animal has died during the fight
+	 * 
+	 *@param a the WildAnimals
+	 * */
 	public static void deathAnimal(WildAnimals a) {
 		System.out.println(a.getName() + " : DEAD");
 		a.setDead(true);
 		toRemove.add(a.getName());
 	}
+	
 	public static int getNbFights() {
 		return nbFights;
 	}

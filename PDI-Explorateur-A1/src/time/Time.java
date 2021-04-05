@@ -1,5 +1,11 @@
 package time;
 
+/**
+ * @brief Data Class of Time
+ *
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ *
+ */
 public class Time {
 
 	private int value;
