@@ -34,6 +34,7 @@ import treatment.MeetAnimal;
  * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
  *
  */
+import treatment.CharacterTreatment;
 
 public class SimulationState extends GameState implements ImageObserver{
 	
@@ -49,6 +50,7 @@ public class SimulationState extends GameState implements ImageObserver{
 	private Color BEIGE = new Color(255,250,240);
 	private Color DARK_BEIGE = new Color(193, 146, 115);
 	private Font categoryFont = new Font("Arial", Font.BOLD, 22);
+	private Font endGame = new Font("Arial", Font.BOLD, 50);
 	private Font whiteBoardFont = new Font("Arial", Font.PLAIN, 20);
 	private Font buttonFont = new Font("Arial", Font.PLAIN, 33);
 	
@@ -79,12 +81,16 @@ public class SimulationState extends GameState implements ImageObserver{
 	/**Booleans*/
 	private boolean treasurePlaced;
 	private boolean animalPlaced;
+	private boolean explorerPlaced;
 	private boolean recapAccessible = false;
 	
 	
 	/** Timer */
 	private RealTime timer = new RealTime();
 	private Thread t = new Thread(timer);
+	
+	/** Text */
+	private String endString = "";
 	
 	/**
 	 * @brief Constructor
@@ -96,6 +102,7 @@ public class SimulationState extends GameState implements ImageObserver{
 		initImageFiles();
 		treasurePlacement();
 		animalsPlacement();
+		explorersPlacement();
 		startTimer();
 	}
 
@@ -186,6 +193,37 @@ public class SimulationState extends GameState implements ImageObserver{
 		}
 	}
 	
+	private void explorersPlacement() {
+		nbCol = tilemap.getNbCols();
+		nbRows = tilemap.getNbRows();
+		tMapX = tilemap.getX();
+		tMapY = tilemap.getY();
+		tileSize = tilemap.getTileSize();
+		
+		for(Explorer e : Simulation.explorers.values()) {
+			System.out.println(e.getName() + " : TRY PLACEMENT");
+			explorerPlaced = false;
+			while(!explorerPlaced) {
+				/* Random position X [startPosition X ; Map.width] */
+				int x = (int) (tMapX + Math.random() * (tMapX+(nbRows-1)*tileSize+5));
+				
+				/* Random position Y [startPosition Y; Map.height] */
+				int y = (int) (tMapY + Math.random() * (tMapY+(nbCol-1)*tileSize+5));
+				
+				/* Calcul d�duit de la classe TileMap sur le placement des tiles */
+				/* Col = (xPoS - OffSetX)/tileSize, Row = (YPoS - OffSetY)/tileSize */
+				int row = (int)(x-5-tMapX)/tileSize;
+				int col = (int) (y-5-tMapY)/tileSize;
+				
+				e.setPosition(new Position(col*tileSize+5+tMapX,row*tileSize+5+tMapY));
+				if(tilemap.getPosition(row,col) == 7 && CharacterTreatment.explorerSpawnable(e)) {
+					explorerPlaced = true;
+				}
+			}
+			System.out.println("SPAWNED");
+		}
+	}
+	
 	/**
 	 * @brief Method that starts the timer
 	 */
@@ -240,8 +278,17 @@ public class SimulationState extends GameState implements ImageObserver{
 	 * @brief Abstract method that can detect when the simulation is over
 	 */
 	public void tick() {
-		if(Simulation.explorers.isEmpty()||Simulation.treasures.isEmpty()) {
+		if(Simulation.explorers.isEmpty()||Simulation.treasures.isEmpty() || timer.getMinute().getValue() == 2) {
+			if(Simulation.explorers.isEmpty() || timer.getMinute().getValue() == 2){
+				endString = "YOU LOST";
+			}
+			else if(Simulation.treasures.isEmpty()) {
+				endString = "YOU WON";
+			}
 			recapAccessible = true;
+			for(Character c : Simulation.characters.values()) {
+				c.setDead(true);
+			}
 			timer.setRunning(false);
 		}
 	}
@@ -321,6 +368,19 @@ public class SimulationState extends GameState implements ImageObserver{
 				WildAnimals wa = (WildAnimals)c;
 			}
 			else {
+				Explorer e = (Explorer)c;
+				if(e.isEscaping()) {
+					g.setColor(Color.blue);
+				}
+				else if(e.isWaiting()) {
+					g.setColor(Color.red);
+				}
+				else if(e.isHelping()) {
+					g.setColor(Color.green);
+				}
+				else {
+					g.setColor(Color.black);
+				}
 				g.drawOval(c.getPosition().getX()-(c.getAura()/2)+(c.getSize().getWidth()/2), c.getPosition().getY()-(c.getAura()/2)+(c.getSize().getHeight()/2), c.getAura(), c.getAura());
 			}
 		}
@@ -329,6 +389,12 @@ public class SimulationState extends GameState implements ImageObserver{
 		for(HashMap.Entry<String,Treasure> entry : Simulation.treasures.entrySet()) {
 			Treasure t = entry.getValue();
 			g.drawImage(treasure, t.getPosition().getX(), t.getPosition().getY(), t.getSize().getWidth(), t.getSize().getHeight(),(ImageObserver)this);
+		}
+		
+		if(recapAccessible) {
+			g.setColor(Color.black);
+	        g.setFont(endGame);
+	        g.drawString("FIN DE PARTIE : \n" + endString,200, 400);
 		}
 		
 		/**White board*/

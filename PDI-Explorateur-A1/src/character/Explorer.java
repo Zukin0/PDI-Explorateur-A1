@@ -16,6 +16,9 @@ public class Explorer extends Character{
 	private boolean isHelping;
 	private boolean isNearExp;
 	private boolean isDead;
+	
+	private String waitingWho;
+	private String helpingWho;
 
 	
 	public Explorer(String name, Size size, Position position, boolean movable, int lifePoint, int lifePointMax,
@@ -48,6 +51,8 @@ public class Explorer extends Character{
 		isHelping = false;
 		isNearExp = false;
 		setDead(false);
+		setWaitingWho("");
+		setHelpingWho("");
 	}
 	
 	public String toString() {
@@ -100,6 +105,14 @@ public class Explorer extends Character{
 		return isDead;
 	}
 
+	public String getHelpingWho() {
+		return helpingWho;
+	}
+
+	public String getWaitingWho() {
+		return waitingWho;
+	}
+
 	public void setProbaFight(float probaFight) {
 		this.probaFight = probaFight;
 	}
@@ -133,6 +146,14 @@ public class Explorer extends Character{
 	}
 	public void setDead(boolean isDead) {
 		this.isDead = isDead;
+	}
+
+	public void setHelpingWho(String helpingWho) {
+		this.helpingWho = helpingWho;
+	}
+
+	public void setWaitingWho(String waitingWho) {
+		this.waitingWho = waitingWho;
 	}
 
 }

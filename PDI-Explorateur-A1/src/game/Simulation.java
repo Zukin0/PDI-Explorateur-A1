@@ -116,30 +116,31 @@ public class Simulation {
 			e.setName(nameEx);
 			
 			/* Gather right equipmentName list for the explorer and create <Equipment> List*/
-			ArrayList<Equipment> eqList = new ArrayList<Equipment>();
-			for(String equipment : exEquipment.get(nameEx)) {
-				switch(equipment) {
-				case "Machettes" : eqCreator.setEquipmentBuilder(bMachette);
-					break;
-				case "Jumelles" : eqCreator.setEquipmentBuilder(bBinocular);
-					break;
-				case "Bottes" : eqCreator.setEquipmentBuilder(bBoots);
-					break;
+			if(exEquipment != null) {
+				ArrayList<Equipment> eqList = new ArrayList<Equipment>();
+				for(String equipment : exEquipment.get(nameEx)) {
+					switch(equipment) {
+					case "Machettes" : eqCreator.setEquipmentBuilder(bMachette);
+						break;
+					case "Jumelles" : eqCreator.setEquipmentBuilder(bBinocular);
+						break;
+					case "Bottes" : eqCreator.setEquipmentBuilder(bBoots);
+						break;
+					}
+					eqCreator.BuildEquipment();
+					Equipment eq = eqCreator.getEquipment();
+					eqList.add(eq);
+					
+					switch(eq.getName()) {
+					case "Machettes" : e.setAttackPoint(e.getAttackPoint() + eq.getPower());;
+						break;
+					case "Jumelles" : e.setAura(e.getAura() + eq.getPower());
+						break;
+					}
 				}
-				eqCreator.BuildEquipment();
-				Equipment eq = eqCreator.getEquipment();
-				eqList.add(eq);
-				
-				switch(eq.getName()) {
-				case "Machettes" : e.setAttackPoint(e.getAttackPoint() + eq.getPower());;
-					break;
-				case "Jumelles" : e.setAura(e.getAura() + eq.getPower());
-					break;
-				}
+				e.setEquiment(eqList);
 			}
-			
 			/* Add Equipment List to Explorer and add to instance's HashMap */
-			e.setEquiment(eqList);
 			explorers.put(e.getName(),e);
 		}
 	}

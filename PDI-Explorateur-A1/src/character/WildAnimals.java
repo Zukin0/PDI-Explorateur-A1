@@ -7,6 +7,7 @@ public class WildAnimals extends Character{
 	
 	private Size territorySize;
 	private Position posTerr;
+	private String fightAgainst;
 
 	public WildAnimals(String name, Size size, Position position, boolean movable, int lifePoint, int lifePointMax,
 			int attackPoint, int attackPointMax, int speed, int aura, int widthTerritory, int heightTerritory) {
@@ -19,6 +20,7 @@ public class WildAnimals extends Character{
 	public WildAnimals() {
 		super("", new Size(0, 0), new Position(0,0), true, 0, 0, 0, 0, 0, 0);
 		setDead(false);
+		fightAgainst = "";
 	}
 
 	public Size getTerritorySize() {
@@ -29,12 +31,21 @@ public class WildAnimals extends Character{
 		return posTerr;
 	}
 
+	public String getFightAgainst() {
+		return fightAgainst;
+	}
+
 	public void setTerritorySize(Size territorySize) {
 		this.territorySize = territorySize;
 	}
 
 	public void setPosTerr(Position posTerr) {
 		this.posTerr = posTerr;
+	}
+
+
+	public void setFightAgainst(String fightAgainst) {
+		this.fightAgainst = fightAgainst;
 	}
 	
 	
