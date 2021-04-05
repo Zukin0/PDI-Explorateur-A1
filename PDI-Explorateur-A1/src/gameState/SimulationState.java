@@ -205,7 +205,6 @@ public class SimulationState extends GameState implements ImageObserver{
 		tileSize = tilemap.getTileSize();
 		
 		for(Explorer e : Simulation.explorers.values()) {
-			System.out.println(e.getName() + " : TRY PLACEMENT");
 			explorerPlaced = false;
 			while(!explorerPlaced) {
 				/* Random position X [startPosition X ; Map.width] */
@@ -224,7 +223,6 @@ public class SimulationState extends GameState implements ImageObserver{
 					explorerPlaced = true;
 				}
 			}
-			System.out.println("SPAWNED");
 		}
 	}
 	
@@ -372,7 +370,12 @@ public class SimulationState extends GameState implements ImageObserver{
 				else {
 					g.setColor(Color.black);
 				}
-				g.drawOval(c.getPosition().getX()-(c.getAura()/2)+(c.getSize().getWidth()/2), c.getPosition().getY()-(c.getAura()/2)+(c.getSize().getHeight()/2), c.getAura(), c.getAura());
+				g.drawOval( (c.getPosition().getX()+ (c.getSize().getWidth()/2)) - c.getAura(),
+						(c.getPosition().getY()+ (c.getSize().getHeight()/2)) - c.getAura(),
+						c.getAura()*2, c.getAura()*2);
+//				g.drawOval(c.getPosition().getX()-(c.getAura()/2)+(c.getSize().getWidth()/2),
+//						c.getPosition().getY()-(c.getAura()/2)+(c.getSize().getHeight()/2),
+//						c.getAura()*2, c.getAura()*2);
 			}
 //			g.setColor(Color.red);
 //			g.drawRect(c.getPosition().getX(), c.getPosition().getY(), c.getSize().getWidth(), c.getSize().getHeight());

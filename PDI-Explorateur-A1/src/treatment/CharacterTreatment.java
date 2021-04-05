@@ -194,4 +194,22 @@ public class CharacterTreatment {
 		return true;
 		
 	}
+	
+	public static boolean isFarEnough(Explorer e) {
+		int futurX = CharacterTreatment.predictPos(e).getX();
+		int futurY = CharacterTreatment.predictPos(e).getY();
+		
+		for(Explorer eTmp : Simulation.explorers.values()) {
+			if(!e.getName().equals(eTmp.getName())) {
+				double dis = Math.sqrt(Math.pow(futurX - eTmp.getPosition().getX(), 2)
+						+ Math.pow(futurY - eTmp.getPosition().getY(), 2));
+				//System.out.println(e.getName() + " : " + dis + " FROM " + eTmp.getName());
+				if((e.getAura() + eTmp.getAura()) >= dis) {
+					changeDir(e);
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 }

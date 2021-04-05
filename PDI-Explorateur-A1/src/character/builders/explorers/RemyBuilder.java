@@ -26,7 +26,7 @@ public class RemyBuilder extends ExBuilder{
 		//walks faster than others 
 		explorer.setBaseSpeed(8);
 		explorer.setSpeed(8);
-		explorer.setAura(100);	
+		explorer.setAura(50);	
 	}
 
 	

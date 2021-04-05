@@ -45,7 +45,7 @@ public class ExplorerThread implements Runnable{
 			if(e.isEscaping() == true) {
 				//System.out.println(e.getName() + " : JE FUIS PENDANT " + Constant.NUMBER_ESCAPE_ITERATIONS + " ms VERS : " + e.getDir());
 				if(cpt != Constant.NUMBER_ESCAPE_ITERATIONS) {
-					if(!collision(e)) {
+					if(!collision(e) && CharacterTreatment.isFarEnough(e)) {
 						CharacterTreatment.move(e);
 					}
 					cpt++;
@@ -113,7 +113,7 @@ public class ExplorerThread implements Runnable{
 					}
 				}
 				if(cpt != Constant.NUMBER_HELP_ITERATIONS && e.isHelping() && eInDanger != null) {
-					if(!collision(e)) {
+					if(!collision(e) && CharacterTreatment.isFarEnough(e)) {
 						if(e.isNearExp()) {
 							System.out.println(e.getName() + " : DUO FIGHT 1");
 							MeetAnimal.duoFight(e, eInDanger);
@@ -174,7 +174,7 @@ public class ExplorerThread implements Runnable{
 					CharacterTreatment.changeDir(e);
 					cpt = 0;
 				}
-				if(!collision(e)) {
+				if(!collision(e) && CharacterTreatment.isFarEnough(e)) {
 					CharacterTreatment.move(e);
 				}
 				cpt++;

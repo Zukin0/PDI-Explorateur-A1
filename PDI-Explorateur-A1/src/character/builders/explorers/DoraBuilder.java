@@ -23,7 +23,7 @@ public class DoraBuilder extends ExBuilder{
 				
 				explorer.setBaseSpeed(6);
 				explorer.setSpeed(6);
-				explorer.setAura(100);
+				explorer.setAura(50);
 			}
 
 			public void upExplorer() {
