@@ -22,7 +22,6 @@ import character.builders.explorers.MikeBuilder;
 import character.builders.explorers.RemyBuilder;
 import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
-import data.MapObjects;
 import data.Position;
 import data.Size;
 import data.Treasure;

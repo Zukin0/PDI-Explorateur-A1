@@ -6,24 +6,24 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Random;
-
 import javax.imageio.ImageIO;
 
-import ihm.GamePanel;
+/**
+ * @brief Class that initializes the tilemap and tileset
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ *
+ */
 
 public class TileMap {
-	
-	//positions
+
 	private int x;
 	private int y;
 	
-	//bords
 	private int xmin;
 	private int xmax;
 	private int ymin;
 	private int ymax;
 	
-	//map
 	public static int[][] map;
 	private int tileSize=32;
 	private int nbRows ;
@@ -31,23 +31,24 @@ public class TileMap {
 	private int width;
 	private int height;
 	
-	//tileset
+	/**Tileset*/
 	private BufferedImage tileset;
 	private static int numTilesAcross;
 	private static Tile[][] tiles;
 	
 	public static int blockTile[] = {1,2,3,4,5,8,9,10,11,12};
 	
-	//drawing ? 
-	
 	public TileMap() {}
 	
+	/**
+	 * @brief Method that loads the tiles from the tileset file
+	 * @param s : tileset's file path
+	 */
 	public void loadTiles (String s) {
 		
 		try {
 			tileset = ImageIO.read(getClass().getResource(s));
 			numTilesAcross = tileset.getWidth()/tileSize;
-			//[3] car on a deux rangées sur notre tileset
 			tiles = new Tile[3][numTilesAcross];
 			BufferedImage subImage;
 			for(int col = 0; col < numTilesAcross; col++) {
@@ -64,16 +65,11 @@ public class TileMap {
 		}
 	}
 	 
-	
+	/**
+	 * @brief Method that loads the map corresponding to the text map
+	 * @param s : map text's file path
+	 */
 	public void loadMap (String s) {
-		
-	//public void loadMap (int tab[][]) {
-		/*
-		 * notre doc .txt de la map est fait tel que :
-		 * première ligne  = nombre de lignes
-		 * deuxième ligne = nombre de colonnes
-		 * ensuite c'est la map en elle même
-		 */
 		
 		try {
 		 	InputStream in = getClass().getResourceAsStream(s);
@@ -111,15 +107,7 @@ public class TileMap {
 						}
 					}
 				}
-			}
-			
-//			for (int row = 0; row<nbRows;row++) {
-//				for (int col = 0; col<nbCols; col++) {
-//					System.out.print(map[row][col]+" ");
-//				}
-//				System.out.println();
-//			}
-			
+			}	
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -162,8 +150,6 @@ public class TileMap {
 		return map[x][y];
 	}
 	
-	//ici on récupère le type de tile car pour lui il y a des tiles bloquées 
-	//genre le sol et des tiles non bloquées qu'on peut superposé par dessus le sol
 	public int getType(int row, int col) {
 		int rc = map[row][col];
 		int r = rc/numTilesAcross;
@@ -171,7 +157,6 @@ public class TileMap {
 		return tiles[r][c].getType();
 	}
 	
-	//il utilise ça pour que la l'écran suive le joueur donc pour l'instant pas besoin
 	public void setPosition(int x, int y) {
 		this.x=x;
 		this.y=y;
@@ -193,6 +178,10 @@ public class TileMap {
 		}
 	}
 	
+	/**
+	 * @brief Method that draws the map
+	 * @param g
+	 */
 	public void draw(Graphics g) {
 		for (int row = 0; row<nbRows; row++) {
 			for (int col = 0; col<nbCols; col++) {
@@ -211,8 +200,6 @@ public class TileMap {
 				int c = rc % numTilesAcross;
 				
 				g.drawImage(tiles[r][c].getImage(), x+col*tileSize+5, y+row*tileSize+5,tileSize, tileSize, null);
-				//g.drawRect(x+col*tileSize+5, y+row*tileSize+5, tileSize, tileSize);
-				//g.drawString(row + "," + col, x+col*tileSize+5, y+row*tileSize+5 + 20);
 			}
 		}
 	}	

@@ -24,6 +24,8 @@ public class MeetAnimal{
 	private static ArrayList<String> toRemove = Simulation.toRemove;
 	private static int simulation = Simulation.strategy;
 	
+	static int nbFights = 0;
+	
 	public static void meetAnimals(Explorer e, WildAnimals a) {
 		
 
@@ -171,6 +173,7 @@ public class MeetAnimal{
 	
 	public static String fight(Explorer e, WildAnimals a) {
 		String outcome = null;
+		nbFights++;
 		if(a != null) {
 			int apE = e.getAttackPoint();
 			int lpE = e.getLifePoint();
@@ -318,4 +321,8 @@ public class MeetAnimal{
 		a.setDead(true);
 		toRemove.add(a.getName());
 	}
+	public static int getNbFights() {
+		return nbFights;
+	}
+	
 }

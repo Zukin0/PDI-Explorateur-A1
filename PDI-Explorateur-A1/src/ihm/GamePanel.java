@@ -6,11 +6,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
 import javax.swing.JPanel;
-
 import gameState.GameStateManager;
 
+/**
+ * @brief Class that initialize the game panel
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ *
+ */
 public class GamePanel extends JPanel implements Runnable, KeyListener, MouseListener{
 
 	private static final long serialVersionUID = 1L;
@@ -26,6 +29,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener, MouseLis
 	
 	private GameStateManager gsm;
 	
+	/**
+	 * @brief Constructor
+	 */
 	public GamePanel () {
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		addKeyListener(this);
@@ -34,13 +40,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener, MouseLis
 		start();
 	}
 	
+	/**
+	 * @brief Method that initializes starts the thread
+	 */
 	private void start() {
 		isRunning = true;
 		thread = new Thread(this);
 		thread.start();
 	}
 	
-	//La boucle de jeu
+	/**
+	 * @brief Method that initializes the time and make everything run
+	 */
 	public void run() {
 		long start, elapsed, wait;
 		gsm = new GameStateManager();
@@ -69,10 +80,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener, MouseLis
 		gsm.tick();
 	}
 	
+	/**
+	 * Method that reset the panel
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		//g.drawRect(x, y, width, height);
-		g.clearRect(0, 0, WIDTH, HEIGHT); //clear la fenetre avant de la repaint
+		g.clearRect(0, 0, WIDTH, HEIGHT); 
 		gsm.draw(g);
 	}
 
@@ -105,5 +118,4 @@ public class GamePanel extends JPanel implements Runnable, KeyListener, MouseLis
 	public void mouseExited(MouseEvent m) {
 		gsm.mouseExited(m);
 	}
-	
 }

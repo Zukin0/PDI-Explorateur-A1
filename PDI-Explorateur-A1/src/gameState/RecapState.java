@@ -3,56 +3,53 @@ package gameState;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
-import character.Explorer;
 import data.Treasure;
 import character.Character;
 import game.Simulation;
-import ihm.Game;
 import ihm.GamePanel;
+
+/**
+ * @brief This class defines the recap state
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ *
+ */
 
 public class RecapState extends GameState implements ImageObserver{
 	
-	//création des couleurs nécessaires à l'interface
+	/**Initialization of necessary colors and fonts*/
 	private Color BEIGE = new Color(255,250,240);
 	private Color DARK_BEIGE = new Color(193, 146, 115);
-		
-	//création des polices
 	private Font titleFont = new Font("Century Goth", Font.BOLD, 40);
-	private Font simpleFont = new Font("Century Goth", Font.BOLD, 35);
 	private Font texteFont = new Font("Century Goth", Font.PLAIN, 20);
 	private Font buttonFont = new Font("Arial", Font.PLAIN, 33);
 	
-	/*Variables for the white board and recap*/
+	/**Variables for the white board and recap*/
 	private String time = "0";
 	private String currentMoney = "0";
 	private String nbCurrentTreasures = "0";
 	private String nbFights = "0";
 	private String nbAnimalsDead ="0";
-	private String nbExplorersDead;
+	private String nbExplorersDead = "0";
 	private String lifeExplo1 = "0";
 	private String lifeExplo2 = "0";
 	private String lifeExplo3 = "0";
 	private String lifeExplo4 = "0";
 	private String lifeExplo5 = "0";
 	private String lifeExplo6 = "0";
+	private int nbExplo = 2;
 	
-	//images
+	/**Images*/
 	private BufferedImage map=null;
 	private BufferedImage heart=null;
 	private BufferedImage clock=null;
@@ -62,13 +59,24 @@ public class RecapState extends GameState implements ImageObserver{
 	private BufferedImage animals=null;
 	private BufferedImage dead=null;
 	
+	/**
+	 * @brief Constructor
+	 * @param gsm
+	 */
 	public RecapState(GameStateManager gsm) {
 		super(gsm);
+		readFile("ressources/donnees_money.txt");
+		readFile("ressources/donnees_sim.txt");
 	}
 
-	public void init() {
-	}
+	public void init() {}
 	
+	public void tick() {}
+	
+	/**
+	 * @brief Method that reset all the simulation's parameters
+	 * 
+	 */
 	public void resetSimulation() {
 		for(Character c : Simulation.characters.values()) {
 			Simulation.toRemove.add(c.getName());
@@ -81,10 +89,9 @@ public class RecapState extends GameState implements ImageObserver{
 		Simulation.listExp.clear();
 	}
 	
-	public void tick() {
-	
-	}
-	
+	/**
+	 * @brief Method that removes treasures, explorers or and animals from their hashmap when dead
+	 */
 	public void clearAll() {
 		for(String name : Simulation.toRemove) {
 			if(name.contains("treasure")) {
@@ -102,22 +109,22 @@ public class RecapState extends GameState implements ImageObserver{
 		Simulation.toRemove.clear();
 	}
 	
+	/**
+	 * @brief Method that fills the graphical interface
+	 */
 	public void draw(Graphics g) {
 		clearAll();
-		//background
+		
+		/**Background*/
 		g.setColor(BEIGE);
 		g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
 				
-		//title
+		/**Titles*/
 		g.setColor(Color.black);
 		g.setFont(titleFont);
 		g.drawString("RECAPITULATIF DE LA SIMULATION",20, 60);
 		
-		g.setColor(Color.black);
-		g.setFont(simpleFont);
-		g.drawString("LES LOGS DE LA SIMULATION",650, 325);
-		
-		//images
+		/**Images*/
 		try {
 			map = ImageIO.read(new File("ressources/schema_carte_sans_fond.png"));
 			heart= ImageIO.read(new File("ressources/icone_coeur.png"));
@@ -133,79 +140,60 @@ public class RecapState extends GameState implements ImageObserver{
 		}
         g.drawImage(map, 1000, 40, 200, 200, (ImageObserver) this);
         
-        g.drawImage(clock, 20, 80, 60, 60, (ImageObserver) this);
-        g.drawImage(money, 20,135, 60, 60, (ImageObserver) this);
-        g.drawImage(treasure,20, 190, 60, 60, (ImageObserver) this);
-        g.drawImage(fight, 20, 245, 60, 60, (ImageObserver) this);
-        g.drawImage(animals, 20, 300,60, 60, (ImageObserver) this);
-        g.drawImage(dead, 20, 355, 60, 60, (ImageObserver) this);
-        
-        readFile("ressources/donnees_sim.txt");
-        
-        //texte
+        /**Texts*/
         g.setColor(Color.black);
 		g.setFont(texteFont);
-		g.drawString("Temps de votre simulation : "+time,95, 120);
-		g.drawString("Il vous reste "+currentMoney+" $",95, 175);
-		g.drawString("Vous avez trouve "+nbCurrentTreasures+" tresors !",95, 230);
-		g.drawString("Vous avez combattu "+nbFights+" fois",95, 285);
-		g.drawString("Vous avez tue "+nbAnimalsDead+" animaux, bravo !",95, 340);
-		g.drawString(nbExplorersDead+" de vos explorateurs sont morts ...",95, 395);
+		g.drawImage(clock, 50, 80, 60, 60, (ImageObserver) this);
+		g.drawString("Temps de votre simulation : "+time,125, 120);
+		g.drawImage(money, 50,135, 60, 60, (ImageObserver) this);
+		g.drawString("Il vous reste "+currentMoney+" $",125, 175);
+		g.drawImage(treasure,50, 190, 60, 60, (ImageObserver) this);
+		g.drawString("Vous avez trouvé "+nbCurrentTreasures+" trésors !",125, 230);
+		g.drawImage(fight, 50, 245, 60, 60, (ImageObserver) this);
+		g.drawString("Vous avez combattu "+nbFights+" fois",125, 285);
+		g.drawImage(animals, 50, 300,60, 60, (ImageObserver) this);
+		g.drawString("Vous avez tué "+nbAnimalsDead+" animaux, bravo !",125, 340);
+		g.drawImage(dead, 50, 355, 60, 60, (ImageObserver) this);
+		g.drawString(nbExplorersDead+" de vos explorateurs sont morts ...",125, 395);
 		
-		 int i = 0;
-	        for(String name : Simulation.listExp) {
-	        	if(!Simulation.explorers.containsKey(name)) {
-	        		g.drawString(name+" est mort",95, 450+55*i);
-	        		g.drawImage(dead, 20, 410+55*i, 60, 60, (ImageObserver) this);
-	        		i++;
-	        	}
-	        }
-			for(Explorer e : Simulation.explorers.values()) {
-				g.drawImage(heart, 20, 410+55*i, 60, 60, (ImageObserver) this);
-				g.drawString("Il reste "+e.getLifePoint()+" points de vie a "+ e.getName(),95, 450+55*i);
-				i++;
-			}
+		g.drawImage(heart, 50, 410, 60, 60, (ImageObserver) this);
+        g.drawImage(heart, 50, 465, 60, 60, (ImageObserver) this);
+        g.drawString(lifeExplo1,125, 450);
+		g.drawString(lifeExplo2,125, 505);
 		
-//		if (lifeExplo1.equals("0")) {
-//			g.drawString("Dora1 est mort",95, 450);
-//		} 
-//		else {
-//			g.drawString("Il reste "+lifeExplo1+" points de vie à Dora1 ",95, 450);
-//		}
-//		if (lifeExplo2.equals("0")) {
-//			g.drawString("Mike1 est mort",95, 505);
-//		} 
-//		else {
-//			g.drawString("Il reste "+lifeExplo2+" points de vie à Mike1 ",95, 505);
-//		}
-//		if (lifeExplo3.equals("0")) {
-//			g.drawString("Remy1 est mort",95, 560);
-//		} 
-//		else {
-//			g.drawString("Il reste "+lifeExplo3+" points de vie à Remy1 ",95, 560);
-//		}
-//		if (lifeExplo4.equals("0")) {
-//			g.drawString("Dora2 est mort",95, 615);
-//		} 
-//		else {
-//			g.drawString("Il reste "+lifeExplo4+" points de vie à Dora2 ",95, 615);
-//		}
-//		if (lifeExplo5.equals("0")) {
-//			g.drawString("Mike2 est mort",95, 670);
-//		} 
-//		else {
-//			g.drawString("Il reste "+lifeExplo5+" points de vie à Mike2 ",95, 670);
-//		}
-//		if (lifeExplo1.equals("0")) {
-//			g.drawString("Joe1 est mort",95, 725);
-//		} 
-//		else {
-//			g.drawString("Il reste "+lifeExplo6+" points de vie à Joe1 ",95, 725);
-//		}
+		switch(nbExplo) {
+		case 3:
+			g.drawImage(heart, 50, 520,60,60, (ImageObserver) this);
+			g.drawString(lifeExplo3,125, 560);
+			break;
+		case 4 :
+			g.drawImage(heart, 50, 520,60,60, (ImageObserver) this);
+			g.drawString(lifeExplo3,125, 560);
+			g.drawImage(heart, 50, 575,60,60, (ImageObserver) this);
+			g.drawString(lifeExplo4,125, 615);
+			
+			break;
+		case 5 :
+			g.drawImage(heart, 50, 520,60,60, (ImageObserver) this);
+			g.drawString(lifeExplo3,125, 560);
+			g.drawImage(heart, 50, 575,60,60, (ImageObserver) this);
+			g.drawString(lifeExplo4,125, 615);
+			g.drawImage(heart, 50, 630, 60, 60, (ImageObserver) this);
+			g.drawString(lifeExplo5,125, 670);
+			break;
+		case 6 : 
+			g.drawImage(heart, 50, 520,60,60, (ImageObserver) this);
+			g.drawString(lifeExplo3,125, 560);
+			g.drawImage(heart, 50, 575,60,60, (ImageObserver) this);
+			g.drawString(lifeExplo4,125, 615);
+			g.drawImage(heart, 50, 630, 60, 60, (ImageObserver) this);
+			g.drawString(lifeExplo5,125, 670);
+			g.drawImage(heart, 50,685, 60,60, (ImageObserver) this);
+			g.drawString(lifeExplo6,125, 725);
+			break;
+		}
 		
-		g.drawString("Blablabla.....",650, 360);
-		
-		//button
+		/**Button*/
         g.setColor(Color.black);
 		g.fillRect(1080, 650, 180, 67);
         g.setColor(DARK_BEIGE);
@@ -215,24 +203,47 @@ public class RecapState extends GameState implements ImageObserver{
         g.drawString("Menu",1125, 695);
 	}
 	
+	/**
+	 * @brief Method that reads a file using scanner 
+	 * @param s : the file's path
+	 */
 	public void readFile(String s) {
 		try {
-			FileInputStream file = new FileInputStream(s);
-			Scanner scanner = new Scanner(file);
-			String vide = scanner.nextLine();
-			time = scanner.nextLine();
-			currentMoney = scanner.nextLine();
-			nbCurrentTreasures = scanner.nextLine();
-			nbFights =scanner.nextLine();
-			nbAnimalsDead = scanner.nextLine();
-			nbExplorersDead = scanner.nextLine();
-			lifeExplo1 = scanner.nextLine();
-			lifeExplo2 = scanner.nextLine();
-			lifeExplo3 = scanner.nextLine();
-			lifeExplo4 = scanner.nextLine();
-			lifeExplo5 = scanner.nextLine();
-			lifeExplo6 = scanner.nextLine();
-		    scanner.close();  
+			if (s.equals("ressources/donnees_money.txt")) {
+				FileInputStream file = new FileInputStream(s);
+				Scanner scanner = new Scanner(file); 
+				currentMoney = scanner.nextLine();
+			    scanner.close(); 
+			}
+			else if(s.equals("ressources/donnees_sim.txt")) {
+				FileInputStream file = new FileInputStream(s);
+				Scanner scanner = new Scanner(file); 
+				time = scanner.nextLine();
+				nbCurrentTreasures = scanner.nextLine();
+				nbFights =scanner.nextLine();
+				nbAnimalsDead = scanner.nextLine();
+				nbExplorersDead = scanner.nextLine();
+				lifeExplo1 = scanner.nextLine();
+				lifeExplo2 = scanner.nextLine();
+				if (scanner.hasNext()) {
+					lifeExplo3 = scanner.nextLine();
+					nbExplo++;
+				}
+				if(scanner.hasNext()) {
+					lifeExplo4 = scanner.nextLine();
+					nbExplo++;
+				}
+				if(scanner.hasNext()) {
+					lifeExplo5 = scanner.nextLine();
+					nbExplo++;
+				}
+				if(scanner.hasNext()) {
+					lifeExplo6 = scanner.nextLine();
+					nbExplo++;
+				}
+
+			    scanner.close(); 
+			} 
 		}			
 			catch (Exception e) {
 				e.printStackTrace();
@@ -245,6 +256,9 @@ public class RecapState extends GameState implements ImageObserver{
 
 	public void mouseClicked(MouseEvent m) {}
 
+	/**
+	 * @brief Method that detects the mouse's clicks to interact with the user and go from one state to another
+	 */
 	public void mousePressed(MouseEvent m) {
 		if (m.getX()>= 1080 && m.getX()<= 1280 && m.getY()>=645 && m.getY()<= 715) {
 			resetSimulation();
@@ -252,7 +266,6 @@ public class RecapState extends GameState implements ImageObserver{
 				gsm.gameStates.pop();
 			}
 			if((gsm.gameStates.isEmpty())) {
-				System.out.println("/////STACK EMPTY");
 			}
 			gsm.gameStates.push(new MenuState(gsm));
 		}

@@ -1,19 +1,14 @@
 package ihm;
 
 import java.awt.BorderLayout;
-import java.awt.Canvas;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
-import gameState.GameStateManager;
-
-public class Game /*extends Canvas implements Runnable*/ {
+/**
+ * @brief Class that initialize the frame for the graphical interface
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ *
+ */
+public class Game {
 	
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("EXPLORATEURS INTELLIGENTS ET COMMUNICANTS");
