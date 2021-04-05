@@ -1,5 +1,11 @@
 package game;
 
+/**
+ * @brief Data Class of the Difficulty of a game
+ * The Difficulty contains the number of Treasure, the Number of Animals in the game and the money of the player
+ * 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
 public class Difficulty {
 
 	private int id;

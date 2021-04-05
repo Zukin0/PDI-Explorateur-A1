@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 00:00:03
 
@@ -42,3 +43,16 @@ vie
 vie
 vie
 >>>>>>> refs/heads/juju
+=======
+00:00:39
+3
+7
+1
+6
+Mike1 n'a pas survÃ©cu
+Remy1 n'a pas survÃ©cu
+Joe1 n'a pas survÃ©cu
+Dora1 n'a pas survÃ©cu
+Joe2 n'a pas survÃ©cu
+Remy2 n'a pas survÃ©cu
+>>>>>>> refs/heads/Alexandre_from_emma

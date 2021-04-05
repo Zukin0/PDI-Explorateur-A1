@@ -1,7 +1,10 @@
 package data;
 
 /**
+ * @brief Data Class of the Position of each Instance 
  * This class initializes the position (x and y), we will use it for every object
+ * 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
  */
 public class Position {
 	

@@ -276,8 +276,8 @@ public class SimulationState extends GameState implements ImageObserver{
 	 * @brief Abstract method that can detect when the simulation is over
 	 */
 	public void tick() {
-		if(Simulation.explorers.isEmpty()||Simulation.treasures.isEmpty() || timer.getMinute().getValue() == 2) {
-			if(Simulation.explorers.isEmpty() || timer.getMinute().getValue() == 2){
+		if(Simulation.explorers.isEmpty()||Simulation.treasures.isEmpty() || timer.getMinute().getValue() == 1) {
+			if(Simulation.explorers.isEmpty() || timer.getMinute().getValue() == 1){
 				endString = "YOU LOST";
 			}
 			else if(Simulation.treasures.isEmpty()) {

@@ -1,5 +1,10 @@
 package data;
 
+/**
+ * @brief Abtract data Class which Explorers, WildAnimal and Treasures will inherit
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ *
+ */
 public abstract class MapObjects {
 
 	private String name;
@@ -13,8 +18,6 @@ public abstract class MapObjects {
 		this.movable = movable;
 		this.name = name;
 	}
-	
-	//setters and getters 
 	
 	public String getName() {
 		return name;
