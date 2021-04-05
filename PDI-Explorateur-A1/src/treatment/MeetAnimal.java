@@ -17,25 +17,13 @@ import character.builders.explorers.core.ExDirector;
 import game.Simulation;
 import data.Position;
 
-/**
- * @brief This class realized the treatment of the meeting between an explorer and an animal.
- * 
- * @author Yohan Chabot, Julia De Sousa, Emma Gastebois et Alexandre Hang
- * */
-
 public class MeetAnimal{
 	private static HashMap<String,Explorer> explorers = Simulation.explorers;
 	private static HashMap<String,Character> characters = Simulation.characters;
 	private static HashMap<String,WildAnimals> animals = Simulation.animals;
 	private static ArrayList<String> toRemove = Simulation.toRemove;
 	private static int simulation = Simulation.strategy;
-	
-	/**
-	 * @brief select a response 
-	 * 
-	 * @param e : explorer
-	 * @param a : animal
-	 * */
+
 	public static void meetAnimals(Explorer e, WildAnimals a) {
 
 		String outcome = null;
@@ -182,16 +170,6 @@ public class MeetAnimal{
 		helper.setNearExp(false);
 	}
 	
-	/**
-	 * @brief fight between the explorer and animal
-	 * 
-	 * @param e : explorer 
-	 * @param a : animal
-	 * 
-	 * @return deathBoth : if both of the explorer and animal die during the fight
-	 * @return deathAnimal : animal only dies
-	 * @return deathExplo : explorer only dies
-	 * */
 	public static String fight(Explorer e, WildAnimals a) {
 		String outcome = null;
 		if(a != null) {
@@ -246,12 +224,6 @@ public class MeetAnimal{
 		return outcome;
 	}
 	
-	/**
-	 * @brief change the direction of the explorer according to his old one
-	 * 
-	 * @param e : explorer who needs to escape the animal
-	 * @param dir : explorer's  direction
-	 * */
 	public static void escapeDir(Explorer e, int dir) {
 		switch(dir) {
 		case 0:
@@ -273,14 +245,6 @@ public class MeetAnimal{
 		}
 	}
 	
-	/**
-	 * @brief find the nearest explorer
-	 * 
-	 * @param e : explorer who needs help
-	 * @param explorers : HashMap that contains all the simulations's explorers
-	 * 
-	 * @return helper : the nearest explorer
-	 * */
 	public static Explorer findHelper(Explorer e, HashMap<String,Explorer> explorers) {
 		
 		double min = 100000;
@@ -309,15 +273,6 @@ public class MeetAnimal{
 		return pos;
 	}
 	
-	/**
-	 * @brief treatment of a dead explorer : remove him and actualized others
-	 * 
-	 * @param e : dead explorer
-	 * @param simulation : integer that represents the type of simulation (0 smart, 1 fight, 2 escape)
-	 * @param explorers : HashMap that contains all the simulations's explorers
-	 * @param characters : HashMap that contains all the simulation's characters (animals + explorers)
-	 * @param toRemove : ArrayList that contains the name of the characters that need to be removed from the map
-	 * */
 	public static void deathExplorer(Explorer e) {
 		float gain = 0;
 		int gain2 =0;
@@ -360,13 +315,7 @@ public class MeetAnimal{
 			break;
 		}
 	}
-	
-	/**
-	 * @brief remove a dead animal
-	 * 
-	 * @param a : dead animal
-	 * @param toRemove : ArrayList that contains the name of the characters that need to be removed from the map
-	 * */
+
 	public static void deathAnimal(WildAnimals a) {
 		System.out.println(a.getName() + " : DEAD");
 		a.setDead(true);
