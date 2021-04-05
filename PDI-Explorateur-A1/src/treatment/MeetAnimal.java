@@ -130,6 +130,14 @@ public class MeetAnimal{
 		}
 	}
 	
+	/**
+	 * @brief fight between two explorers and a wild animal
+	 * it occurs when an explorer called another to help him
+	 * if the helper find the second, they fight the wild animal
+	 * 
+	 * @param helper is the Explorer who comes to help the other
+	 * @param victim is the Explorer who needs help
+	 * */
 	public static void duoFight(Explorer helper, Explorer victim) {
 		String outcome = null;
 		WildAnimals a = null;
@@ -174,6 +182,16 @@ public class MeetAnimal{
 		helper.setNearExp(false);
 	}
 	
+	/**
+	 * @brief fight between a wild animal and an explorer
+	 * 
+	 * @param e the Explorer
+	 * @param a the WildAnimals
+	 * 
+	 * @return deathBoth if both of the explorer and wild animal died
+	 * @return deathAnimal if only the animal died
+	 * @return deathExplo if only the explorer died
+	 * */
 	public static String fight(Explorer e, WildAnimals a) {
 		String outcome = null;
 		nbFights++;
@@ -229,6 +247,12 @@ public class MeetAnimal{
 		return outcome;
 	}
 	
+	/**
+	 * @brief this method changes the direction of an explorer who wants to escape, according to the current one
+	 * 
+	 * @param e the Explorer
+	 * @param dir the current direction of the explorer
+	 * */
 	public static void escapeDir(Explorer e, int dir) {
 		switch(dir) {
 		case 0:
@@ -250,6 +274,14 @@ public class MeetAnimal{
 		}
 	}
 	
+	/**
+	 * @brief this method finds the nearest explorer from the caller one
+	 * 
+	 * @param e the Explorer (the caller one)
+	 * @param explorers HashMap that contains all of the explorers
+	 * 
+	 * @return helper the nearest Explorer
+	 * */
 	public static Explorer findHelper(Explorer e, HashMap<String,Explorer> explorers) {
 		
 		double min = 100000;
@@ -278,6 +310,12 @@ public class MeetAnimal{
 		return pos;
 	}
 	
+	/**
+	 * @brief this method is called when an explorer has died during the fight
+	 * Deletes the explorer and updates other explorers according to the type of simulation
+	 * 
+	 *@param e the Explorer
+	 * */
 	public static void deathExplorer(Explorer e) {
 		float gain = 0;
 		int gain2 =0;
@@ -321,6 +359,11 @@ public class MeetAnimal{
 		}
 	}
 
+	/**
+	 * @brief this method is called when a wild animal has died during the fight
+	 * 
+	 *@param a the WildAnimals
+	 * */
 	public static void deathAnimal(WildAnimals a) {
 		System.out.println(a.getName() + " : DEAD");
 		a.setDead(true);
