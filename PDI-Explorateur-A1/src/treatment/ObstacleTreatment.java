@@ -1,62 +1,53 @@
 package treatment;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import character.Equipment;
 import character.Explorer;
-import character.builders.explorers.DoraBuilder;
-import character.builders.explorers.JoeBuilder;
-import character.builders.explorers.core.ExBuilder;
-import character.builders.explorers.core.ExDirector;
-import data.Obstacles;
-import data.Position;
-import data.Size;
 import game.Simulation;
-import thread.ExplorerThread;
 
+/**
+ * @brief Class Singleton of Treatment when facing an obstacle
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ *
+ */
 public class ObstacleTreatment {
 	
-	//private static HashMap<String,Explorer> explorers = new HashMap<String,Explorer>();
-
-	//rencontre avec les obstacles fixes et modulables
-	
+	/**
+	 * @brief Treatment when an explorer has encountered an obstacle
+	 * 
+	 * @param e The explorer
+	 * @param nameObs The name of the obstacle
+	 */
 	public static void meetObstacles(Explorer e, String nameObs) {
 		
 		HashMap<String,Explorer> explorers = Simulation.explorers;
 		
-		int oldSpeed = e.getBaseSpeed();
 		int newSpeed = (int)(e.getBaseSpeed()/2);
 		
 		switch(nameObs) {
 		case "water":
-			//take water and ask who need some
-			//System.out.println("j'ai trouvé de l'eau qui est mal en point ?");
 			needWater(explorers);
 			break;
 		case "mud":
-			//slow down
 			if (!hasEquipment(e)) {
-				//System.out.println("j'ai pas de bottes alors je ralenti");
 				e.setSpeed(newSpeed);
 			}
-			//System.out.println("Je sors de la boue je retrouve ma vitesse : "+e.getSpeed());
 			break;
 		case "blocked":
-			//tree, stone or side
-			//change direction
-			//System.out.println("je suis bloquée je change de direction");
 			CharacterTreatment.changeDir(e);
-			break;
-		case "treasure": 
-			//traitement a faire
-			//recuperer
-			//comm avec others
 			break;
 		}
 		
 	}
 	
+	/**
+	 * @brief Check if an explorer has boots in his inventory
+	 * 
+	 * @param e The explorer to check
+	 * @return false on failure
+	 * @return true on success
+	 */
 	public static boolean hasEquipment(Explorer e) {
 		boolean botte = false;
 		if (e.getEquipment().isEmpty()) {
@@ -66,7 +57,8 @@ public class ObstacleTreatment {
 				if (equipments.getName().equals("Bottes")) {
 					botte = true;
 					break;
-				}else {
+				}
+				else {
 					botte = false;
 				}
 			}
@@ -74,6 +66,10 @@ public class ObstacleTreatment {
 		return botte;
 	}
 	
+	/**
+	 * @brief Function called when an explorer founds water, it will heal the most injured explorer
+	 * @param explorers HashMap of explorers instances
+	 */
 	public static void needWater(HashMap<String,Explorer> explorers) {
 		int minPV = 150;
 		int pv = 0;
@@ -87,10 +83,10 @@ public class ObstacleTreatment {
 		}
 		if(applicant != null) {
 			int gain = applicant.getLifePoint()*(int)50/100;
-			//System.out.println("bonjour je suis "+ applicant.getName() +" et j'ai besoin d'eau j ai plus que : "+applicant.getLifePoint());
 			if ((applicant.getLifePoint()+gain)< applicant.getLifePointMax()) {
 				applicant.setLifePoint(applicant.getLifePoint()+gain);
-			}else {
+			}
+			else {
 				applicant.setLifePoint(applicant.getLifePointMax());
 			}
 		}

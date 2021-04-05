@@ -28,6 +28,13 @@ import data.Treasure;
 import thread.ExplorerThread;
 import thread.WildAnimalsThread;
 
+/**
+ * @brief Class of the Simulation/Game launched
+ * It will initiate and store all the instances, lists and maps of instances and elements of the game
+ * 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ *
+ */
 public class Simulation {
 
 	public static HashMap<String,Explorer> explorers = new HashMap<String, Explorer>();
@@ -71,6 +78,9 @@ public class Simulation {
 		addListCharacters();
 	}
 	
+	/**
+	 *  @brief Initiate and create all builders for futur purposes
+	 */
 	public void initBuilders() {
 		/*Create the builder director */
 		exCreator = new ExDirector() ;
@@ -95,6 +105,13 @@ public class Simulation {
 		bBoots = new BootsBuilder();
 	}
 	
+	/**
+	 * @brief Create all the explorers and equipment selected in the selection menu.
+	 * It will assigned the equipment to the proper explorer
+	 * 
+	 * @param listExp List of Explorer to build, filled in the selection menu
+	 * @param exEquipment Map of Equipment of each explorer to build, filled in the selection menu
+	 */
 	public void createExplorers(ArrayList<String> listExp, HashMap<String,ArrayList<String>> exEquipment) {
 		/* Loop through explorer list, change Builder when needed */
 		for(String nameEx : listExp) {
@@ -145,6 +162,9 @@ public class Simulation {
 		}
 	}
 	
+	/**
+	 * @brief Create all the animals randomly. The number of animal created is based on the difficulty
+	 */
 	public void createAnimals() {
 		int nbAnimals = difficulty.getAnimalsNB();
 		String name = "";
@@ -176,6 +196,9 @@ public class Simulation {
 		}
 	}
 	
+	/**
+	 * @brief Creates all the treasures instances randomly. The number of treasure created is based on the difficulty
+	 */
 	public void createTreasures() {
 		int nbTreasures = difficulty.getTreasureNB();
 		for(int i=1;i<=nbTreasures;i++) {
@@ -186,6 +209,10 @@ public class Simulation {
 		}
 	}
 	
+	/**
+	 * @brief Place all the instances of Explorers and WildAnimals in a commun Character Hashmap
+	 * The map will be used for more efficient searching algorithm
+	 */
 	public void addListCharacters() {
 		for(Explorer e : explorers.values()) {
 			characters.put(e.getName(),e);
@@ -195,6 +222,9 @@ public class Simulation {
 		}
 	}
 	
+	/**
+	 * @brief Creates and starts all the threads for all the characters created
+	 */
 	public void createThreads() {
 		for(Character c : characters.values()) {
 			Thread t = null;

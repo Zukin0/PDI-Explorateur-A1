@@ -1,7 +1,10 @@
 package data;
 
 /**
+ * @brief Data Class of the Size of each instance
  * This class initializes the size (width and height), we will use it for every object
+ * 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
  */
 public class Size {
 	

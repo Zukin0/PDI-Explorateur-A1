@@ -43,6 +43,7 @@ public class SelectionState extends GameState implements ImageObserver {
 	private boolean changeDif = false;
 	private int difficultySelected = 3;
 	
+	private boolean changeStrat = false;
 	private int strategySelected = 3;
 	
 	private int priceExplorers = 0;
@@ -221,31 +222,35 @@ public class SelectionState extends GameState implements ImageObserver {
         g.drawString("FUITE",80,670);
         
         /**0=intelligent, 1=fight, 2=run away*/
-        switch(strategySelected) {
-        case 0 :
+        if(changeStrat) {
+		    switch(strategySelected) {
+		    case 0 :
+		    	priceWeapon = 10;
+		    	priceBinoculars = 20;
+		    	priceBoots = 10;
+		    	priceExplorers = 20;
+        		resetAll();
+		    	break;
+		    case 1 :
+		    	priceWeapon = 20;
+		    	priceBinoculars = 10;
+		    	priceBoots = 10;
+		    	priceExplorers = 10;
+        		resetAll();
+		    	break;
+		    case 2 :
+		    	priceWeapon = 10;
+		    	priceBinoculars = 10;
+		    	priceBoots = 20;
+		    	priceExplorers = 10;
+        		resetAll();
+		    	break;
+		    }
+		    changeStrat = false;
+        }
+        else if(strategySelected != 3) {
         	g.setColor(Color.black);
-        	g.fillRect(50, 533, 20, 20);
-        	priceWeapon = 10;
-        	priceBinoculars = 20;
-        	priceBoots = 10;
-        	priceExplorers = 20;
-        	break;
-        case 1 :
-        	g.setColor(Color.black);
-        	g.fillRect(50, 593, 20, 20);
-        	priceWeapon = 20;
-        	priceBinoculars = 10;
-        	priceBoots = 10;
-        	priceExplorers = 10;
-        	break;
-        case 2 :
-        	g.setColor(Color.black);
-        	g.fillRect(50, 653, 20, 20);
-        	priceWeapon = 10;
-        	priceBinoculars = 10;
-        	priceBoots = 20;
-        	priceExplorers = 10;
-        	break;
+    		g.fillRect(50, 533 + (strategySelected * 60), 20, 20);
         }
         
         /**Explorers*/
@@ -478,14 +483,17 @@ public class SelectionState extends GameState implements ImageObserver {
 		else if ((m.getX()>= 50 && m.getX()<= 70 && m.getY()>=535 && m.getY()<= 555)) {
 			System.out.println("STRATEGIE INTELLIGENTE CHOISIE");
 			strategySelected = 0;
+			changeStrat = true;
 		}
 		else if ((m.getX()>= 50 && m.getX()<= 70 && m.getY()>=595 && m.getY()<= 615)) {
 			System.out.println("STRATEGIE DE COMBAT CHOISIE");
 			strategySelected = 1;
+			changeStrat = true;
 		}
 		else if ((m.getX()>= 50 && m.getX()<= 70 && m.getY()>=655 && m.getY()<= 675)) {
 			System.out.println("STRATEGIE DE FUITE CHOISIE");
 			strategySelected = 2;
+			changeStrat = true;
 		}
 		
 		/**Clicks for the explorers*/

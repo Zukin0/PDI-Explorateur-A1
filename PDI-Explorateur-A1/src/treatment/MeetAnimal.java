@@ -5,27 +5,28 @@ import java.util.HashMap;
 import java.util.Random;
 
 import character.*;
-import character.Character;
-import character.builders.WildAnimal.WolfBuilder;
-import character.builders.WildAnimal.core.WaBuilder;
-import character.builders.WildAnimal.core.WaDirector;
-import character.builders.explorers.DoraBuilder;
-import character.builders.explorers.JoeBuilder;
-import character.builders.explorers.MikeBuilder;
-import character.builders.explorers.core.ExBuilder;
-import character.builders.explorers.core.ExDirector;
 import game.Simulation;
 import data.Position;
 
+/**
+ * @brief Class Singleton of Treatment when an explorer is facing a WildAnimal
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ *
+ */
 public class MeetAnimal{
 	private static HashMap<String,Explorer> explorers = Simulation.explorers;
-	private static HashMap<String,Character> characters = Simulation.characters;
-	private static HashMap<String,WildAnimals> animals = Simulation.animals;
 	private static ArrayList<String> toRemove = Simulation.toRemove;
 	private static int simulation = Simulation.strategy;
 	
 	static int nbFights = 0;
 	
+	/**
+	 * @brief Treatment when an explorer is facing a WildAnimal
+	 * Depending on the strategy, the explorer will either flee, fight or call for help
+	 * 
+	 * @param e The Explorer
+	 * @param a The WildAnimal
+	 */
 	public static void meetAnimals(Explorer e, WildAnimals a) {
 		
 

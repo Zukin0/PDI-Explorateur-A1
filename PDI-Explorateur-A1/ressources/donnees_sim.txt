@@ -1,13 +1,11 @@
-
-00:00:37
-
-8
-0
-4
+00:00:39
 3
-vie
-vie
-vie
-vie
-vie
-vie
+7
+1
+6
+Mike1 n'a pas survÃ©cu
+Remy1 n'a pas survÃ©cu
+Joe1 n'a pas survÃ©cu
+Dora1 n'a pas survÃ©cu
+Joe2 n'a pas survÃ©cu
+Remy2 n'a pas survÃ©cu

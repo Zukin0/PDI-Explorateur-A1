@@ -2,6 +2,8 @@ package treatment;
 
 import java.util.Arrays;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+
 import character.Character;
 import character.Explorer;
 import character.WildAnimals;
@@ -179,9 +181,17 @@ public class CharacterTreatment {
 				double dis = Math.sqrt(Math.pow(pChar.getPosition().getX() - mC.getPosition().getX(), 2) + Math.pow(pChar.getPosition().getY() - mC.getPosition().getY(), 2));
 				
 				//Checking
-				if(pChar.getAura() >= dis) {
-					return false;
+				if(mC.getClass() == Explorer.class) {
+					if((pChar.getAura() + mC.getAura()) >= dis) {
+						return false;
+					}
 				}
+				else {
+					if(pChar.getAura() >= dis) {
+						return false;
+					}
+				}
+
 			}
 		}
 		for(Treasure t : Simulation.treasures.values()) {
