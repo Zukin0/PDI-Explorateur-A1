@@ -1,10 +1,12 @@
 package gameState;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 
-//c'est une classe abstraite qui va définir toutes les méthodes que nos états implémenteront obligatoirement 
+/**
+ * @brief This abstract class defines all the methods needed for the different states 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
 
 public abstract class GameState {
 	
