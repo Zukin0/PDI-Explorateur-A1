@@ -1,5 +1,9 @@
 package character;
 
+/**
+ * @brief Data Class of an Equipement
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
 public class Equipment {
 
 	private String name;

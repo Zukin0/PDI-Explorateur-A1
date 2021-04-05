@@ -15,6 +15,11 @@ import treatment.CharacterTreatment;
 import treatment.MeetAnimal;
 import treatment.ObstacleTreatment;
 
+/**
+ * @brief Class for thread of an Explorer
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
+
 public class ExplorerThread implements Runnable{
 	private Explorer e;
 	private TileMap tilemap;
@@ -28,6 +33,9 @@ public class ExplorerThread implements Runnable{
 		treasureFind = 0;
 	}
 	
+	/**
+	 * @brief fuinction contain all the action will do an explorer during his thread running
+	 */
 	public void run() {
 		int cpt = 0;
 		CharacterTreatment.changeDir(e);
@@ -183,6 +191,11 @@ public class ExplorerThread implements Runnable{
 		System.out.println(e.getName() + " : Stop moving");
 	}
 	
+	/**
+	 * @brief function will check if an explorer is collide an element of a Tile Map and do the right action depends on the object collide.
+	 * @param e Explorer which checked
+	 * @return Boolean
+	 */
 	public boolean collision(Explorer e) {
 		boolean slowed = false;
 		
@@ -272,6 +285,9 @@ public class ExplorerThread implements Runnable{
 		}
 	}
 	
+	/**
+	 * @brief function will improve the volatile variable treasure find to scale the speed of the explorers
+	 */
 	public synchronized void find() {
 		treasureFind++;
 		//System.out.println("Tresor trouver on en est a : " + treasureFind);

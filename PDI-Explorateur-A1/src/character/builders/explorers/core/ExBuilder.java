@@ -4,23 +4,36 @@ import character.Explorer;
 import data.Position;
 import data.Size;
 
+/**
+ * @brief Abstract Builder class for an explorer
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
+
 public abstract class ExBuilder {
 	
 	//here we got a variable who want create
 	protected Explorer explorer ;
 	public Explorer getE() { return explorer; }
-
-	//we create an empty version of these object
+	
+	/**
+	 * @brief Create an empty version of these explorer
+	 */
 	public void createExplorer() {
 		explorer = new Explorer();
 	}
 	
-	//put its objectMap propriety 
+	/**
+	 * @brief takes the created explorer and puts the chosen mapObject stats on it
+	 */
 	public abstract void upMapObject();
 	
-	//put its character stats
+	/**
+	 * @brief takes the created explorer and puts the chosen character stats on it
+	 */
 	public abstract void upCharacter();
 	
-	//Finalize put specificities values for explorer
+	/**
+	 * @brief takes the created explorer and puts the chosen explorer spécific stats on it
+	 */
 	public abstract void upExplorer();	
 }

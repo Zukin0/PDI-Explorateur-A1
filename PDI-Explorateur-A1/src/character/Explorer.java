@@ -3,6 +3,10 @@ package character;
 import java.util.ArrayList;
 import data.*;
 
+/**
+ * @brief Data Class of an Explorer
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
 public class Explorer extends Character{
 
 	private float probaFight;

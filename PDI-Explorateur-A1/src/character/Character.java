@@ -4,6 +4,10 @@ import data.MapObjects;
 import data.Position;
 import data.Size;
 
+/**
+ * @brief Data Class of Character 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
 public abstract class Character extends MapObjects{
 	
 	private int lifePoint;

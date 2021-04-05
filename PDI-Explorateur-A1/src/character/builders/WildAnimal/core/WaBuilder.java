@@ -2,23 +2,36 @@ package character.builders.WildAnimal.core;
 
 import character.WildAnimals;
 
+/**
+ * @brief Abstract builder class for wildAnimals
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
+
 public abstract class WaBuilder {
 	
 	//here we got a variable who want create
 	protected WildAnimals animal ;
 	public WildAnimals getA() { return animal; }
 	
-	//we create an empty version of these object
+	/**
+	 * @brief Create an empty version of these wildAnimals
+	 */
 	public void createAnimal() {
 		animal = new WildAnimals() ;
 	}
 	
-	//put its objectMap propriety 
+	/**
+	 * @brief takes the created wildAnimals and puts the chosen mapObject stats on it
+	 */
 	public abstract void upMapObject();
 	
-	//put its character stats
+	/**
+	 * @brief takes the created wildAnimals and puts the chosen character stats on it
+	 */
 	public abstract void upCharacter();
 	
-	//Finalize put specificities values for animals
+	/**
+	 * @brief takes the created wildAnimals and puts the chosen specific animals stats on it
+	 */
 	public abstract void upAnimals();	
 }

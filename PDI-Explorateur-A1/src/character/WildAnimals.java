@@ -3,6 +3,10 @@ import java.util.ArrayList;
 import data.Position;
 import data.Size;
 
+/**
+ * @brief Data Class of WildAnimals
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
 public class WildAnimals extends Character{
 	
 	private Size territorySize;

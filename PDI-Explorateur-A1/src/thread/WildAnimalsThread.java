@@ -12,6 +12,10 @@ import gameState.SimulationState;
 import treatment.CharacterTreatment;
 import treatment.ObstacleTreatment;
 
+/**
+ * @brief Class for thread of an WildAnimals
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
 public class WildAnimalsThread implements Runnable{
 	private WildAnimals a;
 	private TileMap tilemap;
@@ -21,6 +25,9 @@ public class WildAnimalsThread implements Runnable{
 		tilemap = SimulationState.tilemap;
 	}
 	
+	/**
+	 * @brief fuinction contain all the action will do an explorer during his thread running
+	 */
 	public void run() {
 		int cpt = 0;
 		// need while(!dead & running)
@@ -44,6 +51,12 @@ public class WildAnimalsThread implements Runnable{
 			}
 		}
 	}
+	
+	/**
+	 * @brief function which check if an explorer is inside of animals territory
+	 * @param predictedPos this is prediction of where the explorer will do his next move
+	 * @return Boolean
+	 */
 	
 	public boolean isInsideTerritory(Position predictedPos) {
 		int width = a.getSize().getWidth();
@@ -77,6 +90,11 @@ public class WildAnimalsThread implements Runnable{
 		return true;
 	}
 	
+	/**
+	 * @brief function will check if an wildAnimals is collide an element of a tile Map and do the right action depends on the object collide.
+	 * @param e WildAnimals which checked
+	 * @return Boolean
+	 */
 	public boolean collision(WildAnimals e) {
 		int tMapX = tilemap.getX();
 		int tMapY = tilemap.getY();

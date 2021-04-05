@@ -4,8 +4,15 @@ import character.builders.explorers.core.ExBuilder;
 import data.Position;
 import data.Size;
 
-//Here, we have class that create a Mike Explorer
+/**
+ * @brief Builder class for Mike : explorer
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
 public class MikeBuilder extends ExBuilder{
+	
+	/**
+	 * @brief takes the created explorer and puts the Mike mapObject stats on it
+	 */
 	
 			public void upMapObject() {
 				explorer.setSize(new Size(15, 20));
@@ -13,6 +20,10 @@ public class MikeBuilder extends ExBuilder{
 				explorer.setMovable(true);
 				explorer.setName("Mike");	
 			}
+			
+			/**
+			 * @brief takes the created explorer and puts the Mike character stats on it
+			 */
 
 			public void upCharacter() {
 				explorer.setLifePoint(100);
@@ -26,6 +37,10 @@ public class MikeBuilder extends ExBuilder{
 				explorer.setSpeed(6);
 				explorer.setAura(50);
 			}
+			
+			/**
+			 * @brief takes the created explorer and puts the Mike explorer spécific stats on it
+			 */
 
 			public void upExplorer() {
 				explorer.setProbaCall(20);

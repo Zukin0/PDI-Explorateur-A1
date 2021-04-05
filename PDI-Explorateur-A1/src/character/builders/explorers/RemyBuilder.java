@@ -4,9 +4,15 @@ import character.builders.explorers.core.ExBuilder;
 import data.Position;
 import data.Size;
 
-//Here, we have class that create a Remy Explorer
+/**
+ * @brief Builder class for Remy : explorer
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
 public class RemyBuilder extends ExBuilder{
 
+	/**
+	 * @brief takes the created explorer and puts the Remy mapObject stats on it
+	 */
 
 	public void upMapObject() {
 		explorer.setSize(new Size(15, 20));
@@ -15,6 +21,9 @@ public class RemyBuilder extends ExBuilder{
 		explorer.setName("Remy");	
 	}
 
+	/**
+	 * @brief takes the created explorer and puts the Remy character stats on it
+	 */
 	
 	public void upCharacter() {
 		explorer.setLifePoint(100);
@@ -29,6 +38,9 @@ public class RemyBuilder extends ExBuilder{
 		explorer.setAura(50);	
 	}
 
+	/**
+	 * @brief takes the created explorer and puts the Remy explorer spécific stats on it
+	 */
 	
 	public void upExplorer() {
 		//escapes more often than others
