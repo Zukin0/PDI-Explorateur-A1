@@ -6,14 +6,6 @@ import java.util.Random;
 
 import character.*;
 import character.Character;
-import character.builders.WildAnimal.WolfBuilder;
-import character.builders.WildAnimal.core.WaBuilder;
-import character.builders.WildAnimal.core.WaDirector;
-import character.builders.explorers.DoraBuilder;
-import character.builders.explorers.JoeBuilder;
-import character.builders.explorers.MikeBuilder;
-import character.builders.explorers.core.ExBuilder;
-import character.builders.explorers.core.ExDirector;
 import game.Simulation;
 import data.Position;
 
@@ -24,6 +16,8 @@ public class MeetAnimal{
 	private static ArrayList<String> toRemove = Simulation.toRemove;
 	private static int simulation = Simulation.strategy;
 
+	public static int nbFights = 0;
+	
 	public static void meetAnimals(Explorer e, WildAnimals a) {
 
 		String outcome = null;
@@ -172,6 +166,7 @@ public class MeetAnimal{
 	
 	public static String fight(Explorer e, WildAnimals a) {
 		String outcome = null;
+		nbFights++;
 		if(a != null) {
 			int apE = e.getAttackPoint();
 			int lpE = e.getLifePoint();
@@ -320,6 +315,10 @@ public class MeetAnimal{
 		System.out.println(a.getName() + " : DEAD");
 		a.setDead(true);
 		toRemove.add(a.getName());
+	}
+	
+	public static int getNbFights() {
+		return nbFights;
 	}
 	
 }

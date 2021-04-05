@@ -1,19 +1,19 @@
 package gameState;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Stack;
 
-import ihm.Game;
-
-//Classe qui permet de répertorier les différents états et les gères avec une pile LIFO
+/**
+ * @brief This class initialize all the methods for the FIFO stack that contains all the states 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ *
+ */
 
 public class GameStateManager {
 	
-	//pile LIFO
-	public static Stack<GameState> gameStates; //on peut aussi utiliser une array liste comme avait fait Yohan
+	/** LIFO stack */
+	public Stack<GameState> gameStates; 
 	
 	public GameStateManager () {
 		gameStates = new Stack<GameState>();
@@ -21,7 +21,7 @@ public class GameStateManager {
 	}
 	
 	public void tick() {
-		gameStates.peek().tick(); //peek() prend le gameState en haut de la pile
+		gameStates.peek().tick();
 	}
 	
 	public void draw (Graphics g) {

@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 00:00:03
 
@@ -26,3 +27,18 @@ vie
 vie
 >>>>>>> refs/heads/Alexandre_from_emma
 vie
+=======
+
+00:00:37
+
+8
+0
+4
+3
+vie
+vie
+vie
+vie
+vie
+vie
+>>>>>>> refs/heads/juju

@@ -2,6 +2,11 @@ package character.builders.equipment.core;
 
 import character.Equipment;
 
+/**
+ * @brief 
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ */
+
 public abstract class EqBuilder {
 	//here we got a variable who want create
 		protected Equipment equipment ;

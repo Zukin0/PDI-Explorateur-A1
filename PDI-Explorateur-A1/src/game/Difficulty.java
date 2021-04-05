@@ -4,7 +4,7 @@ public class Difficulty {
 
 	private int id;
 	private int treasureNB;
-	private int animalsNB;
+	private static int animalsNB;
 	private int money;
 	
 	public Difficulty (int id, int treasureNB, int animalsNB, int money) {
@@ -33,7 +33,7 @@ public class Difficulty {
 	public int getTreasureNB() {
 		return treasureNB;
 	}
-	public int getAnimalsNB() {
+	public static int getAnimalsNB() {
 		return animalsNB;
 	}
 	public int getMoney() {
