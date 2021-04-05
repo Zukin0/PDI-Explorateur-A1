@@ -69,8 +69,8 @@ public class CharacterTreatment {
 		if (e!=null) {
 			int xFinish = e.getPosition().getX();
 			int yFinish = e.getPosition().getY();
-			int xStart = e.getPosition().getX();
-			int yStart = e.getPosition().getY();
+			int xStart = helper.getPosition().getX();
+			int yStart = helper.getPosition().getY();
 		
 			int x = xFinish - xStart;
 			int y = yFinish - yStart;
@@ -92,7 +92,8 @@ public class CharacterTreatment {
 				}
 			}
 		
-			if(xStart==xFinish && yStart==yFinish) {
+			if(Math.abs(x) <=  Math.max(e.getAura(),helper.getAura())&& Math.abs(y) <= Math.max(e.getAura(),helper.getAura())) {
+				System.out.println(helper.getName() + " : IS CLOSE TO " + e.getName());
 				helper.setNearExp(true);
 			}
 		}
@@ -160,16 +161,55 @@ public class CharacterTreatment {
 		
 		//Checking
 		if(pChar.getAura() >= dis) {
-			//System.out.println("Dans la zone");
-			if(mC.getClass() == WildAnimals.class)
+			if(mC.getClass() == WildAnimals.class) {
 				MeetAnimal.meetAnimals((Explorer) pChar, (WildAnimals) mC);
-//			
-			if(mC.getClass() == Treasure.class)
+			}	
+			if(mC.getClass() == Treasure.class) {
 				eT.find();
 				Simulation.toRemove.add(mC.getName());
+			}
 		}
-		else {
-//			System.out.println("Pas dans la zone");
-		}	
+	}
+	
+	public static boolean explorerSpawnable(Explorer pChar) {
+				
+		//Calcul distance between two entity
+		for(Character mC : Simulation.characters.values()) {
+			if(!mC.getName().equals(pChar.getName())) {
+				double dis = Math.sqrt(Math.pow(pChar.getPosition().getX() - mC.getPosition().getX(), 2) + Math.pow(pChar.getPosition().getY() - mC.getPosition().getY(), 2));
+				
+				//Checking
+				if(pChar.getAura() >= dis) {
+					return false;
+				}
+			}
+		}
+		for(Treasure t : Simulation.treasures.values()) {
+			double dis = Math.sqrt(Math.pow(pChar.getPosition().getX() - t.getPosition().getX(), 2) + Math.pow(pChar.getPosition().getY() - t.getPosition().getY(), 2));
+			
+			//Checking
+			if(pChar.getAura() >= dis)
+				return false;
+		}
+		return true;
+		
+	}
+	
+	public static boolean isFarEnough(Explorer e) {
+		int futurX = CharacterTreatment.predictPos(e).getX();
+		int futurY = CharacterTreatment.predictPos(e).getY();
+		
+		for(Explorer eTmp : Simulation.explorers.values()) {
+			if(!e.getName().equals(eTmp.getName())) {
+				double dis = Math.sqrt(Math.pow(futurX - eTmp.getPosition().getX(), 2)
+						+ Math.pow(futurY - eTmp.getPosition().getY(), 2));
+				//System.out.println(e.getName() + " : " + dis + " FROM " + eTmp.getName());
+				if((e.getAura() + eTmp.getAura()) >= dis) {
+					changeDir(e);
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }

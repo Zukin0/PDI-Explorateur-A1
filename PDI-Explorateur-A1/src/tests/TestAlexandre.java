@@ -1,5 +1,8 @@
 package tests;
- import java.util.ArrayList;
+ import java.awt.BorderLayout;
+import java.util.ArrayList;
+
+import javax.swing.JFrame;
 
 import character.*;
 import character.Character;
@@ -13,7 +16,12 @@ import character.builders.explorers.RemyBuilder;
 import character.builders.explorers.core.ExBuilder;
 import character.builders.explorers.core.ExDirector;
 import data.*;
+import game.Difficulty;
+import game.Simulation;
 import game.SimulationUtility;
+import gameState.GameStateManager;
+import gameState.SimulationState;
+import ihm.GamePanel;
 import thread.ExplorerThread;
 import thread.WildAnimalsThread;
 
@@ -35,10 +43,30 @@ public class TestAlexandre {
 	
 	public TestAlexandre() {		
 		
-		initBuilders();
-		createCharacters();
-		addCharactersList();
-		createThreads();
+//		initBuilders();
+//		createCharacters();
+//		addCharactersList();
+//		createThreads();
+		
+		JFrame frame = new JFrame("EXPLORATEURS INTELLIGENTS ET COMMUNICANTS");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		frame.setLayout(new BorderLayout());
+		frame.add(new GamePanel(), BorderLayout.CENTER);
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true); 
+		
+		ArrayList<String> listExplorers = new ArrayList<String>();
+		listExplorers.add("Dora1");
+		listExplorers.add("Joe1");
+		Difficulty dif = new Difficulty();
+		dif.changeDif(8, 9, 160);// param : nbTreasure, nbAnimals, money
+		GameStateManager gsm = new GameStateManager();
+		Simulation sim = new Simulation(dif, 0, listExplorers, null);
+		SimulationState simulationState = new SimulationState(gsm);
+		gsm.gameStates.push(simulationState);
+		sim.createThreads();
 		
 	}
 	

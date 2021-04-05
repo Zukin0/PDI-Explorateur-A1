@@ -11,9 +11,9 @@ import game.Simulation;
 import game.SimulationUtility;
 import game.TileMap;
 import gameState.SimulationState;
-import tests.TestObstacles;
 import treatment.CharacterTreatment;
 import treatment.MeetAnimal;
+import treatment.ObstacleTreatment;
 
 public class ExplorerThread implements Runnable{
 	private Explorer e;
@@ -31,78 +31,150 @@ public class ExplorerThread implements Runnable{
 	public void run() {
 		int cpt = 0;
 		CharacterTreatment.changeDir(e);
-		while(!e.isDead()) {
-
+		while(!e.isDead()) {		
+			if(!e.isWaiting() && !e.isHelping()) {
+				for(WildAnimals a : Simulation.animals.values()) {
+					CharacterTreatment.auraCheck(e, a, this);
+				}
+				for(Treasure t : Simulation.treasures.values()) {
+					CharacterTreatment.auraCheck(e, t, this);
+				}
+			}
 			SimulationUtility.unitTime();
-			for(WildAnimals a : Simulation.animals.values()) {
-				CharacterTreatment.auraCheck(e, a, this);
-			}
-			for(Treasure t : Simulation.treasures.values()) {
-				CharacterTreatment.auraCheck(e, t, this);
-			}
 			/* Explorer is fleeing */
 			if(e.isEscaping() == true) {
-				cpt = 0;
-				System.out.println(e.getName() + " : JE FUIS PENDANT " + Constant.NUMBER_ESCAPE_ITERATIONS + " ms VERS :" + e.getDir());
-				while(cpt != Constant.NUMBER_ESCAPE_ITERATIONS) {
-					SimulationUtility.unitTime();
-					if(!collision(e)) {
+				//System.out.println(e.getName() + " : JE FUIS PENDANT " + Constant.NUMBER_ESCAPE_ITERATIONS + " ms VERS : " + e.getDir());
+				if(cpt != Constant.NUMBER_ESCAPE_ITERATIONS) {
+					if(!collision(e) && CharacterTreatment.isFarEnough(e)) {
 						CharacterTreatment.move(e);
 					}
 					cpt++;
 
 				}
-				System.out.println(e.getName() + " : J'ARRETE DE FUIR");
-				e.setEscaping(false);
-				cpt = 0;
+				else {
+					System.out.println(e.getName() + " : J'ARRETE DE FUIR");
+					e.setEscaping(false);
+					cpt = 0;
+				}
 			}
-			else if (e.isWaiting() == true) {
-				cpt = 0;
-				System.out.println(e.getName() + " : J'ATTEND MON AMI PENDANT "+Constant.NUMBER_WAIT_ITERATIONS+" ms");
-				while(cpt != Constant.NUMBER_WAIT_ITERATIONS) {
-					SimulationUtility.unitTime();
-					//ne bouge pas alors on ne fait pas de move on fait rien
-					System.out.println(e.getName() + " : J'ATTENDS");
+			/** Explorer needs help, he waits to be helped */
+			else if (e.isWaiting()) {
+				//System.out.println(e.getName() + " : J'ATTEND MON AMI PENDANT "+Constant.NUMBER_WAIT_ITERATIONS+" ms");
+				if(cpt != Constant.NUMBER_WAIT_ITERATIONS) {
 					cpt++;
 				}
-				System.out.println(e.getName() + " : J'ARRETE D'ATTENDRE");
-				e.setWaiting(false);
-				cpt = 0;
-			}
-			else if (e.isHelping() == true) {
-				cpt = 0;
-				System.out.println(e.getName() + " : JE VAIS AIDER MON AMI, JE LE CHERCHE PENDANT "+Constant.NUMBER_HELP_ITERATIONS+" ms");
-				while(cpt != Constant.NUMBER_HELP_ITERATIONS) {
-					SimulationUtility.unitTime();
-					if(!collision(e)) {
-						//doit aller vers son ami
-						Explorer eInDanger=null;
-						for(Explorer explorer : Simulation.explorers.values()) {
-							if(explorer.isWaiting()==true) {
-								eInDanger=explorer;
+				else {
+					System.out.println(e.getName() + " : J'ARRETE D'ATTENDRE");
+					WildAnimals a = null;
+					for(WildAnimals tmp : Simulation.animals.values()) {
+						if(tmp.getFightAgainst() != null) {
+							if(tmp.getFightAgainst().equals(e.getName())) {
+								a = tmp;
 							}
 						}
-						//change
-						CharacterTreatment.goHelp(eInDanger, e);
-						//move
-						CharacterTreatment.move(e);
 					}
-					cpt++;
+					System.out.println(e.getName() + " : FIGHT 3");
+					String outcome = MeetAnimal.fight(e, a);
+					if(outcome != null) {
+						if (outcome == "deathExplo" || outcome.equals("deathBoth")) {
+							a.setFightAgainst("");
+							MeetAnimal.deathExplorer(e);
+						}
+						if(outcome == "deathAnimal" || outcome.equals("deathBoth")) {
+							MeetAnimal.deathAnimal(a);
+						}
+						for(Explorer eTmp : Simulation.explorers.values()) {
+							if(eTmp.getHelpingWho() != null) {
+								if(eTmp.getHelpingWho().equals(e.getName())) {
+									Explorer helper = eTmp;
+									helper.setHelping(false);
+									helper.setHelpingWho("");
+									break;
+								}
+							}
+						}
+					}
+					e.setWaiting(false);
+					cpt = 0;
 				}
-				System.out.println(e.getName() + " : J'ARRETE D'ATTENDRE");
-				e.setHelping(false);
-				cpt = 0;
 			}
+			/** Explorer is rescuing a friend */
+			else if (e.isHelping()) {
+				//System.out.println(e.getName() + " : I HELP");
+				Explorer eInDanger = Simulation.explorers.get(e.getHelpingWho());
+				WildAnimals a = null;
+				if(eInDanger != null) {
+					for(WildAnimals tmp : Simulation.animals.values()) {
+						if(tmp.getFightAgainst() != null) {
+							if(tmp.getFightAgainst().equals(eInDanger.getName())) {
+								a = tmp;
+							}
+						}
+					}
+				}
+				if(cpt != Constant.NUMBER_HELP_ITERATIONS && e.isHelping() && eInDanger != null) {
+					if(!collision(e) && CharacterTreatment.isFarEnough(e)) {
+						if(e.isNearExp()) {
+							System.out.println(e.getName() + " : DUO FIGHT 1");
+							MeetAnimal.duoFight(e, eInDanger);
+						}
+						else {
+							CharacterTreatment.goHelp(eInDanger, e);
+							CharacterTreatment.move(e);
+						}
+						cpt++;
+					}
+					else {
+						
+						System.out.println(e.getName() + " : J'ARRETE DE CHERCHER");
+						eInDanger.setWaiting(false);
+						eInDanger.setWaitingWho("");
+						
+						e.setHelping(false);
+						e.setNearExp(false);
+						e.setHelpingWho("");
+						System.out.println(e.getName() + " : FIGHT 5");
+						String outcome = MeetAnimal.fight(eInDanger, a);
+						if (outcome == "deathExplo" || outcome.equals("deathBoth")) {
+							a.setFightAgainst("");
+							MeetAnimal.deathExplorer(e);
+						}
+						if(outcome == "deathAnimal" || outcome.equals("deathBoth")) {
+							MeetAnimal.deathAnimal(a);
+						}
+						cpt = 0;
+					}
+				}
+				else {
+					System.out.println(e.getName() + " : J'ARRETE DE CHERCHER");
+					e.setHelping(false);
+					e.setNearExp(false);
+					e.setHelpingWho("");
+					
+					if(eInDanger != null) {
+						eInDanger.setWaiting(false);
+						eInDanger.setWaitingWho("");
+						System.out.println(e.getName() + " : FIGHT 6");
+						String outcome = MeetAnimal.fight(eInDanger, a);
+						if (outcome == "deathExplo" || outcome.equals("deathBoth")) {
+							a.setFightAgainst("");
+							MeetAnimal.deathExplorer(e);
+						}
+						if(outcome == "deathAnimal" || outcome.equals("deathBoth")) {
+							MeetAnimal.deathAnimal(a);
+						}
+						
+					}
+					cpt = 0;
+				}
+			}
+			/** Default mode */
 			else {
 				if(cpt == Constant.NUMBER_EXPLORE_ITERATIONS) {
 					CharacterTreatment.changeDir(e);
 					cpt = 0;
 				}
-				if(!collision(e)) {
-
-					/*
-					 * TESTING BRUTE LE TEMPS D'AVOIR LE CODE DE YOHAN
-					 */
+				if(!collision(e) && CharacterTreatment.isFarEnough(e)) {
 					CharacterTreatment.move(e);
 				}
 				cpt++;
@@ -112,6 +184,8 @@ public class ExplorerThread implements Runnable{
 	}
 	
 	public boolean collision(Explorer e) {
+		boolean slowed = false;
+		
 		int tMapX = tilemap.getX();
 		int tMapY = tilemap.getY();
 		int tileSize = tilemap.getTileSize();
@@ -167,27 +241,33 @@ public class ExplorerThread implements Runnable{
 		
 		if(CharacterTreatment.contains(TileMap.blockTile, tile1) || CharacterTreatment.contains(TileMap.blockTile, tile2)) {
 			//System.out.println("Blocked tile1 : " + tile1);
-			TestObstacles.meetObstacles(e, "blocked");
+			ObstacleTreatment.meetObstacles(e, "blocked");
 			return true;
 		}
 		else {
 			switch(tile1) {
 			case 6 :
-				TestObstacles.meetObstacles(e, "mud");
+				ObstacleTreatment.meetObstacles(e, "mud");
+				slowed = true;
 				break;
 			case 13 :
-				TestObstacles.meetObstacles(e, "water");
+				ObstacleTreatment.meetObstacles(e, "water");
 				break;
 			}
 			
 			switch(tile2) {
 			case 6 :
-				TestObstacles.meetObstacles(e, "mud");
+				ObstacleTreatment.meetObstacles(e, "mud");
+				slowed = true;
 				break;
 			case 13 :
-				TestObstacles.meetObstacles(e, "water");
+				ObstacleTreatment.meetObstacles(e, "water");
 				break;
 			}	
+			
+			if(!slowed) {
+				e.setSpeed(e.getBaseSpeed());
+			}
 			return false;
 		}
 	}

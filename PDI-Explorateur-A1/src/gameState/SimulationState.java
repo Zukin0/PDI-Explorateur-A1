@@ -34,6 +34,7 @@ import data.Treasure;
 import ihm.GamePanel;
 import time.RealTime;
 import time.Time;
+import treatment.CharacterTreatment;
 
 public class SimulationState extends GameState implements ImageObserver{
 	
@@ -52,6 +53,7 @@ public class SimulationState extends GameState implements ImageObserver{
 	
 	//création des polices
 	private Font categoryFont = new Font("Arial", Font.BOLD, 22);
+	private Font endGame = new Font("Arial", Font.BOLD, 50);
 	private Font whiteBoardFont = new Font("Arial", Font.PLAIN, 20);
 	private Font buttonFont = new Font("Arial", Font.PLAIN, 33);
 	
@@ -87,6 +89,7 @@ public class SimulationState extends GameState implements ImageObserver{
 	/*Boolean*/
 	private boolean treasurePlaced;
 	private boolean animalPlaced;
+	private boolean explorerPlaced;
 	private boolean recapAccessible = false;
 	
 	
@@ -94,15 +97,18 @@ public class SimulationState extends GameState implements ImageObserver{
 	private RealTime timer = new RealTime();
 	private Thread t = new Thread(timer);
 	
+	/** Text */
+	private String endString = "";
+	
 	public SimulationState(GameStateManager gsm) {
 		super(gsm);
 		init();
 		initImageFiles();
 		treasurePlacement();
 		animalsPlacement();
+		explorersPlacement();
 		startTimer();
 	}
-
 
 	public void init() {
 		tilemap = new TileMap();
@@ -191,6 +197,35 @@ public class SimulationState extends GameState implements ImageObserver{
 		}
 	}
 	
+	private void explorersPlacement() {
+		nbCol = tilemap.getNbCols();
+		nbRows = tilemap.getNbRows();
+		tMapX = tilemap.getX();
+		tMapY = tilemap.getY();
+		tileSize = tilemap.getTileSize();
+		
+		for(Explorer e : Simulation.explorers.values()) {
+			explorerPlaced = false;
+			while(!explorerPlaced) {
+				/* Random position X [startPosition X ; Map.width] */
+				int x = (int) (tMapX + Math.random() * (tMapX+(nbRows-1)*tileSize+5));
+				
+				/* Random position Y [startPosition Y; Map.height] */
+				int y = (int) (tMapY + Math.random() * (tMapY+(nbCol-1)*tileSize+5));
+				
+				/* Calcul d�duit de la classe TileMap sur le placement des tiles */
+				/* Col = (xPoS - OffSetX)/tileSize, Row = (YPoS - OffSetY)/tileSize */
+				int row = (int)(x-5-tMapX)/tileSize;
+				int col = (int) (y-5-tMapY)/tileSize;
+				
+				e.setPosition(new Position(col*tileSize+5+tMapX,row*tileSize+5+tMapY));
+				if(tilemap.getPosition(row,col) == 7 && CharacterTreatment.explorerSpawnable(e)) {
+					explorerPlaced = true;
+				}
+			}
+		}
+	}
+	
 	public void startTimer() {
 		t.start();
 	}
@@ -232,10 +267,18 @@ public class SimulationState extends GameState implements ImageObserver{
 	}
 	
 	public void tick() {
-		if(Simulation.explorers.isEmpty()||Simulation.treasures.isEmpty()) {
+		if(Simulation.explorers.isEmpty()||Simulation.treasures.isEmpty() || timer.getMinute().getValue() == 2) {
+			if(Simulation.explorers.isEmpty() || timer.getMinute().getValue() == 2){
+				endString = "YOU LOST";
+			}
+			else if(Simulation.treasures.isEmpty()) {
+				endString = "YOU WON";
+			}
 			recapAccessible = true;
+			for(Character c : Simulation.characters.values()) {
+				c.setDead(true);
+			}
 			timer.setRunning(false);
-			
 		}
 	}
 
@@ -312,10 +355,27 @@ public class SimulationState extends GameState implements ImageObserver{
 				g.setColor(Color.black);
 				WildAnimals wa = (WildAnimals)c;
 //				g.drawRect(wa.getPosTerr().getX(),wa.getPosTerr().getY(), wa.getTerritorySize().getHeight(), wa.getTerritorySize().getHeight());
-//				g.setColor(Color.red);
 			}
 			else {
-				g.drawOval(c.getPosition().getX()-(c.getAura()/2)+(c.getSize().getWidth()/2), c.getPosition().getY()-(c.getAura()/2)+(c.getSize().getHeight()/2), c.getAura(), c.getAura());
+				Explorer e = (Explorer)c;
+				if(e.isEscaping()) {
+					g.setColor(Color.blue);
+				}
+				else if(e.isWaiting()) {
+					g.setColor(Color.red);
+				}
+				else if(e.isHelping()) {
+					g.setColor(Color.green);
+				}
+				else {
+					g.setColor(Color.black);
+				}
+				g.drawOval( (c.getPosition().getX()+ (c.getSize().getWidth()/2)) - c.getAura(),
+						(c.getPosition().getY()+ (c.getSize().getHeight()/2)) - c.getAura(),
+						c.getAura()*2, c.getAura()*2);
+//				g.drawOval(c.getPosition().getX()-(c.getAura()/2)+(c.getSize().getWidth()/2),
+//						c.getPosition().getY()-(c.getAura()/2)+(c.getSize().getHeight()/2),
+//						c.getAura()*2, c.getAura()*2);
 			}
 //			g.setColor(Color.red);
 //			g.drawRect(c.getPosition().getX(), c.getPosition().getY(), c.getSize().getWidth(), c.getSize().getHeight());
@@ -326,6 +386,12 @@ public class SimulationState extends GameState implements ImageObserver{
 		for(HashMap.Entry<String,Treasure> entry : Simulation.treasures.entrySet()) {
 			Treasure t = entry.getValue();
 			g.drawImage(treasure, t.getPosition().getX(), t.getPosition().getY(), t.getSize().getWidth(), t.getSize().getHeight(),(ImageObserver)this);
+		}
+		
+		if(recapAccessible) {
+			g.setColor(Color.black);
+	        g.setFont(endGame);
+	        g.drawString("FIN DE PARTIE : \n" + endString,200, 400);
 		}
 		
 		

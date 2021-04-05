@@ -9,7 +9,7 @@ public class MikeBuilder extends ExBuilder{
 	
 			public void upMapObject() {
 				explorer.setSize(new Size(15, 20));
-				explorer.setPosition(new Position(600,300));
+				explorer.setPosition(new Position(-100,-100));
 				explorer.setMovable(true);
 				explorer.setName("Mike");	
 			}
@@ -22,8 +22,9 @@ public class MikeBuilder extends ExBuilder{
 				explorer.setAttackPoint(9);
 				explorer.setAttackPointMax(10);
 				
+				explorer.setBaseSpeed(6);
 				explorer.setSpeed(6);
-				explorer.setAura(100);
+				explorer.setAura(50);
 			}
 
 			public void upExplorer() {

@@ -9,8 +9,8 @@ import data.Position;
 import game.SimulationUtility;
 import game.TileMap;
 import gameState.SimulationState;
-import tests.TestObstacles;
 import treatment.CharacterTreatment;
+import treatment.ObstacleTreatment;
 
 public class WildAnimalsThread implements Runnable{
 	private WildAnimals a;
@@ -31,15 +31,17 @@ public class WildAnimalsThread implements Runnable{
 			/*
 			 * Change direction every X iterations
 			 */
-			if(cpt == Constant.NUMBER_EXPLORE_ITERATIONS) {
-				CharacterTreatment.changeDir(a);
-				cpt = 0;
+			if(a.getFightAgainst().equals("")) {
+				if(cpt == Constant.NUMBER_EXPLORE_ITERATIONS) {
+					CharacterTreatment.changeDir(a);
+					cpt = 0;
+				}
+				
+				if(isInsideTerritory(CharacterTreatment.predictPos(a)) && !collision(a)) {
+					CharacterTreatment.move(a);
+				}
+				cpt++;
 			}
-			
-			if(isInsideTerritory(CharacterTreatment.predictPos(a)) && !collision(a)) {
-				CharacterTreatment.move(a);
-			}
-			cpt++;
 		}
 	}
 	

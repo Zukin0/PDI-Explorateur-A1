@@ -10,6 +10,7 @@ public abstract class Character extends MapObjects{
 	private int lifePointMax;
 	private int attackPoint;
 	private int attackPointMax;
+	private int baseSpeed;
 	private int speed;
 	private int aura;
 	private int dir;
@@ -50,6 +51,10 @@ public abstract class Character extends MapObjects{
 	public boolean isDead() {
 		return isDead;
 	}
+
+	public int getBaseSpeed() {
+		return baseSpeed;
+	}
 	
 	public void setLifePoint(int lifePoint) {
 		this.lifePoint = lifePoint;
@@ -74,6 +79,10 @@ public abstract class Character extends MapObjects{
 	}
 	public void setDead(boolean isDead) {
 		this.isDead = isDead;
+	}
+
+	public void setBaseSpeed(int baseSpeed) {
+		this.baseSpeed = baseSpeed;
 	}
 
 }

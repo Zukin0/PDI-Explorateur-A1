@@ -7,7 +7,7 @@ public class BinocularBuilder extends EqBuilder{
 	public void upEquipment() {
 		
 		equipment.setName("Jumelles");
-		equipment.setPower("");
+		equipment.setPower(15);
 		equipment.setPrice(0);
 	}
 

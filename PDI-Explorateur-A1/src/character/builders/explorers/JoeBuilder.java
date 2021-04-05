@@ -8,7 +8,7 @@ public class JoeBuilder extends ExBuilder{
 
 	public void upMapObject() {
 		explorer.setSize(new Size(15, 20));
-		explorer.setPosition(new Position(250,300));
+		explorer.setPosition(new Position(-100,-100));
 		explorer.setMovable(true);
 		explorer.setName("Joe");	
 	}
@@ -20,8 +20,9 @@ public class JoeBuilder extends ExBuilder{
 		explorer.setAttackPoint(5);
 		explorer.setAttackPointMax(10);
 		
+		explorer.setBaseSpeed(6);
 		explorer.setSpeed(6);
-		explorer.setAura(100);
+		explorer.setAura(50);
 	}
 
 	public void upExplorer() {
