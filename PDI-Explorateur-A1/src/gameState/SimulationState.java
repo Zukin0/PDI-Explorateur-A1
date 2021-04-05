@@ -36,6 +36,11 @@ import treatment.MeetAnimal;
  */
 import treatment.CharacterTreatment;
 
+/**
+ * @brief This class defines the simulation state
+ * @author Chabot Yohan, De Sousa Julia, Gastebois Emma and Hang Alexandre
+ *
+ */
 public class SimulationState extends GameState implements ImageObserver{
 	
 	/** TileMap */
